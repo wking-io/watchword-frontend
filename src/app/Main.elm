@@ -2,11 +2,11 @@ module Main exposing (main)
 
 import Html exposing (Html, program, text, button)
 import Html.Attributes as Html exposing (class)
-import Html.Events exposing (on, onMouseDown, onMouseUp)
+import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
 import Json.Decode as Decode
 import SelectList exposing (SelectList)
 import Svg exposing (svg, polyline)
-import Svg.Attributes as Svg exposing (class, fill, stroke, strokeWidth, points)
+import Svg.Attributes as Svg exposing (class, fill, stroke, strokeLinejoin, strokeWidth, points)
 import Mouse exposing (Position)
 
 
@@ -33,13 +33,13 @@ view model =
     let
         handlers =
             if model.isDrawing then
-                [ getMouseOn "mouseup" DrawEnd, getMouseOn "mousemove" DrawAt ]
+                [ getPositionOn "mouseup" DrawEnd, getPositionOn "mousemove" DrawAt, getPositionOn "touchend" DrawEnd, getPositionOn "touchmove" DrawAt ]
             else
-                [ getMouseOn "mousedown" DrawStart ]
+                [ getPositionOn "mousedown" DrawStart, getPositionOn "touchstart" DrawStart ]
     in
         Html.main_ []
             [ svg (List.append [ Svg.class "artboard" ] handlers) (renderLines model.content)
-            , button [ Html.class "eraser" ] [ text "Clear Artboard" ]
+            , button [ Html.class "eraser", onClick ClearArtboard ] [ text "Clear Artboard" ]
             ]
 
 
@@ -57,7 +57,7 @@ renderLines maybeLines =
 
 toLine : String -> Html Msg
 toLine thePoints =
-    polyline [ fill "none", stroke "#000000", strokeWidth "4", points thePoints ] []
+    polyline [ fill "none", stroke "#000000", strokeWidth "6", strokeLinejoin "round", points thePoints ] []
 
 
 toPoints : List Position -> String
@@ -73,23 +73,13 @@ toPoint { x, y } =
     toString x ++ "," ++ toString y
 
 
-
--- renderLine : Path -> Html msg
--- renderLine { current, history } =
---     case history of
---         Nothing ->
---             polyline [] []
---         Just coords ->
---             polyline [ fill "none", stroke "#000000", strokeWidth (px 2), points "" ] []
-
-
 px : Int -> String
 px number =
     toString number ++ "px"
 
 
-getMouseOn : String -> (Position -> Msg) -> Html.Attribute Msg
-getMouseOn event msg =
+getPositionOn : String -> (Position -> Msg) -> Html.Attribute Msg
+getPositionOn event msg =
     on event (Decode.map msg Mouse.position)
 
 
@@ -101,6 +91,7 @@ type Msg
     = DrawStart Position
     | DrawAt Position
     | DrawEnd Position
+    | ClearArtboard
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -115,10 +106,16 @@ updateHelp msg model =
             { model | isDrawing = True, content = startLine model.content position }
 
         DrawAt position ->
-            { model | content = drawLine model.content position }
+            if model.isDrawing then
+                { model | content = drawLine model.content position }
+            else
+                model
 
         DrawEnd position ->
             { model | isDrawing = False, content = drawLine model.content position }
+
+        ClearArtboard ->
+            { model | content = Nothing }
 
 
 startLine : Maybe (SelectList (List Position)) -> Position -> Maybe (SelectList (List Position))
