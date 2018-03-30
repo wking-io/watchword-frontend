@@ -1,0 +1,12 @@
+.artboard {
+  width: 100vw;
+  height: 100vh;
+}
+
+.eraser {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 999;
+  cursor: pointer;
+}
