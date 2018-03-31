@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Html exposing (Html, program, text, button)
+import Html exposing (Html, program, text, button, div)
 import Html.Attributes as Html exposing (class)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
 import Json.Decode as Decode
@@ -15,13 +15,19 @@ import Mouse exposing (Position)
 
 type alias Model =
     { isDrawing : Bool
-    , content : Maybe (SelectList (List Position))
+    , content : HistoryList
+    }
+
+
+type alias HistoryList =
+    { done : List (List Position)
+    , undone : List (List Position)
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model False Nothing, Cmd.none )
+    ( Model False (HistoryList [] []), Cmd.none )
 
 
 
@@ -39,20 +45,23 @@ view model =
     in
         Html.main_ []
             [ svg (List.append [ Svg.class "artboard" ] handlers) (renderLines model.content)
-            , button [ Html.class "eraser", onClick ClearArtboard ] [ text "Clear Artboard" ]
+            , div [ Html.class "controls" ]
+                [ button [ Html.class "eraser", onClick ClearArtboard ] [ text "Clear Artboard" ]
+                , button [ Html.class "undo", onClick Undo ] [ text "← Undo" ]
+                , button [ Html.class "redo", onClick Redo ] [ text "Redo →" ]
+                ]
             ]
 
 
-renderLines : Maybe (SelectList (List Position)) -> List (Html Msg)
-renderLines maybeLines =
-    case maybeLines of
-        Nothing ->
-            [ text "" ]
-
-        Just lines ->
-            getActiveLines lines
-                |> List.map toPoints
-                |> List.map toLine
+renderLines : HistoryList -> List (Html Msg)
+renderLines history =
+    if (List.length history.done) == 0 then
+        [ text "" ]
+    else
+        history.done
+            |> List.reverse
+            |> List.map toPoints
+            |> List.map toLine
 
 
 toLine : String -> Html Msg
@@ -92,6 +101,8 @@ type Msg
     | DrawAt Position
     | DrawEnd Position
     | ClearArtboard
+    | Undo
+    | Redo
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -115,35 +126,83 @@ updateHelp msg model =
             { model | isDrawing = False, content = drawLine model.content position }
 
         ClearArtboard ->
-            { model | content = Nothing }
+            { model | content = HistoryList [] [] }
+
+        Undo ->
+            { model | content = undo model.content }
+
+        Redo ->
+            { model | content = redo model.content }
 
 
-startLine : Maybe (SelectList (List Position)) -> Position -> Maybe (SelectList (List Position))
-startLine maybeLines position =
-    case maybeLines of
-        Nothing ->
-            Just (SelectList.singleton (List.singleton position))
-
-        Just lines ->
-            Just (SelectList.fromLists (getActiveLines lines) (List.singleton position) ([]))
-
-
-drawLine : Maybe (SelectList (List Position)) -> Position -> Maybe (SelectList (List Position))
-drawLine maybeLines position =
-    case maybeLines of
-        Nothing ->
-            Just (SelectList.singleton (List.singleton position))
-
-        Just lines ->
-            Just (SelectList.mapBy (addPosition position) lines)
-
-
-addPosition : Position -> SelectList.Position -> List Position -> List Position
-addPosition position item line =
-    if item == SelectList.Selected then
-        List.append line (List.singleton position)
+startLine : HistoryList -> Position -> HistoryList
+startLine history position =
+    if (List.length history.done) == 0 then
+        { history | done = (List.singleton (List.singleton position)) }
     else
-        line
+        { history | done = ((List.singleton position) :: history.done) }
+
+
+drawLine : HistoryList -> Position -> HistoryList
+drawLine history position =
+    case (List.head history.done) of
+        Nothing ->
+            HistoryList (List.singleton (List.singleton position)) []
+
+        Just line ->
+            let
+                rest =
+                    case (List.tail history.done) of
+                        Nothing ->
+                            []
+
+                        Just rest ->
+                            rest
+            in
+                { history | done = ((addPosition position line) :: rest) }
+
+
+addPosition : Position -> List Position -> List Position
+addPosition position line =
+    List.append line (List.singleton position)
+
+
+undo : HistoryList -> HistoryList
+undo history =
+    case (List.head history.done) of
+        Nothing ->
+            history
+
+        Just line ->
+            let
+                rest =
+                    case (List.tail history.done) of
+                        Nothing ->
+                            []
+
+                        Just lines ->
+                            lines
+            in
+                { history | done = rest, undone = (line :: history.undone) }
+
+
+redo : HistoryList -> HistoryList
+redo history =
+    case (List.head history.undone) of
+        Nothing ->
+            history
+
+        Just line ->
+            let
+                rest =
+                    case (List.tail history.undone) of
+                        Nothing ->
+                            []
+
+                        Just lines ->
+                            lines
+            in
+                { history | done = (line :: history.done), undone = rest }
 
 
 
@@ -152,7 +211,7 @@ addPosition position item line =
 
 getActiveLines : SelectList (List Position) -> List (List Position)
 getActiveLines lines =
-    List.append (SelectList.before lines) (List.singleton (SelectList.selected lines))
+    (SelectList.selected lines) :: (SelectList.before lines)
 
 
 
