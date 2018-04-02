@@ -152,12 +152,7 @@ drawLine history position =
         Just line ->
             let
                 rest =
-                    case (List.tail history.done) of
-                        Nothing ->
-                            []
-
-                        Just rest ->
-                            rest
+                    Maybe.withDefault [] (List.tail history.done)
             in
                 { history | done = ((addPosition position line) :: rest) }
 
@@ -176,12 +171,7 @@ undo history =
         Just line ->
             let
                 rest =
-                    case (List.tail history.done) of
-                        Nothing ->
-                            []
-
-                        Just lines ->
-                            lines
+                    Maybe.withDefault [] (List.tail history.done)
             in
                 { history | done = rest, undone = (line :: history.undone) }
 
@@ -195,12 +185,7 @@ redo history =
         Just line ->
             let
                 rest =
-                    case (List.tail history.undone) of
-                        Nothing ->
-                            []
-
-                        Just lines ->
-                            lines
+                    Maybe.withDefault [] (List.tail history.undone)
             in
                 { history | done = (line :: history.done), undone = rest }
 
