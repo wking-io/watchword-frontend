@@ -1,11 +1,13 @@
 module Main exposing (main)
 
-import Data.Card exposing (Card)
+import Data.Card as Card exposing (Card)
 import Request.Words exposing (getDeck, getDeckBy)
 import Html exposing (Html, program, text, div, p)
 import Html.Attributes as Html exposing (class)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
 import MatchList exposing (MatchList)
+import Time
+import Util
 
 
 -- MODEL --
@@ -42,6 +44,7 @@ view model =
 type Msg
     = ShuffleDeck (List Card)
     | SelectCard String
+    | CheckMatch
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -51,13 +54,17 @@ update msg model =
             ( Model (MatchList.fromList cards), Cmd.none )
 
         SelectCard id ->
-            ( { model | deck = MatchList.select (matchesId id) model.deck }, Cmd.none )
+            let
+                matchlist =
+                    MatchList.select (Card.equalsId id) model.deck
+            in
+                if MatchList.isComparable matchlist then
+                    ( { model | deck = matchlist }, Util.delay (Time.second * 2) CheckMatch )
+                else
+                    ( { model | deck = matchlist }, Cmd.none )
 
-
-matchesId : String -> Card -> Bool
-matchesId id word =
-    .id word
-        |> (==) id
+        CheckMatch ->
+            ( { model | deck = MatchList.compare Card.equals model.deck }, Cmd.none )
 
 
 

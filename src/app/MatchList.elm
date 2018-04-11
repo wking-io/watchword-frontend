@@ -1,6 +1,6 @@
 module MatchList
     exposing
-        ( MatchList
+        ( MatchList(Empty, One, Two)
         , unmatched
         , matched
         , selected
@@ -8,6 +8,7 @@ module MatchList
         , Position
         , mapBy
         , select
+        , isComparable
         , compare
         , append
         , prepend
@@ -178,6 +179,16 @@ selectHelp isSelectable list =
     list
         |> List.filter isSelectable
         |> List.head
+
+
+isComparable : MatchList a -> Bool
+isComparable matchlist =
+    case matchlist of
+        Two _ _ _ ->
+            True
+
+        _ ->
+            False
 
 
 compare : (a -> a -> Bool) -> MatchList a -> MatchList a
