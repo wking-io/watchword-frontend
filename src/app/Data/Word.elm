@@ -1,7 +1,6 @@
 module Data.Word exposing (Word, decoder, toString)
 
 import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline exposing (decode, required)
 
 
 type Word
@@ -10,8 +9,7 @@ type Word
 
 decoder : Decoder Word
 decoder =
-    decode Word
-        |> required "word" Decode.string
+    Decode.map Word Decode.string
 
 
 toString : Word -> String

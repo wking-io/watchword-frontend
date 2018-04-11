@@ -1,11 +1,10 @@
 module Main exposing (main)
 
 import Data.Card exposing (Card)
-import Request.Words exposing (getDeck)
+import Request.Words exposing (getDeck, getDeckBy)
 import Html exposing (Html, program, text, div, p)
 import Html.Attributes as Html exposing (class)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
-import Json.Decode as Decode
 import MatchList exposing (MatchList)
 
 
@@ -18,7 +17,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (MatchList.fromList []), getDeck ShuffleDeck )
+    ( Model (MatchList.fromList []), getDeckBy "un" ShuffleDeck )
 
 
 
@@ -29,8 +28,10 @@ view : Model -> Html Msg
 view model =
     div []
         (model.deck
-            |> MatchList.map (\the -> p [] [ text the.word ])
+            |> MatchList.map (\the -> ( the.order, p [ onClick (SelectCard the.id) ] [ text the.word ] ))
             |> MatchList.toList
+            |> List.sortBy Tuple.first
+            |> List.map Tuple.second
         )
 
 
@@ -40,18 +41,23 @@ view model =
 
 type Msg
     = ShuffleDeck (List Card)
+    | SelectCard String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( updateHelp msg model, Cmd.none )
-
-
-updateHelp : Msg -> Model -> Model
-updateHelp msg model =
     case msg of
         ShuffleDeck cards ->
-            Model (MatchList.fromList cards)
+            ( Model (MatchList.fromList cards), Cmd.none )
+
+        SelectCard id ->
+            ( { model | deck = MatchList.select (matchesId id) model.deck }, Cmd.none )
+
+
+matchesId : String -> Card -> Bool
+matchesId id word =
+    .id word
+        |> (==) id
 
 
 

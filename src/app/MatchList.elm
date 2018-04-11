@@ -152,16 +152,22 @@ select isSelectable matchlist =
                         One leftovers selection matched
 
         One unmatched a matched ->
-            case selectHelp isSelectable unmatched of
+            case selectHelp isSelectable (a :: unmatched) of
                 Nothing ->
                     matchlist
 
                 Just selection ->
                     let
+                        isCurrent =
+                            a == selection
+
                         leftovers =
                             List.filter (\a -> a /= selection) unmatched
                     in
-                        Two leftovers ( a, selection ) matched
+                        if isCurrent then
+                            Empty (a :: unmatched) matched
+                        else
+                            Two leftovers ( a, selection ) matched
 
         Two _ _ _ ->
             matchlist
