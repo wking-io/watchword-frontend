@@ -11,7 +11,7 @@ type Image
 
 imageUrl : String
 imageUrl =
-    "assets/images"
+    "assets/images/"
 
 
 
