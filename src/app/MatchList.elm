@@ -1,12 +1,14 @@
 module MatchList
     exposing
         ( MatchList(Empty, One, Two)
+        , Position(Unmatched, SelectSolo, SelectOne, SelectTwo, Matched)
         , unmatched
         , matched
         , selected
         , map
         , Position
         , mapBy
+        , ifTwo
         , select
         , isComparable
         , compare
@@ -109,7 +111,9 @@ map transform matchlist =
 
 type Position
     = Unmatched
-    | Selected
+    | SelectSolo
+    | SelectOne
+    | SelectTwo
     | Matched
 
 
@@ -124,17 +128,33 @@ mapBy transform matchlist =
         One unmatched selected matched ->
             One
                 (List.map (transform Unmatched) unmatched)
-                (transform Selected selected)
+                (transform SelectSolo selected)
                 (List.map (transform Matched) matched)
 
         Two unmatched selected matched ->
             Two
                 (List.map (transform Unmatched) unmatched)
                 (selected
-                    |> Tuple.mapFirst (transform Selected)
-                    |> Tuple.mapSecond (transform Selected)
+                    |> Tuple.mapFirst (transform SelectOne)
+                    |> Tuple.mapSecond (transform SelectTwo)
                 )
                 (List.map (transform Matched) matched)
+
+
+ifTwo : (a -> a) -> MatchList a -> MatchList a
+ifTwo transform matchlist =
+    case matchlist of
+        Two unmatched selected matched ->
+            Two
+                (List.map transform unmatched)
+                (selected
+                    |> Tuple.mapFirst transform
+                    |> Tuple.mapSecond transform
+                )
+                (List.map transform matched)
+
+        _ ->
+            matchlist
 
 
 select : (a -> Bool) -> MatchList a -> MatchList a
