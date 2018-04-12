@@ -3,3 +3,4 @@ elm-stuff
 dist
 build
 .DS_Store
+yarn-error.log
