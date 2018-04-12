@@ -6,6 +6,7 @@ import Dict exposing (Dict)
 import Json
 import Json.Decode as Decode exposing (decodeString, field)
 import Random exposing (Generator)
+import Random.List exposing (shuffle)
 
 
 getBase : Result String (Dict String (List Word))
@@ -76,6 +77,6 @@ shuffleDeck words =
         count =
             List.length words
     in
-        Random.int 0 100
-            |> Random.list count
+        List.range 0 count
+            |> shuffle
             |> Random.map (List.map2 Card.fromWord words)
