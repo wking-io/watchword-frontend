@@ -2,12 +2,13 @@ module Main exposing (main)
 
 import Data.Card as Card exposing (Card)
 import Request.Words exposing (getDeck, getDeckBy)
-import Html exposing (Html, program, text, div, p)
-import Html.Attributes as Html exposing (class)
+import Html exposing (Html, program, text, div, li, img)
+import Html.Attributes exposing (class, classList)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
-import MatchList exposing (MatchList)
+import MatchList exposing (MatchList, Position(..))
 import Time
-import Util
+import Util exposing ((=>))
+import View.Asset exposing (src, cardBack)
 
 
 -- MODEL --
@@ -30,11 +31,32 @@ view : Model -> Html Msg
 view model =
     div []
         (model.deck
-            |> MatchList.map (\the -> ( the.order, p [ onClick (SelectCard the.id) ] [ text the.word ] ))
+            |> MatchList.mapBy viewCard
             |> MatchList.toList
             |> List.sortBy Tuple.first
             |> List.map Tuple.second
         )
+
+
+viewCard : Position -> Card -> ( Int, Html Msg )
+viewCard position card =
+    ( card.order
+    , li
+        [ class "card__container"
+        , onClick (SelectCard card.id)
+        ]
+        [ div
+            [ classList
+                [ "card" => True
+                , "card—flipping" => position == SelectSolo || position == SelectTwo
+                , "card—flipped" => position == SelectOne || position == Matched
+                ]
+            ]
+            [ img [ class "card__back", src cardBack ] []
+            , div [ class "card__front" ] [ text card.word ]
+            ]
+        ]
+    )
 
 
 
