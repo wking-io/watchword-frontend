@@ -1,27 +1,102 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 html,
 body {
-  position: fixed;
   margin: 0;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-}
-.artboard {
-  width: 100vw;
-  height: 100vh;
+  padding: 0;
 }
 
-.controls {
+.container {
+  max-width: 900px;
+  width: 90vw;
+  margin: 0 auto;
+}
+
+.deck {
+  list-style-type: none;
+  padding: 0;
   display: flex;
-  position: fixed;
-  top: 24px;
-  left: 24px;
-  z-index: 999;
+  flex-wrap: wrap;
+  margin: 0 -10px;
 }
 
-.eraser,
-.undo,
-.redo {
+.card__container {
+  padding: 0;
   cursor: pointer;
+  height: calc((((900px / 4) - 6px) / 3) * 4);
+  perspective: 600;
+  position: relative;
+  margin: 0 10px 20px;
+  width: calc(25% - 20px);
+}
+
+.card {
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: all 0.5s ease-in-out;
+  width: 100%;
+
+  &--flipping {
+    transform: rotateY(180deg);
+  }
+
+  &--flipped {
+    transform: rotateY(180deg);
+    transition: none;
+  }
+
+  &__side {
+    backface-visibility: hidden;
+    border-radius: 4px;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+
+    &--back {
+      object-fit: cover;
+    }
+
+    &--front {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 40px;
+      border: 3px solid #294e85;
+      font-weight: bold;
+      color: #294e85;
+      line-height: 150px;
+      text-align: center;
+      transform: rotateY(180deg);
+    }
+  }
+
+  &__word {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    line-height: 1;
+    margin: 0;
+  }
+}
+
+.congrats {
+  position: fixed;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 50vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem 4rem;
+  text-align: center;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: bold;
+  font-size: 80px;
+  color: #294e85;
 }

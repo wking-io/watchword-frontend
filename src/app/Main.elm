@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import Data.Card as Card exposing (Card)
 import Request.Words exposing (getDeck, getDeckBy)
-import Html exposing (Html, program, text, div, li, img)
+import Html exposing (Html, program, text, div, ul, li, img, p)
 import Html.Attributes exposing (class, classList)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
 import MatchList exposing (MatchList, Position(..))
@@ -20,7 +20,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (MatchList.fromList []), getDeckBy "un" ShuffleDeck )
+    ( Model (MatchList.fromList []), getDeckBy "at" ShuffleDeck )
 
 
 
@@ -29,13 +29,24 @@ init =
 
 view : Model -> Html Msg
 view model =
-    div []
-        (model.deck
-            |> MatchList.mapBy viewCard
-            |> MatchList.toList
-            |> List.sortBy Tuple.first
-            |> List.map Tuple.second
-        )
+    div [ class "container" ]
+        [ ul [ class "deck" ]
+            (model.deck
+                |> MatchList.mapBy viewCard
+                |> MatchList.toList
+                |> List.sortBy Tuple.first
+                |> List.map Tuple.second
+            )
+        , viewCongrats (MatchList.isComplete model.deck)
+        ]
+
+
+viewCongrats : Bool -> Html Msg
+viewCongrats isComplete =
+    if isComplete then
+        div [ class "congrats" ] [ text "Congrats!" ]
+    else
+        text ""
 
 
 viewCard : Position -> Card -> ( Int, Html Msg )
@@ -48,12 +59,14 @@ viewCard position card =
         [ div
             [ classList
                 [ "card" => True
-                , "card—flipping" => position == SelectSolo || position == SelectTwo
-                , "card—flipped" => position == SelectOne || position == Matched
+                , "card--flipping" => position == SelectSolo || position == SelectTwo
+                , "card--flipped" => position == SelectOne || position == Matched
                 ]
             ]
-            [ img [ class "card__back", src cardBack ] []
-            , div [ class "card__front" ] [ text card.word ]
+            [ img [ class "card__side card__side--back", src cardBack ] []
+            , div [ class "card__side card__side--front" ]
+                [ p [ class "card__word" ] [ text card.word ]
+                ]
             ]
         ]
     )
@@ -81,7 +94,7 @@ update msg model =
                     MatchList.select (Card.equalsId id) model.deck
             in
                 if MatchList.isComparable matchlist then
-                    ( { model | deck = matchlist }, Util.delay (Time.second * 2) CheckMatch )
+                    ( { model | deck = matchlist }, Util.delay (Time.second * 1) CheckMatch )
                 else
                     ( { model | deck = matchlist }, Cmd.none )
 

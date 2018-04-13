@@ -8,9 +8,9 @@ module MatchList
         , map
         , Position
         , mapBy
-        , ifTwo
         , select
         , isComparable
+        , isComplete
         , compare
         , append
         , prepend
@@ -44,6 +44,7 @@ type MatchList a
     = Empty (List a) (List a)
     | One (List a) a (List a)
     | Two (List a) ( a, a ) (List a)
+    | Complete (List a)
 
 
 unmatched : MatchList a -> List a
@@ -58,6 +59,9 @@ unmatched matchlist =
         Two unmatched ( a, b ) _ ->
             b :: a :: unmatched
 
+        Complete _ ->
+            []
+
 
 matched : MatchList a -> List a
 matched matchlist =
@@ -69,6 +73,9 @@ matched matchlist =
             matched
 
         Two _ _ matched ->
+            matched
+
+        Complete matched ->
             matched
 
 
@@ -83,6 +90,9 @@ selected matchlist =
 
         Two _ ( a, b ) _ ->
             [ a, b ]
+
+        Complete _ ->
+            []
 
 
 map : (a -> b) -> MatchList a -> MatchList b
@@ -107,6 +117,9 @@ map transform matchlist =
                     |> Tuple.mapSecond transform
                 )
                 (List.map transform matched)
+
+        Complete matched ->
+            Complete (List.map transform matched)
 
 
 type Position
@@ -140,21 +153,9 @@ mapBy transform matchlist =
                 )
                 (List.map (transform Matched) matched)
 
-
-ifTwo : (a -> a) -> MatchList a -> MatchList a
-ifTwo transform matchlist =
-    case matchlist of
-        Two unmatched selected matched ->
-            Two
-                (List.map transform unmatched)
-                (selected
-                    |> Tuple.mapFirst transform
-                    |> Tuple.mapSecond transform
-                )
-                (List.map transform matched)
-
-        _ ->
-            matchlist
+        Complete matched ->
+            Complete
+                (List.map (transform Matched) matched)
 
 
 select : (a -> Bool) -> MatchList a -> MatchList a
@@ -193,6 +194,9 @@ select isSelectable matchlist =
         Two _ _ _ ->
             matchlist
 
+        Complete _ ->
+            matchlist
+
 
 selectHelp : (a -> Bool) -> List a -> Maybe a
 selectHelp isSelectable list =
@@ -211,12 +215,25 @@ isComparable matchlist =
             False
 
 
+isComplete : MatchList a -> Bool
+isComplete matchlist =
+    case matchlist of
+        Complete _ ->
+            True
+
+        _ ->
+            False
+
+
 compare : (a -> a -> Bool) -> MatchList a -> MatchList a
 compare isComparable matchlist =
     case matchlist of
         Two unmatched ( a, b ) matched ->
             if isComparable a b then
-                Empty unmatched (a :: b :: matched)
+                if List.isEmpty unmatched then
+                    Complete (a :: b :: matched)
+                else
+                    Empty unmatched (a :: b :: matched)
             else
                 Empty (a :: b :: unmatched) matched
 
@@ -246,6 +263,9 @@ append a matchlist =
         Two unmatched selected matched ->
             Two (List.append unmatched [ a ]) selected matched
 
+        Complete matched ->
+            Empty [ a ] matched
+
 
 {-| Returns a `MatchList`.
 
@@ -268,6 +288,9 @@ prepend a matchlist =
 
         Two unmatched selected matched ->
             Two (a :: unmatched) selected matched
+
+        Complete matched ->
+            Empty [ a ] matched
 
 
 {-| Returns a `MatchList`.
@@ -306,3 +329,6 @@ toList matchlist =
 
         Two unmatched ( a, b ) matched ->
             unmatched ++ a :: b :: matched
+
+        Complete matched ->
+            matched
