@@ -2,6 +2,7 @@ module Request.Words exposing (get, getBy, getDeck, getDeckBy)
 
 import Data.Word as Word exposing (Word)
 import Data.Card as Card exposing (Card)
+import Data.Group as Group exposing (Group)
 import Dict exposing (Dict)
 import Json
 import Json.Decode as Decode exposing (decodeString, field)
@@ -43,6 +44,21 @@ getBy group =
                     Debug.log "Error: " err
             in
                 Nothing
+
+
+getGroup : List Group
+getGroup =
+    case getBase of
+        Ok words ->
+            words
+                |> Group.fromDict
+
+        Err err ->
+            let
+                _ =
+                    Debug.log "Error:" err
+            in
+                []
 
 
 getDeck : (List Card -> msg) -> Cmd msg
