@@ -3,6 +3,8 @@ module Page.MemorySetup exposing (Model, Msg, init, update, view)
 import Data.Word as Word exposing (Word)
 import Data.Group as Group exposing (Group)
 import Data.Memory as Memory
+import Data.Memory.Option as Option exposing (Option)
+import Data.Memory.Size as Size exposing (Size)
 import Dict exposing (Dict)
 import Html exposing (Html, program, text, h2, div, ul, li, p, button, a)
 import Html.Attributes exposing (class, classList, disabled)
@@ -13,23 +15,12 @@ import Route
 -- TYPES --
 
 
-type SetupProgress
+type Step
     = StepOne
     | StepTwo Option
     | StepThree Option Size
-    | StepFour Option Size (Maybe (List Group))
-
-
-type Size
-    = Small
-    | Medium
-    | Large
-    | ExtraLarge
-
-
-type Option
-    = RandomOption
-    | PickOption
+    | StepFourGroup Option Size (Maybe (List Group))
+    | StepFourWord Option Size (Maybe (List Word))
 
 
 
@@ -38,7 +29,7 @@ type Option
 
 type alias Model =
     { options : Dict String (List Word)
-    , setup : SetupProgress
+    , step : Step
     }
 
 
@@ -60,18 +51,18 @@ view model =
         StepTwo _ ->
             viewSizes
 
-        StepThree option _ ->
+        StepThree option size ->
             case option of
-                RandomOption ->
+                Random ->
                     (viewGroups (Group.fromDict model.options)) ++ (viewActions True)
 
-                PickOption ->
+                Pick ->
                     (viewGroups model.options) ++ (viewActions True)
 
-        StepFour option _ _ ->
+        StepFourGroup option size maybeSelection ->
             case option of
                 RandomOption ->
-                    (viewGroups (Group.fromDict model.options)) ++ (viewActions False)
+                    (viewGroups (Group.fromDict model.options) model.step) ++ (viewActions False)
 
                 PickOption ->
                     (viewGroups model.options) ++ (viewActions False)
@@ -102,7 +93,7 @@ viewGroups groups =
 
 viewGroup : Group -> Html Msg
 viewGroup group =
-    li [] [ text (Group.toString group) ]
+    li [ onClick ] [ text (Group.toString group) ]
 
 
 viewWords : List ( String, List Word ) -> Html Msg
@@ -146,7 +137,31 @@ viewPlay canPlay slug =
 
 type Msg
     = SelectOption Option
-    | SelectSize Size
-    | Select String
+    | SelectSize Option Size
+    | Select Option Size String
     | ClearSelection
     | GetUrl
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        SelectOption option ->
+            ( { model | setup = StepTwo option }, Cmd.none )
+
+        SelectSize option size ->
+            ( { model | setup = StepThree option size }, Cmd.none )
+
+        Select option size selection ->
+            case Option of
+                Random ->
+                    ( { model | setup = StepFourGroup option size (Group.fromString selection) }, Cmd.none )
+
+                Pick ->
+                    ( { model | setup = StepFourGroup option size (Word.fromString selection) }, Cmd.none )
+
+        SelectOption option ->
+            ( { model | setup = StepTwo option }, Cmd.none )
+
+        SelectOption option ->
+            ( { model | setup = StepTwo option }, Cmd.none )
