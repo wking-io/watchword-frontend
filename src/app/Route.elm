@@ -1,4 +1,4 @@
-module Route exposing (Route(..), fromLocation, href, modifyUrl)
+module Route exposing (Route(..), fromGame, fromLocation, href, modifyUrl)
 
 import Data.Memory.Option as Option exposing (Option)
 import Data.Memory.Size as Size exposing (Size)
@@ -82,3 +82,13 @@ fromLocation location =
         Just Root
     else
         parseHash route location
+
+
+fromGame : String -> Route
+fromGame id =
+    case id of
+        "memory" ->
+            MemorySetup
+
+        _ ->
+            Home
