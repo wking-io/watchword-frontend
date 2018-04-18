@@ -1,4 +1,4 @@
-module Data.Memory.Size exposing (Size(..), parser, fromString, toString)
+module Data.Memory.Size exposing (Size(..), parser, equals, fromString, toString)
 
 import UrlParser
 
@@ -43,3 +43,19 @@ toString size =
 
         ExtraLarge ->
             "extralarge"
+
+
+equals : Int -> Size -> Bool
+equals int size =
+    case size of
+        Small ->
+            int == 3
+
+        Medium ->
+            int == 4
+
+        Large ->
+            int == 5
+
+        ExtraLarge ->
+            int == 6

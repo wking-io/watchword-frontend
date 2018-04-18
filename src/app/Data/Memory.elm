@@ -12,7 +12,7 @@ toString : Slug -> String
 toString (Slug option size maybeSelection) =
     case maybeSelection of
         Just selection ->
-            (Option.toString option) ++ "/" ++ (Size.toString size) ++ "?selection=full"
+            (Option.toString option) ++ "/" ++ (Size.toString size) ++ "?selection=" ++ (String.join "," selection)
 
         Nothing ->
             (Option.toString option) ++ "/" ++ (Size.toString size) ++ "?selection=empty"

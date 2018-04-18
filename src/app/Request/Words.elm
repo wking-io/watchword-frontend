@@ -12,7 +12,7 @@ import Random.List exposing (shuffle)
 
 getBase : Result String (Dict String (List Word))
 getBase =
-    decodeString (Decode.dict (Decode.list Word.decoder)) Json.data
+    decodeString (Decode.dict (Decode.list Word.decoder)) Json.words
 
 
 get : List Word
