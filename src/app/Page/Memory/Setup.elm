@@ -9,6 +9,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, program, text, h2, div, ul, li, p, button, a)
 import Html.Attributes exposing (class, classList, disabled)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
+import Page.Errored exposing (PageLoadError, pageLoadError)
+import Request.Words as Words
 import Route
 
 
@@ -136,9 +138,14 @@ type alias Model =
     }
 
 
-init : Model
+init : Result PageLoadError Model
 init =
-    Model (Dict.fromList [ ( "group", [ (Word.fromString "word") ] ) ]) StepOne False
+    let
+        handleLoadError _ =
+            pageLoadError "Match & Memory Setup is currently unavailable."
+    in
+        Result.map3 Model Words.getBase (Ok StepOne) (Ok False)
+            |> Result.mapError handleLoadError
 
 
 

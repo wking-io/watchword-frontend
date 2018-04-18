@@ -3,8 +3,7 @@ module Page.Home exposing (Model, Msg, init, update, view)
 import Data.Game as Game exposing (Game)
 import Request.Games as Games
 import Html exposing (Html, program, text, div, ul, li, img, p, a)
-import Html.Attributes exposing (class, classList)
-import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
+import Page.Errored exposing (PageLoadError, pageLoadError)
 import Route
 
 
@@ -15,18 +14,14 @@ type alias Model =
     { games : List Game }
 
 
-init : ( Model, Cmd Msg )
+init : Result PageLoadError Model
 init =
-    case Games.get of
-        Ok games ->
-            ( Model games, Cmd.none )
-
-        Err err ->
-            let
-                _ =
-                    Debug.log "Error:" err
-            in
-                ( Model [], Cmd.none )
+    let
+        handleLoadError _ =
+            pageLoadError "Homepage is currently unavailable."
+    in
+        Result.map Model Games.get
+            |> Result.mapError handleLoadError
 
 
 

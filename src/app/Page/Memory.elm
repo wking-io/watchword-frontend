@@ -1,11 +1,15 @@
 module Page.Memory exposing (Model, Msg, init, update, view)
 
 import Data.Card as Card exposing (Card)
+import Data.Memory as Memory
+import Data.Memory.Option as Option exposing (Option)
 import Request.Words exposing (getDeck, getDeckBy)
 import Html exposing (Html, program, text, div, ul, li, img, p)
 import Html.Attributes exposing (class, classList)
 import Html.Events exposing (on, onMouseDown, onMouseUp, onClick)
 import MatchList exposing (MatchList, Position(..))
+import Page.Errored as Errored exposing (PageLoadError, pageLoadError)
+import Random exposing (Generator)
 import Time
 import Util exposing ((=>))
 import View.Asset exposing (src, cardBack)
@@ -18,9 +22,28 @@ type alias Model =
     { deck : MatchList Card }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( Model (MatchList.fromList []), getDeckBy "at" ShuffleDeck )
+init : Memory.Slug -> Result PageLoadError (Generator Model)
+init (Memory.Slug option size maybeSelection) =
+    let
+        handleLoadError =
+            pageLoadError "Match & Memory game is currently unavailable."
+
+        matchlist selection =
+            case option of
+                Option.Random ->
+                    getDeckBy selection
+                        |> Random.map (MatchList.fromList >> Model)
+
+                Option.Pick ->
+                    getDeck
+                        |> Random.map (MatchList.fromList >> Model)
+    in
+        case maybeSelection of
+            Just selection ->
+                Ok (matchlist selection)
+
+            Nothing ->
+                Err handleLoadError
 
 
 

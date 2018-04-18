@@ -1,4 +1,4 @@
-module Request.Words exposing (get, getBy, getDeck, getDeckBy)
+module Request.Words exposing (getBase, get, getBy, getDeck, getDeckBy)
 
 import Data.Word as Word exposing (Word)
 import Data.Card as Card exposing (Card)
@@ -31,19 +31,21 @@ get =
                 []
 
 
-getBy : String -> Maybe (List Word)
-getBy group =
+getBy : List String -> List Word
+getBy groups =
     case getBase of
         Ok words ->
-            words
-                |> Dict.get group
+            groups
+                |> List.map (\group -> Dict.get group words)
+                |> List.map (Maybe.withDefault [])
+                |> List.concat
 
         Err err ->
             let
                 _ =
                     Debug.log "Error: " err
             in
-                Nothing
+                []
 
 
 getGroup : List Group
@@ -61,21 +63,18 @@ getGroup =
                 []
 
 
-getDeck : (List Card -> msg) -> Cmd msg
-getDeck msg =
+getDeck : Generator (List Card)
+getDeck =
     get
         |> duplicate
         |> shuffleDeck
-        |> Random.generate msg
 
 
-getDeckBy : String -> (List Card -> msg) -> Cmd msg
-getDeckBy group msg =
+getDeckBy : List String -> Generator (List Card)
+getDeckBy group =
     getBy group
-        |> Maybe.withDefault []
         |> duplicate
         |> shuffleDeck
-        |> Random.generate msg
 
 
 
