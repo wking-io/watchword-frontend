@@ -1,4 +1,4 @@
-module Route exposing (Route(..), fromGame, fromLocation, href, modifyUrl)
+module Route exposing (Route(..), fromLocation, href, modifyUrl)
 
 import Data.Memory.Option as Option exposing (Option)
 import Data.Memory.Size as Size exposing (Size)
@@ -13,17 +13,15 @@ import UrlParser as Url exposing ((</>), (<?>), Parser, QueryParser, oneOf, pars
 
 
 type Route
-    = Home
+    = Admin
     | Root
-    | MemorySetup
     | MemoryGame Memory.Slug
 
 
 route : Parser (Route -> a) a
 route =
     oneOf
-        [ Url.map Home (s "")
-        , Url.map MemorySetup (s "memory" </> s "setup")
+        [ Url.map Admin (s "")
         , Url.map Memory.Slug (s "memory" </> s "game" </> Option.parser </> Size.parser <?> listParam "selection")
             |> Url.map MemoryGame
         ]
@@ -47,14 +45,11 @@ routeToString page =
     let
         pieces =
             case page of
-                Home ->
+                Admin ->
                     []
 
                 Root ->
                     []
-
-                MemorySetup ->
-                    [ "memory", "setup" ]
 
                 MemoryGame slug ->
                     [ "memory", "game", (Memory.toString slug) ]
@@ -82,13 +77,3 @@ fromLocation location =
         Just Root
     else
         parseHash route location
-
-
-fromGame : String -> Route
-fromGame id =
-    case id of
-        "memory" ->
-            MemorySetup
-
-        _ ->
-            Home

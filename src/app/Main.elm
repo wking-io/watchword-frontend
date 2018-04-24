@@ -1,15 +1,13 @@
 module Main exposing (main)
 
 import Html exposing (Html, program, text, div, ul, li, img, p)
-import Html.Attributes exposing (class, classList)
-import Page.Home as Home
-import Page.Memory as Memory
-import Page.Memory.Setup as MemorySetup
+import Page.Admin as Admin
+import Page.Memory.Game as MemoryGame
 import Page.NotFound as NotFound
 import Page.Errored as Errored exposing (PageLoadError)
 import Navigation exposing (Location)
 import Route exposing (Route)
-import Util exposing ((=>))
+import Util.Infix exposing ((=>))
 import Random exposing (Generator)
 import View.Page as Page
 
@@ -18,9 +16,8 @@ type Page
     = Blank
     | NotFound
     | Errored PageLoadError
-    | Home Home.Model
-    | Memory Memory.Model
-    | MemorySetup MemorySetup.Model
+    | Admin Admin.Model
+    | MemoryGame MemoryGame.Model
 
 
 type PageState
@@ -91,20 +88,15 @@ viewPage isLoading page =
                 Errored.view subModel
                     |> frame
 
-            Home subModel ->
-                Home.view subModel
+            Admin subModel ->
+                Admin.view subModel
                     |> frame
-                    |> Html.map HomeMsg
+                    |> Html.map AdminMsg
 
-            MemorySetup subModel ->
-                MemorySetup.view subModel
+            MemoryGame subModel ->
+                MemoryGame.view subModel
                     |> frame
-                    |> Html.map MemorySetupMsg
-
-            Memory subModel ->
-                Memory.view subModel
-                    |> frame
-                    |> Html.map MemoryMsg
+                    |> Html.map MemoryGameMsg
 
 
 
@@ -113,12 +105,10 @@ viewPage isLoading page =
 
 type Msg
     = SetRoute (Maybe Route)
-    | HomeLoaded (Result PageLoadError Home.Model)
-    | MemorySetupLoaded (Result PageLoadError MemorySetup.Model)
-    | MemoryGameLoaded Memory.Model
-    | HomeMsg Home.Msg
-    | MemorySetupMsg MemorySetup.Msg
-    | MemoryMsg Memory.Msg
+    | AdminLoaded (Result PageLoadError Admin.Model)
+    | MemoryGameLoaded MemoryGame.Model
+    | AdminMsg Admin.Msg
+    | MemoryGameMsg MemoryGame.Msg
 
 
 setRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -148,17 +138,14 @@ setRoute maybeRoute model =
             Nothing ->
                 { model | pageState = Loaded NotFound } => Cmd.none
 
-            Just Route.Home ->
-                isError Home Home.init
+            Just Route.Admin ->
+                isError Admin Admin.init
 
             Just Route.Root ->
-                model => Route.modifyUrl Route.Home
-
-            Just Route.MemorySetup ->
-                isError MemorySetup MemorySetup.init
+                model => Route.modifyUrl Route.Admin
 
             Just (Route.MemoryGame slug) ->
-                generate MemoryGameLoaded (Memory.init slug)
+                generate MemoryGameLoaded (MemoryGame.init slug)
 
 
 pageErrored : Model -> String -> ( Model, Cmd msg )
@@ -192,29 +179,20 @@ updatePage page msg model =
             ( SetRoute route, _ ) ->
                 setRoute route model
 
-            ( HomeLoaded (Ok subModel), _ ) ->
-                { model | pageState = Loaded (Home subModel) } => Cmd.none
+            ( AdminLoaded (Ok subModel), _ ) ->
+                { model | pageState = Loaded (Admin subModel) } => Cmd.none
 
-            ( HomeLoaded (Err error), _ ) ->
-                { model | pageState = Loaded (Errored error) } => Cmd.none
-
-            ( MemorySetupLoaded (Ok subModel), _ ) ->
-                { model | pageState = Loaded (MemorySetup subModel) } => Cmd.none
-
-            ( MemorySetupLoaded (Err error), _ ) ->
+            ( AdminLoaded (Err error), _ ) ->
                 { model | pageState = Loaded (Errored error) } => Cmd.none
 
             ( MemoryGameLoaded subModel, _ ) ->
-                { model | pageState = Loaded (Memory subModel) } => Cmd.none
+                { model | pageState = Loaded (MemoryGame subModel) } => Cmd.none
 
-            ( HomeMsg subMsg, Home subModel ) ->
-                toPage Home HomeMsg Home.update subMsg subModel
+            ( AdminMsg subMsg, Admin subModel ) ->
+                toPage Admin AdminMsg Admin.update subMsg subModel
 
-            ( MemoryMsg subMsg, Memory subModel ) ->
-                toPage Memory MemoryMsg Memory.update subMsg subModel
-
-            ( MemorySetupMsg subMsg, MemorySetup subModel ) ->
-                toPage MemorySetup MemorySetupMsg MemorySetup.update subMsg subModel
+            ( MemoryGameMsg subMsg, MemoryGame subModel ) ->
+                toPage MemoryGame MemoryGameMsg MemoryGame.update subMsg subModel
 
             ( _, NotFound ) ->
                 -- Disregard incoming messages when we're on the

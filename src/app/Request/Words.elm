@@ -1,97 +1,44 @@
-module Request.Words exposing (getBase, get, getBy, getDeck, getDeckBy)
+module Request.Words exposing (get, getBy, getDeck, getDeckBy)
 
-import Data.Word as Word exposing (Word)
+import Data.Words as Words exposing (Words, Word)
 import Data.Card as Card exposing (Card)
-import Data.Group as Group exposing (Group)
-import Dict exposing (Dict)
 import Json
 import Json.Decode as Decode exposing (decodeString, field)
 import Random exposing (Generator)
 import Random.List exposing (shuffle)
 
 
-getBase : Result String (Dict String (List Word))
-getBase =
-    decodeString (Decode.dict (Decode.list Word.decoder)) Json.words
-
-
-get : List Word
+get : Result String Words
 get =
-    case getBase of
-        Ok words ->
-            words
-                |> Dict.values
-                |> List.concat
-
-        Err err ->
-            let
-                _ =
-                    Debug.log "Error:" err
-            in
-                []
+    decodeString Words.decoder Json.words
 
 
-getBy : List String -> List Word
-getBy groups =
-    case getBase of
-        Ok words ->
-            groups
-                |> List.map (\group -> Dict.get group words)
-                |> List.map (Maybe.withDefault [])
-                |> List.concat
-
-        Err err ->
-            let
-                _ =
-                    Debug.log "Error: " err
-            in
-                []
+getBy : (Words -> Words) -> Result String Words
+getBy pred =
+    get
+        |> Result.map pred
 
 
-getGroup : List Group
-getGroup =
-    case getBase of
-        Ok words ->
-            words
-                |> Group.fromDict
-
-        Err err ->
-            let
-                _ =
-                    Debug.log "Error:" err
-            in
-                []
-
-
-getDeck : Generator (List Card)
+getDeck : Result String (Generator (List Card))
 getDeck =
     get
-        |> duplicate
-        |> shuffleDeck
+        |> Result.map Words.duplicate
+        |> Result.map shuffleDeck
 
 
-getDeckBy : List String -> Generator (List Card)
-getDeckBy group =
-    getBy group
-        |> duplicate
-        |> shuffleDeck
+getDeckBy : (Words -> Words) -> Result String (Generator (List Card))
+getDeckBy pred =
+    getBy pred
+        |> Result.map Words.duplicate
+        |> Result.map shuffleDeck
 
 
 
 -- HELPERS --
 
 
-duplicate : List a -> List a
-duplicate list =
-    list ++ list
-
-
-shuffleDeck : List Word -> Generator (List Card)
+shuffleDeck : Words -> Generator (List Card)
 shuffleDeck words =
-    let
-        count =
-            List.length words
-    in
-        List.range 0 count
-            |> shuffle
-            |> Random.map (List.map2 Card.fromWord words)
+    List.range 0 (Words.length words)
+        |> shuffle
+        |> Random.map (List.map2 Card.fromWord (Words.toList words))

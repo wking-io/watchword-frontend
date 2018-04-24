@@ -1,6 +1,5 @@
-module View.Asset exposing (src, cardBack, sketchWords)
+module View.Asset exposing (src, cardBack, summary)
 
-import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
 
@@ -23,11 +22,9 @@ cardBack =
     Image (imageUrl ++ "cardback.jpg")
 
 
-sketchWords : Dict String Image
-sketchWords =
-    Dict.fromList
-        [ ( "bat", Image (imageUrl ++ "bat.jpg") )
-        ]
+summary : String -> Image
+summary filename =
+    Image (imageUrl ++ "summary/" ++ filename ++ ".jpg")
 
 
 

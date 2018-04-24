@@ -1,10 +1,17 @@
-module Request.Games exposing (get)
+module Request.Games exposing (get, getSelectList)
 
-import Data.Game as Game exposing (Game)
+import Data.Games as Games exposing (Games, Game)
 import Json
 import Json.Decode as Decode exposing (decodeString, field)
+import SelectList exposing (SelectList, fromLists)
 
 
-get : Result String (List Game)
+get : Result String Games
 get =
-    decodeString (field "games" (Decode.list Game.decoder)) Json.games
+    decodeString Games.decoder Json.games
+
+
+getSelectList : Result String (SelectList Game)
+getSelectList =
+    get
+        |> Result.map Games.toSelectList

@@ -1,6 +1,6 @@
 module Data.Card exposing (Card, fromWord, equals, equalsId)
 
-import Data.Word as Word exposing (Word)
+import Data.Words as Words exposing (Words, Word)
 
 
 type alias Card =
@@ -11,8 +11,8 @@ type alias Card =
 
 
 fromWord : Word -> Int -> Card
-fromWord word int =
-    Card (Word.toString word) int ((Word.toString word) ++ "-" ++ (toString int))
+fromWord { name } int =
+    Card name int (name ++ "-" ++ (toString int))
 
 
 equals : Card -> Card -> Bool
