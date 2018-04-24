@@ -1,4 +1,4 @@
-module View.Asset exposing (src, cardBack, summary)
+module View.Asset exposing (src, cardBack, contact, info, logo, summary)
 
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
@@ -15,6 +15,21 @@ imageUrl =
 
 
 -- IMAGES --
+
+
+logo : Image
+logo =
+    Image (imageUrl ++ "logo.png")
+
+
+info : Image
+info =
+    Image (imageUrl ++ "info.png")
+
+
+contact : Image
+contact =
+    Image (imageUrl ++ "contact.png")
 
 
 cardBack : Image

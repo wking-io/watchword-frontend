@@ -5,6 +5,7 @@ module View.Page exposing (frame)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import View.Asset as Asset
 
 
 {-| Take a page's Html and frame it with a header and footer.
@@ -18,22 +19,25 @@ frame isLoading content =
     div [ class "page-frame" ]
         [ viewHeader isLoading
         , content
-        , viewFooter
         ]
 
 
 viewHeader : Bool -> Html msg
 viewHeader isLoading =
     nav [ class "navbar" ]
-        [ div [ class "container" ]
-            [ p [] [ text "school-apps" ] ]
-        ]
-
-
-viewFooter : Html msg
-viewFooter =
-    footer []
-        [ div [ class "container" ]
-            [ p [] [ text "made by wking-io" ]
+        [ div [ class "navbar__icon" ]
+            [ button []
+                [ img [ Asset.src Asset.logo ] []
+                ]
+            ]
+        , div [ class "navbar__icon" ]
+            [ button []
+                [ img [ Asset.src Asset.info ] []
+                ]
+            ]
+        , div [ class "navbar__icon" ]
+            [ button []
+                [ img [ Asset.src Asset.contact ] []
+                ]
             ]
         ]

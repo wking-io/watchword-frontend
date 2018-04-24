@@ -1,3 +1,13 @@
+$primary: #3bc9db;
+$primary-dark: #0b7285;
+$neutral-xlight: #f1f3f5;
+$neutral-light: #ced4da;
+$neutral-medium: #868e96;
+$neutral-dark: #495057;
+
+$white: #fff;
+$black: $neutral-dark;
+
 *,
 *:before,
 *:after {
@@ -8,6 +18,54 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+
+.page-frame {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.navbar {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+
+  &__icon {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 0;
+
+    &:first-child {
+      padding: 16px;
+      flex: 1;
+    }
+
+    &:last-child {
+      padding: 20px;
+    }
+
+    & button {
+      padding: 0;
+      margin: 0;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    & img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.game-menu {
+  width: 250px;
+  background-color: $neutral-xlight;
 }
 
 .container {

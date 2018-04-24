@@ -7,7 +7,7 @@ import Data.Memory.Setup as MemorySetup
 import Request.Games
 import Request.Words
 import Html exposing (Html, program, text, div, ul, li, img, p, button, h1, h2, main_)
-import Html.Attributes exposing (classList)
+import Html.Attributes exposing (class, classList)
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import SelectList exposing (SelectList)
 import Util.Infix exposing ((=>))
@@ -54,16 +54,18 @@ view : Model -> Html Msg
 view model =
     case model.state of
         Summary games ->
-            div [] (viewGames games)
+            div [ class "game-menu" ] [ (viewGames games) ]
 
         Setup games setup ->
-            div [] (viewGames games)
+            div [ class "game-menu" ] [ (viewGames games) ]
 
 
-viewGames : SelectList Game -> List (Html Msg)
+viewGames : SelectList Game -> Html Msg
 viewGames games =
-    SelectList.mapBy viewGame games
-        |> SelectList.toList
+    ul []
+        (SelectList.mapBy viewGame games
+            |> SelectList.toList
+        )
 
 
 viewGame : SelectList.Position -> Game -> Html Msg
