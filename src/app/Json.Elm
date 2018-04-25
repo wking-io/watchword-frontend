@@ -15,6 +15,50 @@ games =
               "Memory",
               "Word Sounds",
               "Letter wordentification"
+            ],
+            "steps": [
+              {
+                "id": "step-01",
+                "name": "Option",
+                "options": [
+                  {
+                    "value": "random",
+                    "label": "Random Selection",
+                    "description": "A game where words are selected randomly from the chosen word groups. Also, matches in the game must be the same word."
+                  },
+                  {
+                    "value": "custom",
+                    "label": "You Pick Selection",
+                    "description": "A game where you get to choose the words that are used. Also, matches in the game must be the same word."
+                  }
+                ]
+              },
+              {
+                "id": "step-02",
+                "name": "Word Count",
+                "options": [
+                  {
+                    "value": "small",
+                    "label": "Small - 3 Words",
+                    "description": "Total words to match will be three so there will be six cards on the board."
+                  },
+                  {
+                    "value": "medium",
+                    "label": "Medium - 4 Words",
+                    "description": "Total words to match will be four so there will be eight cards on the board."
+                  },
+                  {
+                    "value": "large",
+                    "label": "Large - 5 Words",
+                    "description": "Total words to match will be five so there will be ten cards on the board."
+                  },
+                  {
+                    "value": "xtralarge",
+                    "label": "ExtraLarge - 6 Words",
+                    "description": "Total words to match will be six so there will be twelve cards on the board."
+                  }
+                ]
+              }
             ]
           }
         ]

@@ -8,6 +8,9 @@ $neutral-dark: #495057;
 $white: #fff;
 $black: $neutral-dark;
 
+$sans-font: 'Roboto', sans-serif;
+$serif-font: 'Roboto Slab', $sans-font;
+
 *,
 *:before,
 *:after {
@@ -18,7 +21,15 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: $sans-font;
+}
+
+html {
+  font-size: 4px;
+}
+
+body {
+  font-size: 4rem;
 }
 
 .page-frame {
@@ -46,7 +57,7 @@ body {
     }
 
     &:last-child {
-      padding: 20px;
+      padding: 12px 20px 20px;
     }
 
     & button {
@@ -64,8 +75,20 @@ body {
   }
 }
 
+.admin-container {
+  display: flex;
+  width: 100%;
+}
+
+.admin-content {
+  max-width: 744px;
+  margin: 0 auto;
+  padding: 72px;
+}
+
 .game-menu {
   width: 250px;
+  flex-shrink: 0;
   background-color: $neutral-xlight;
 
   &__title {
@@ -110,6 +133,71 @@ body {
   &--active &__btn {
     background-color: $white;
     color: $black;
+  }
+}
+
+.summary {
+  &__header {
+    width: 100%;
+    padding-bottom: 45%;
+    background-color: $neutral-light;
+    overflow: hidden;
+
+    &__img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__title {
+    font-size: 40px;
+    color: $black;
+    font-family: $serif-font;
+    font-weight: 400;
+    margin: 6rem 0 4rem;
+  }
+
+  &__description {
+    color: $neutral-medium;
+    line-height: 6rem;
+    margin-bottom: 6rem;
+  }
+
+  &__subheading {
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: $black;
+  }
+
+  &__skill-list {
+    padding: 0 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 6rem;
+
+    &__item {
+      color: $neutral-medium;
+      width: 50%;
+      line-height: 6rem;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    background-color: $primary;
+    text-transform: uppercase;
+    color: $white;
+    display: block;
+    margin: 0;
+    padding: 14px;
+    font-size: 4rem;
+    border: none;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $primary-dark;
+    }
   }
 }
 
@@ -202,4 +290,8 @@ body {
   font-weight: bold;
   font-size: 80px;
   color: #294e85;
+}
+
+.w100 {
+  width: 100%;
 }

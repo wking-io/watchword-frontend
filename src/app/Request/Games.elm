@@ -1,4 +1,4 @@
-module Request.Games exposing (get, getSelectList)
+module Request.Games exposing (get, getNav)
 
 import Data.Games as Games exposing (Games, Game)
 import Json
@@ -11,7 +11,7 @@ get =
     decodeString Games.decoder Json.games
 
 
-getSelectList : Result String (SelectList Game)
-getSelectList =
+getNav : Result String (SelectList Game)
+getNav =
     get
-        |> Result.map Games.toSelectList
+        |> Result.map Games.toNav
