@@ -6,10 +6,11 @@ import Data.Words as Words exposing (Words, Word)
 import Data.Memory.Setup as MemorySetup
 import Request.Games
 import Request.Words
-import Html exposing (Html, program, text, div, ul, li, img, p, button, h1, h2, main_)
+import Html exposing (Html, program, text, div, ul, li, img, p, button, h1, h2, h3, main_)
 import Html.Attributes exposing (class, classList)
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import SelectList exposing (SelectList)
+import View.Svg.GameIcon as GameIcon
 import Util.Infix exposing ((=>))
 
 
@@ -42,7 +43,6 @@ init =
             Request.Games.get
             Request.Words.get
             (Request.Games.getSelectList |> Result.map Summary)
-            |> Result.mapError (Debug.log "Help: ")
             |> Result.mapError handleLoadError
 
 
@@ -54,15 +54,21 @@ view : Model -> Html Msg
 view model =
     case model.state of
         Summary games ->
-            div [ class "game-menu" ] [ (viewGames games) ]
+            div [ class "game-menu" ]
+                [ h3 [ class "game-menu__title" ] [ text "Select A Game" ]
+                , (viewGames games)
+                ]
 
         Setup games setup ->
-            div [ class "game-menu" ] [ (viewGames games) ]
+            div [ class "game-menu" ]
+                [ h3 [ class "game-menu__title" ] [ text "Select A Game" ]
+                , (viewGames games)
+                ]
 
 
 viewGames : SelectList Game -> Html Msg
 viewGames games =
-    ul []
+    ul [ class "no-list" ]
         (SelectList.mapBy viewGame games
             |> SelectList.toList
         )
@@ -78,7 +84,10 @@ viewGame position { id, name } =
                     , ( "menu-item--active", isActive )
                     ]
                 ]
-                [ button [] [ text name ]
+                [ button [ class "menu-item__btn" ]
+                    [ div [ class "menu-item__btn__icon" ] [ Maybe.withDefault (GameIcon.default isActive) (GameIcon.icons id isActive) ]
+                    , text name
+                    ]
                 ]
     in
         case position of

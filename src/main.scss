@@ -18,6 +18,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 .page-frame {
@@ -66,6 +67,50 @@ body {
 .game-menu {
   width: 250px;
   background-color: $neutral-xlight;
+
+  &__title {
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    margin: 27px 0 20px 32px;
+    padding: 0;
+    color: $black;
+  }
+}
+
+.no-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.menu-item {
+  width: 100%;
+
+  &__btn {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: $neutral-medium;
+    padding: 16px 32px;
+    font-size: 14px;
+
+    &:hover {
+      background-color: $white;
+    }
+
+    &__icon {
+      margin: 0 12px 0 0;
+    }
+  }
+
+  &--active &__btn {
+    background-color: $white;
+    color: $black;
+  }
 }
 
 .container {
