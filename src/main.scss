@@ -120,6 +120,7 @@ body {
     color: $neutral-medium;
     padding: 16px 32px;
     font-size: 14px;
+    text-decoration: none;
 
     &:hover {
       background-color: $white;
@@ -184,6 +185,8 @@ body {
   }
 
   &__btn {
+    text-align: center;
+    text-decoration: none;
     width: 100%;
     background-color: $primary;
     text-transform: uppercase;

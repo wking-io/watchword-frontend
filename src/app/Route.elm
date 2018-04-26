@@ -1,5 +1,6 @@
 module Route exposing (Route(..), fromLocation, href, modifyUrl)
 
+import Data.Admin as Admin
 import Data.Memory.Option as Option exposing (Option)
 import Data.Memory.Size as Size exposing (Size)
 import Data.Memory as Memory
@@ -13,15 +14,20 @@ import UrlParser as Url exposing ((</>), (<?>), Parser, QueryParser, oneOf, pars
 
 
 type Route
-    = Admin
-    | Root
+    = Root Admin.Slug
+    | Admin Admin.Slug
+    | AdminSelected Admin.Slug
+    | AdminSetup Admin.Slug
     | MemoryGame Memory.Slug
 
 
 route : Parser (Route -> a) a
 route =
     oneOf
-        [ Url.map Admin (s "")
+        [ Url.map Admin.Init (s "") |> Url.map Root
+        , Url.map Admin.Init (s "dashboard") |> Url.map Admin
+        , Url.map AdminSelected (s "dashboard" </> Admin.parser)
+        , Url.map AdminSetup (s "dashboard" </> Admin.parser </> s "setup")
         , Url.map Memory.Slug (s "memory" </> s "game" </> Option.parser </> Size.parser <?> listParam "selection")
             |> Url.map MemoryGame
         ]
@@ -45,11 +51,17 @@ routeToString page =
     let
         pieces =
             case page of
-                Admin ->
-                    []
+                Root _ ->
+                    [ "dashboard" ]
 
-                Root ->
-                    []
+                Admin _ ->
+                    [ "dashboard" ]
+
+                AdminSelected slug ->
+                    [ "dashboard", (Admin.slugToString slug) ]
+
+                AdminSetup slug ->
+                    [ "dashboard", (Admin.slugToString slug), "setup" ]
 
                 MemoryGame slug ->
                     [ "memory", "game", (Memory.toString slug) ]
@@ -74,6 +86,6 @@ modifyUrl =
 fromLocation : Location -> Maybe Route
 fromLocation location =
     if String.isEmpty location.hash then
-        Just Root
+        Just (Root Admin.Init)
     else
         parseHash route location

@@ -1,15 +1,18 @@
 module Page.Admin exposing (Model, Msg, init, update, view)
 
 import View.Asset as Asset
+import Data.Admin as Admin
+import Data.FieldType as FieldType exposing (FieldType)
 import Data.Games as Games exposing (Games, Game)
-import Data.Step as Step exposing (Step)
+import Data.Step as Step exposing (Step, Option)
 import Data.Words as Words exposing (Words, Word)
 import Data.Memory.Setup as MemorySetup
 import Request.Games
 import Request.Words
-import Html exposing (Html, program, text, div, ul, li, img, p, button, h1, h2, h3, main_)
-import Html.Attributes exposing (class, classList)
-import Html.Events exposing (onClick)
+import Route
+import Html exposing (Html, program, text, div, ul, li, img, p, button, h1, h2, h3, main_, a, input, strong, label)
+import Html.Attributes as Attr exposing (class, classList, type_, name, value, for)
+import Html.Events exposing (onClick, onFocus)
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import SelectList exposing (SelectList)
 import View.Svg.GameIcon as GameIcon
@@ -35,17 +38,43 @@ type GameSetup
     = Memory MemorySetup.Setup
 
 
-init : Result PageLoadError Model
-init =
+init : Admin.Slug -> Bool -> Result PageLoadError Model
+init slug isSetup =
     let
         handleLoadError _ =
             pageLoadError "Homepage is currently unavailable."
+
+        base =
+            Result.map3 Model
+                Request.Games.get
+                Request.Words.get
     in
-        Result.map3 Model
-            Request.Games.get
-            Request.Words.get
-            (Request.Games.getNav |> Result.map Summary)
-            |> Result.mapError handleLoadError
+        case slug of
+            Admin.Init ->
+                base
+                    (Result.map Summary Request.Games.getNav)
+                    |> Result.mapError handleLoadError
+
+            Admin.WithGame id ->
+                base
+                    (Result.map (getState id isSetup) Request.Games.getNav)
+                    |> Result.mapError (Debug.log "Error: ")
+                    |> Result.mapError handleLoadError
+
+
+getState : String -> Bool -> SelectList Game -> State
+getState id isSetup games =
+    let
+        updatedGames =
+            SelectList.select (Games.equals id) games
+    in
+        if isSetup then
+            Setup updatedGames
+                (SelectList.selected updatedGames
+                    |> Games.toSteps
+                )
+        else
+            Summary updatedGames
 
 
 
@@ -62,9 +91,9 @@ view model =
                 ]
 
         Setup games setup ->
-            div [ class "game-menu" ]
-                [ h3 [ class "game-menu__title" ] [ text "Select A Game" ]
-                , (viewGames games)
+            div [ class "admin-container" ]
+                [ viewGameMenu games
+                , viewSetup (SelectList.selected setup)
                 ]
 
 
@@ -94,7 +123,7 @@ viewGame position { id, name } =
                     , ( "menu-item--active", isActive )
                     ]
                 ]
-                [ button [ class "menu-item__btn", onClick (SelectGame id) ]
+                [ a [ class "menu-item__btn", Route.href (Route.AdminSelected (Admin.WithGame id)) ]
                     [ div [ class "menu-item__btn__icon" ] [ Maybe.withDefault (GameIcon.default isActive) (GameIcon.icons id isActive) ]
                     , text name
                     ]
@@ -118,7 +147,7 @@ viewGameSummary { id, name, description, skills } =
             , p [ class "summary__description" ] [ text description ]
             , h2 [ class "summary__subheading" ] [ text "Skills Practiced" ]
             , ul [ class "summary__skill-list" ] (List.map viewSkill skills)
-            , button [ class "summary__btn", onClick StartSetup ] [ text "Setup Game" ]
+            , a [ Route.href (Route.AdminSetup (Admin.WithGame id)), class "summary__btn" ] [ text "Setup Game" ]
             ]
         ]
 
@@ -128,30 +157,81 @@ viewSkill skill =
     li [ class "summary__skill-list__item" ] [ text skill ]
 
 
+viewSetup : Step -> Html Msg
+viewSetup ({ id, name, fieldType, options, selection } as step) =
+    main_ [ class ("setup setup--" ++ id) ]
+        [ div [ class "admin-content" ]
+            [ h2 [ class "setup__heading" ] [ text name ]
+            , viewFields step
+            , div []
+                [ button [ onClick NextStep ] [ text "Prev Step" ]
+                , button [ onClick PrevStep ] [ text "Next Step" ]
+                ]
+            ]
+        ]
+
+
+viewFields : Step -> Html Msg
+viewFields { id, name, fieldType, options, selection } =
+    case fieldType of
+        FieldType.RadioHorizontal ->
+            div [] (List.map (viewRadio id (Maybe.withDefault "" selection)) options)
+
+        FieldType.RadioVertical ->
+            div [] (List.map (viewRadio id (Maybe.withDefault "" selection)) options)
+
+        FieldType.WordSelect ->
+            div [] []
+
+        FieldType.NotFound ->
+            div [] []
+
+
+viewRadio : String -> String -> Option -> Html Msg
+viewRadio id maybeString { value, label, description } =
+    Html.label [ for id, onClick (UpdateSelection value) ]
+        [ input [ type_ "radio", name id, Attr.value value, onFocus (UpdateSelection value) ] []
+        , p [] [ strong [] [ text label ] ]
+        , p [] [ text description ]
+        ]
+
+
 
 -- UPDATE --
 
 
 type Msg
-    = SelectGame String
-    | StartSetup
+    = NextStep
+    | PrevStep
+    | UpdateSelection String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SelectGame id ->
-            case model.state of
-                Summary games ->
-                    { model | state = Summary (SelectList.select (Games.equals id) games) } => Cmd.none
+        NextStep ->
+            model => Cmd.none
 
-                Setup games _ ->
-                    { model | state = Summary (SelectList.select (Games.equals id) games) } => Cmd.none
+        PrevStep ->
+            model => Cmd.none
 
-        StartSetup ->
-            case model.state of
-                Summary games ->
-                    { model | state = Setup games (Games.toSteps (SelectList.selected games)) } => Cmd.none
+        UpdateSelection id ->
+            { model | state = (updateSelection id model.state) } => Cmd.none
 
-                Setup _ _ ->
-                    model => Cmd.none
+
+updateSelection : String -> State -> State
+updateSelection id state =
+    case state of
+        Summary _ ->
+            state
+
+        Setup games steps ->
+            Setup games (SelectList.mapBy (addSelection id) steps)
+
+
+addSelection : String -> SelectList.Position -> Step -> Step
+addSelection answer position step =
+    if position == SelectList.Selected then
+        { step | selection = Just answer }
+    else
+        step

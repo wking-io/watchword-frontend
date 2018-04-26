@@ -17,6 +17,8 @@ type Page
     | NotFound
     | Errored PageLoadError
     | Admin Admin.Model
+    | AdminSelected Admin.Model
+    | AdminSetup Admin.Model
     | MemoryGame MemoryGame.Model
 
 
@@ -93,6 +95,16 @@ viewPage isLoading page =
                     |> frame
                     |> Html.map AdminMsg
 
+            AdminSelected subModel ->
+                Admin.view subModel
+                    |> frame
+                    |> Html.map AdminMsg
+
+            AdminSetup subModel ->
+                Admin.view subModel
+                    |> frame
+                    |> Html.map AdminMsg
+
             MemoryGame subModel ->
                 MemoryGame.view subModel
                     |> frame
@@ -138,11 +150,17 @@ setRoute maybeRoute model =
             Nothing ->
                 { model | pageState = Loaded NotFound } => Cmd.none
 
-            Just Route.Admin ->
-                isError Admin Admin.init
+            Just (Route.Root slug) ->
+                model => Route.modifyUrl (Route.Admin slug)
 
-            Just Route.Root ->
-                model => Route.modifyUrl Route.Admin
+            Just (Route.Admin slug) ->
+                isError Admin (Admin.init slug False)
+
+            Just (Route.AdminSelected slug) ->
+                isError Admin (Admin.init slug False)
+
+            Just (Route.AdminSetup slug) ->
+                isError Admin (Admin.init slug True)
 
             Just (Route.MemoryGame slug) ->
                 generate MemoryGameLoaded (MemoryGame.init slug)
