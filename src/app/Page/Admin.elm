@@ -56,6 +56,7 @@ init slug isSetup =
             Admin.Init ->
                 base
                     (Result.map Summary Request.Games.getNav)
+                    |> Result.mapError (Debug.log "Error: ")
                     |> Result.mapError handleLoadError
 
             Admin.WithGame id ->
@@ -176,8 +177,8 @@ viewSetup words game selection =
 isDisabled : Step -> Bool
 isDisabled { answer } =
     answer
-        |> Maybe.map (\n -> True)
-        |> Maybe.withDefault False
+        |> Maybe.map (\n -> False)
+        |> Maybe.withDefault True
 
 
 viewStep : Html Msg -> Html Msg -> String -> String -> Html Msg

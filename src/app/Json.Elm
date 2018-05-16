@@ -55,7 +55,7 @@ games =
                   "description": "Total words to match will be six so there will be twelve cards on the board."
                 }
               ]
-            },
+            }
           },
           {
             "id": "memory-01",
