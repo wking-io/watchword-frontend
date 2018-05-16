@@ -2,7 +2,7 @@ module Page.Memory.Game exposing (Model, Msg, init, update, view)
 
 import Data.Card as Card exposing (Card)
 import Data.Memory as Memory
-import Data.Memory.Option as Option exposing (Option)
+import Data.Option as Option exposing (Option)
 import Data.Words as Words
 import Request.Words exposing (getDeck, getDeckBy)
 import Html exposing (Html, program, text, div, ul, li, img, p)
@@ -38,7 +38,7 @@ init (Memory.Slug option size maybeSelection) =
                         |> getDeckBy
                         |> Result.map (Random.map (Model << MatchList.fromList))
 
-                Option.Pick ->
+                Option.Custom ->
                     getDeck
                         |> Result.map (Random.map (Model << MatchList.fromList))
     in

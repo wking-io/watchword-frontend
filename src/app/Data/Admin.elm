@@ -1,6 +1,5 @@
-module Data.Admin exposing (Slug(..), parser, slugToString)
+module Data.Admin exposing (Slug(..), slugToString)
 
-import UrlParser
 import Data.Option as Option exposing (Option)
 import Data.Size as Size exposing (Size)
 
@@ -11,12 +10,7 @@ type Slug
     | WithSetup String
     | WithOption String Option
     | WithSize String Option Size
-    | WithWords String Option Size (List String)
-
-
-parser : UrlParser.Parser (Slug -> a) a
-parser =
-    UrlParser.custom "SLUG" (Ok << WithGame)
+    | WithWords String Option Size (Maybe (List String))
 
 
 slugToString : Slug -> String
@@ -37,5 +31,10 @@ slugToString slug =
         WithSize id option size ->
             id ++ "/setup/" ++ (Option.toString option) ++ "/" ++ (Size.toString size) ++ "/"
 
-        WithWords id option size words ->
-            id ++ "/setup/" ++ (Option.toString option) ++ "/" ++ (Size.toString size) ++ "?words=" ++ (String.join "," words)
+        WithWords id option size maybeWords ->
+            case maybeWords of
+                Just words ->
+                    id ++ "/setup/" ++ (Option.toString option) ++ "/" ++ (Size.toString size) ++ "?selection=" ++ (String.join "," words)
+
+                Nothing ->
+                    id ++ "/setup/" ++ (Option.toString option) ++ "/" ++ (Size.toString size) ++ "/"

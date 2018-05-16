@@ -1,8 +1,8 @@
 module Route exposing (Route(..), fromLocation, href, modifyUrl)
 
-import Data.Admin as Admin
-import Data.Memory.Option as Option exposing (Option)
-import Data.Memory.Size as Size exposing (Size)
+import Data.Admin as Admin exposing (Slug)
+import Data.Option as Option exposing (Option)
+import Data.Size as Size exposing (Size)
 import Data.Memory as Memory
 import Html exposing (Attribute)
 import Html.Attributes as Attr
@@ -26,8 +26,16 @@ route =
     oneOf
         [ Url.map Admin.Init (s "") |> Url.map Root
         , Url.map Admin.Init (s "dashboard") |> Url.map Admin
-        , Url.map AdminSelected (s "dashboard" </> Admin.parser)
-        , Url.map AdminSetup (s "dashboard" </> Admin.parser </> s "setup")
+        , Url.map Admin.WithGame (s "dashboard" </> Url.string)
+            |> Url.map AdminSelected
+        , Url.map Admin.WithSetup (s "dashboard" </> Url.string </> s "setup")
+            |> Url.map AdminSetup
+        , Url.map Admin.WithOption (s "dashboard" </> Url.string </> s "setup" </> Option.parser)
+            |> Url.map AdminSetup
+        , Url.map Admin.WithSize (s "dashboard" </> Url.string </> s "setup" </> Option.parser </> Size.parser)
+            |> Url.map AdminSetup
+        , Url.map Admin.WithWords (s "dashboard" </> Url.string </> s "setup" </> Option.parser </> Size.parser <?> listParam "selection")
+            |> Url.map AdminSetup
         , Url.map Memory.Slug (s "memory" </> s "game" </> Option.parser </> Size.parser <?> listParam "selection")
             |> Url.map MemoryGame
         ]
@@ -61,7 +69,7 @@ routeToString page =
                     [ "dashboard", (Admin.slugToString slug) ]
 
                 AdminSetup slug ->
-                    [ "dashboard", (Admin.slugToString slug), "setup" ]
+                    [ "dashboard", (Admin.slugToString slug) ]
 
                 MemoryGame slug ->
                     [ "memory", "game", (Memory.toString slug) ]

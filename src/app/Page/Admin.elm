@@ -9,7 +9,7 @@ import Data.Option as Option exposing (Option)
 import Data.Games as Games exposing (Games, Game)
 import Data.Words as Words exposing (Words, Word)
 import Data.Selection as Selection exposing (Selection)
-import Data.Memory.Setup as MemorySetup
+import Data.Memory as Memory
 import Request.Games
 import Request.Words
 import Route
@@ -37,10 +37,6 @@ type State
     | Setup (SelectList Game) Selection
 
 
-type GameSetup
-    = Memory MemorySetup.Setup
-
-
 init : Admin.Slug -> Bool -> Result PageLoadError Model
 init slug isSetup =
     let
@@ -61,19 +57,52 @@ init slug isSetup =
 
             Admin.WithGame id ->
                 base
-                    (Result.map (getState id isSetup) Request.Games.getNav)
+                    (Result.map (getState id isSetup Selection.Empty) Request.Games.getNav)
                     |> Result.mapError (Debug.log "Error: ")
                     |> Result.mapError handleLoadError
 
+            Admin.WithSetup id ->
+                base
+                    (Result.map (getState id isSetup Selection.Empty) Request.Games.getNav)
+                    |> Result.mapError (Debug.log "Error: ")
+                    |> Result.mapError handleLoadError
 
-getState : String -> Bool -> SelectList Game -> State
-getState id isSetup games =
+            Admin.WithOption id option ->
+                base
+                    (Result.map (getState id isSetup (Selection.OptionOnly option)) Request.Games.getNav)
+                    |> Result.mapError (Debug.log "Error: ")
+                    |> Result.mapError handleLoadError
+
+            Admin.WithSize id option size ->
+                base
+                    (Result.map (getState id isSetup (Selection.OptionAndSize option size)) Request.Games.getNav)
+                    |> Result.mapError (Debug.log "Error: ")
+                    |> Result.mapError handleLoadError
+
+            Admin.WithWords id option size maybeWords ->
+                let
+                    selection =
+                        case maybeWords of
+                            Just words ->
+                                Selection.Full option size words
+
+                            Nothing ->
+                                Selection.OptionAndSize option size
+                in
+                    base
+                        (Result.map (getState id isSetup selection) Request.Games.getNav)
+                        |> Result.mapError (Debug.log "Error: ")
+                        |> Result.mapError handleLoadError
+
+
+getState : String -> Bool -> Selection -> SelectList Game -> State
+getState id isSetup selection games =
     let
         updatedGames =
             SelectList.select (Games.equals id) games
     in
         if isSetup then
-            Setup updatedGames Selection.empty
+            Setup updatedGames selection
         else
             Summary updatedGames
 
@@ -162,23 +191,16 @@ viewSetup : Words -> Game -> Selection -> Html Msg
 viewSetup words game selection =
     case selection of
         Selection.Empty ->
-            viewStep (viewStepNav game.id True (isDisabled game.option)) (viewFields game.option) "Step One: Select Option" "option"
+            viewStep (viewStepNav game selection) (viewFields game.option) "Step One: Select Option" "option"
 
-        Selection.OptionOnly _ ->
-            viewStep (viewStepNav game.id False (isDisabled game.size)) (viewFields game.size) "Step Two: Select Word Count" "size"
+        Selection.OptionOnly option ->
+            viewStep (viewStepNav game selection) (viewFields game.size) "Step Two: Select Word Count" "size"
 
         Selection.OptionAndSize option size ->
-            viewStep (viewStepNav game.id False (List.isEmpty game.wordSelection)) (viewWords option size words) "Step Three: Select Words" "words"
+            viewStep (viewStepNav game selection) (viewWords option size words) "Step Three: Select Words" "words"
 
         Selection.Full option size wordSelection ->
-            viewStep (viewStepNav game.id False False) (viewWords option size words) "Step Three: Select Words" "words"
-
-
-isDisabled : Step -> Bool
-isDisabled { answer } =
-    answer
-        |> Maybe.map (\n -> False)
-        |> Maybe.withDefault True
+            viewStep (viewStepNav game selection) (viewWords option size words) "Step Three: Select Words" "words"
 
 
 viewStep : Html Msg -> Html Msg -> String -> String -> Html Msg
@@ -192,11 +214,50 @@ viewStep stepNav fields title stepId =
         ]
 
 
-viewStepNav : String -> Bool -> Bool -> Html Msg
-viewStepNav gameId isBeginning isDisabled =
+viewStepNav : Game -> Selection -> Html Msg
+viewStepNav { id, option, size, wordSelection } selection =
+    case selection of
+        Selection.Empty ->
+            case option.answer of
+                Just answer ->
+                    case (Option.fromString answer) of
+                        Ok o ->
+                            viewStepNavHelp id False True (Route.AdminSetup (Admin.WithOption id o))
+
+                        Err _ ->
+                            viewStepNavHelp id False True (Route.AdminSetup (Admin.WithSetup id))
+
+                Nothing ->
+                    viewStepNavHelp id True True (Route.AdminSetup (Admin.WithSetup id))
+
+        Selection.OptionOnly theOption ->
+            case size.answer of
+                Just answer ->
+                    case (Size.fromString answer) of
+                        Ok s ->
+                            viewStepNavHelp id False False (Route.AdminSetup (Admin.WithSize id theOption s))
+
+                        Err _ ->
+                            viewStepNavHelp id False False (Route.AdminSetup (Admin.WithOption id theOption))
+
+                Nothing ->
+                    viewStepNavHelp id True False (Route.AdminSetup (Admin.WithOption id theOption))
+
+        Selection.OptionAndSize theOption theSize ->
+            if (List.isEmpty wordSelection) then
+                viewStepNavHelp id True False (Route.AdminSetup (Admin.WithSize id theOption theSize))
+            else
+                viewStepNavHelp id False False (Route.AdminSetup (Admin.WithWords id theOption theSize (Just wordSelection)))
+
+        Selection.Full theOption theSize words ->
+            viewStepNavHelp id True False (Route.MemoryGame (Memory.Slug theOption theSize (Just words)))
+
+
+viewStepNavHelp : String -> Bool -> Bool -> Route.Route -> Html Msg
+viewStepNavHelp id isDisabled isBeginning route =
     div [ class "setup__nav" ]
-        [ viewPrevAction gameId isBeginning
-        , button [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
+        [ viewPrevAction id isBeginning
+        , a [ class "btn btn--primary", Route.href route, Attr.disabled isDisabled ] [ text "Next Step" ]
         ]
 
 
@@ -213,7 +274,7 @@ viewNextAction id isComplete isDisabled =
     if isComplete then
         a [ class "btn btn--primary", Route.href (Route.AdminSelected (Admin.WithGame id)), Attr.disabled isDisabled ] [ text "Play Game" ]
     else
-        button [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
+        a [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
 
 
 viewWords : Option -> Size -> Words -> Html Msg

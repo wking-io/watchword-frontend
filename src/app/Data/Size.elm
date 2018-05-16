@@ -1,4 +1,6 @@
-module Data.Size exposing (Size, fromString)
+module Data.Size exposing (Size, fromString, toString, parser)
+
+import UrlParser
 
 
 type Size
@@ -6,6 +8,11 @@ type Size
     | M
     | L
     | XL
+
+
+parser : UrlParser.Parser (Size -> a) a
+parser =
+    UrlParser.custom "Size" fromString
 
 
 toString : Size -> String

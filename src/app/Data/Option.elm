@@ -1,9 +1,16 @@
-module Data.Option exposing (Option(..), fromString)
+module Data.Option exposing (Option(..), fromString, toString, parser)
+
+import UrlParser
 
 
 type Option
     = Random
     | Custom
+
+
+parser : UrlParser.Parser (Option -> a) a
+parser =
+    UrlParser.custom "Option" fromString
 
 
 toString : Option -> String

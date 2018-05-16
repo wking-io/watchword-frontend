@@ -1,7 +1,7 @@
 module Data.Memory exposing (Slug(..), toString)
 
-import Data.Memory.Option as Option exposing (Option)
-import Data.Memory.Size as Size exposing (Size)
+import Data.Option as Option exposing (Option)
+import Data.Size as Size exposing (Size)
 
 
 type Slug
