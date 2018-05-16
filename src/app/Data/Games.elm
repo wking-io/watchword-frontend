@@ -1,7 +1,7 @@
-module Data.Games exposing (Games, Game, decoder, equals, toNav, toSteps)
+module Data.Games exposing (Games, Game, decoder, equals, toNav, setOption, asOptionIn, setSize, asSizeIn, setWordSelection, asWordSelectionIn)
 
 import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline exposing (decode, required)
+import Json.Decode.Pipeline exposing (decode, required, hardcoded)
 import Data.Step as Step exposing (Step)
 import SelectList exposing (SelectList)
 
@@ -15,7 +15,9 @@ type alias Game =
     , name : String
     , description : String
     , skills : List String
-    , steps : List Step
+    , option : Step
+    , size : Step
+    , wordSelection : List String
     }
 
 
@@ -32,7 +34,9 @@ decodeGame =
         |> required "name" Decode.string
         |> required "description" Decode.string
         |> required "skills" (Decode.list Decode.string)
-        |> required "steps" (Decode.list Step.decoder)
+        |> required "option" Step.decoder
+        |> required "size" Step.decoder
+        |> hardcoded []
 
 
 toNav : Games -> SelectList Game
@@ -49,25 +53,41 @@ toNav (Games games) =
                 SelectList.singleton emptyGame
 
 
-toSteps : Game -> SelectList Step
-toSteps { steps } =
-    let
-        sortedSteps =
-            List.sortBy .id steps
-    in
-        case sortedSteps of
-            first :: rest ->
-                SelectList.fromLists [] first rest
-
-            [] ->
-                SelectList.singleton Step.empty
-
-
 emptyGame : Game
 emptyGame =
-    Game "error" "No Games Found" "" [] []
+    Game "error" "No Games Found" "" [] Step.empty Step.empty []
 
 
 equals : String -> Game -> Bool
 equals string { id } =
     string == id
+
+
+setOption : Step -> Game -> Game
+setOption newStep game =
+    { game | option = newStep }
+
+
+asOptionIn : Game -> Step -> Game
+asOptionIn game newStep =
+    { game | option = newStep }
+
+
+setSize : Step -> Game -> Game
+setSize newStep game =
+    { game | size = newStep }
+
+
+asSizeIn : Game -> Step -> Game
+asSizeIn game newStep =
+    { game | size = newStep }
+
+
+setWordSelection : String -> Game -> Game
+setWordSelection newWord game =
+    { game | wordSelection = newWord :: game.wordSelection }
+
+
+asWordSelectionIn : Game -> String -> Game
+asWordSelectionIn game newWord =
+    { game | wordSelection = newWord :: game.wordSelection }

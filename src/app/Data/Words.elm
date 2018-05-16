@@ -11,6 +11,7 @@ module Data.Words
         , filterByVowel
         , length
         , toList
+        , empty
         )
 
 import Json.Decode as Decode exposing (Decoder)
@@ -99,3 +100,8 @@ length (Words words) =
 toList : Words -> List Word
 toList (Words words) =
     words
+
+
+empty : Words
+empty =
+    Words []

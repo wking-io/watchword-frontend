@@ -84,6 +84,7 @@ body {
   max-width: 744px;
   margin: 0 auto;
   padding: 72px;
+  height: 100%;
 }
 
 .game-menu {
@@ -297,4 +298,162 @@ body {
 
 .w100 {
   width: 100%;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+.field-wrapper {
+  display: flex;
+  border: 1px solid $neutral-light;
+  border-radius: 1rem;
+
+  &--horizontal {
+    & .field {
+      width: 50%;
+      border-right: 1px solid $neutral-light;
+    }
+
+    & .field:last-child {
+      border: none;
+    }
+  }
+
+  &--vertical {
+    flex-direction: column;
+
+    & .field {
+      border-bottom: 1px solid $neutral-light;
+      display: flex;
+      align-items: center;
+
+      &__header {
+        width: 66px;
+        height: 60px;
+        padding: 0;
+        margin: 0;
+      }
+
+      &__content {
+        margin: 0 0 0 4rem;
+      }
+    }
+
+    & .field:last-child {
+      border: none;
+    }
+  }
+}
+
+.field {
+  padding: 6rem;
+
+  &__header {
+    width: 100%;
+    padding-bottom: 55%;
+    background-color: $neutral-light;
+    overflow: hidden;
+    margin-bottom: 6rem;
+
+    &__img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__title {
+    color: $neutral-medium;
+    font-size: 14px;
+    margin: 0 0 2rem 0;
+  }
+
+  &__description {
+    color: $neutral-medium;
+    font-size: 14px;
+    line-height: 6rem;
+    margin: 0;
+  }
+
+  &--selected &__title,
+  &--selected &__description {
+    color: $black;
+  }
+
+  &--selected &__header {
+    background-color: $neutral-medium;
+  }
+}
+
+.setup {
+  & .admin-content {
+    display: flex;
+    flex-direction: column;
+  }
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex: 1;
+  }
+}
+
+.btn {
+  background-color: $neutral-medium;
+  color: $white;
+  display: inline-block;
+  min-width: 136px;
+  padding: 3.5rem 6rem;
+  margin: 0;
+  border: 1px solid $neutral-medium;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 4rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  &--ghost {
+    background-color: transparent;
+    border-color: $primary;
+    color: $black;
+
+    &:disabled,
+    &:hover:disabled {
+      background-color: transparent;
+      border-color: $neutral-light;
+      color: $neutral-light;
+    }
+
+    &:hover {
+      background-color: $primary;
+      color: $white;
+    }
+  }
+
+  &--primary {
+    background-color: $primary;
+    border-color: $primary;
+    color: $white;
+
+    &:disabled,
+    &:hover:disabled {
+      background-color: $neutral-light;
+      border-color: $neutral-light;
+      color: $neutral-medium;
+    }
+
+    &:hover {
+      background-color: $primary-dark;
+      border-color: $primary-dark;
+      color: $white;
+    }
+  }
 }

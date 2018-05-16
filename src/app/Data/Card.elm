@@ -10,8 +10,8 @@ type alias Card =
     }
 
 
-fromWord : Word -> Int -> Card
-fromWord { name } int =
+fromWord : Int -> Word -> Card
+fromWord int { name } =
     Card name int (name ++ "-" ++ (toString int))
 
 

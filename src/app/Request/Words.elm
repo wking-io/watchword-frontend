@@ -39,6 +39,5 @@ getDeckBy pred =
 
 shuffleDeck : Words -> Generator (List Card)
 shuffleDeck words =
-    List.range 0 (Words.length words)
-        |> shuffle
-        |> Random.map (List.map2 Card.fromWord (Words.toList words))
+    (shuffle << Words.toList) words
+        |> Random.map (List.indexedMap Card.fromWord)

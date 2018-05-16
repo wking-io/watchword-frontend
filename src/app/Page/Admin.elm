@@ -3,9 +3,12 @@ module Page.Admin exposing (Model, Msg, init, update, view)
 import View.Asset as Asset
 import Data.Admin as Admin
 import Data.FieldType as FieldType exposing (FieldType)
+import Data.Size as Size exposing (Size)
+import Data.Step as Step exposing (Step, Choice)
+import Data.Option as Option exposing (Option)
 import Data.Games as Games exposing (Games, Game)
-import Data.Step as Step exposing (Step, Option)
 import Data.Words as Words exposing (Words, Word)
+import Data.Selection as Selection exposing (Selection)
 import Data.Memory.Setup as MemorySetup
 import Request.Games
 import Request.Words
@@ -31,7 +34,7 @@ type alias Model =
 
 type State
     = Summary (SelectList Game)
-    | Setup (SelectList Game) (SelectList Step)
+    | Setup (SelectList Game) Selection
 
 
 type GameSetup
@@ -69,10 +72,7 @@ getState id isSetup games =
             SelectList.select (Games.equals id) games
     in
         if isSetup then
-            Setup updatedGames
-                (SelectList.selected updatedGames
-                    |> Games.toSteps
-                )
+            Setup updatedGames Selection.empty
         else
             Summary updatedGames
 
@@ -90,10 +90,10 @@ view model =
                 , viewGameSummary (SelectList.selected games)
                 ]
 
-        Setup games setup ->
+        Setup games selection ->
             div [ class "admin-container" ]
                 [ viewGameMenu games
-                , viewSetup (SelectList.selected setup)
+                , viewSetup model.words (SelectList.selected games) selection
                 ]
 
 
@@ -157,43 +157,111 @@ viewSkill skill =
     li [ class "summary__skill-list__item" ] [ text skill ]
 
 
-viewSetup : Step -> Html Msg
-viewSetup ({ id, name, fieldType, options, selection } as step) =
-    main_ [ class ("setup setup--" ++ id) ]
+viewSetup : Words -> Game -> Selection -> Html Msg
+viewSetup words game selection =
+    case selection of
+        Selection.Empty ->
+            viewStep (viewStepNav game.id True (isDisabled game.option)) (viewFields game.option) "Step One: Select Option" "option"
+
+        Selection.OptionOnly _ ->
+            viewStep (viewStepNav game.id False (isDisabled game.size)) (viewFields game.size) "Step Two: Select Word Count" "size"
+
+        Selection.OptionAndSize option size ->
+            viewStep (viewStepNav game.id False (List.isEmpty game.wordSelection)) (viewWords option size words) "Step Three: Select Words" "words"
+
+        Selection.Full option size wordSelection ->
+            viewStep (viewStepNav game.id False False) (viewWords option size words) "Step Three: Select Words" "words"
+
+
+isDisabled : Step -> Bool
+isDisabled { answer } =
+    answer
+        |> Maybe.map (\n -> True)
+        |> Maybe.withDefault False
+
+
+viewStep : Html Msg -> Html Msg -> String -> String -> Html Msg
+viewStep stepNav fields title stepId =
+    main_ [ class ("w100 setup setup--" ++ stepId) ]
         [ div [ class "admin-content" ]
-            [ h2 [ class "setup__heading" ] [ text name ]
-            , viewFields step
-            , div []
-                [ button [ onClick NextStep ] [ text "Prev Step" ]
-                , button [ onClick PrevStep ] [ text "Next Step" ]
-                ]
+            [ h2 [ class "setup__heading" ] [ text title ]
+            , fields
+            , stepNav
             ]
         ]
 
 
+viewStepNav : String -> Bool -> Bool -> Html Msg
+viewStepNav gameId isBeginning isDisabled =
+    div [ class "setup__nav" ]
+        [ viewPrevAction gameId isBeginning
+        , button [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
+        ]
+
+
+viewPrevAction : String -> Bool -> Html Msg
+viewPrevAction id isBeginning =
+    if isBeginning then
+        a [ class "btn btn--ghost", Route.href (Route.AdminSelected (Admin.WithGame id)) ] [ text "Overview" ]
+    else
+        button [ class "btn btn--ghost", onClick PrevStep ] [ text "Prev Step" ]
+
+
+viewNextAction : String -> Bool -> Bool -> Html Msg
+viewNextAction id isComplete isDisabled =
+    if isComplete then
+        a [ class "btn btn--primary", Route.href (Route.AdminSelected (Admin.WithGame id)), Attr.disabled isDisabled ] [ text "Play Game" ]
+    else
+        button [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
+
+
+viewWords : Option -> Size -> Words -> Html Msg
+viewWords option size words =
+    div [] []
+
+
 viewFields : Step -> Html Msg
-viewFields { id, name, fieldType, options, selection } =
+viewFields { fieldType, choices, answer } =
     case fieldType of
         FieldType.RadioHorizontal ->
-            div [] (List.map (viewRadio id (Maybe.withDefault "" selection)) options)
+            div [ class "field-wrapper field-wrapper--horizontal" ] (List.map (viewRadio answer) choices)
 
         FieldType.RadioVertical ->
-            div [] (List.map (viewRadio id (Maybe.withDefault "" selection)) options)
+            div [ class "field-wrapper field-wrapper--vertical" ] (List.map (viewRadio answer) choices)
 
         FieldType.WordSelect ->
-            div [] []
+            div [ class "" ] []
 
         FieldType.NotFound ->
-            div [] []
+            div [ class "" ] []
 
 
-viewRadio : String -> String -> Option -> Html Msg
-viewRadio id maybeString { value, label, description } =
-    Html.label [ for id, onClick (UpdateSelection value) ]
-        [ input [ type_ "radio", name id, Attr.value value, onFocus (UpdateSelection value) ] []
-        , p [] [ strong [] [ text label ] ]
-        , p [] [ text description ]
-        ]
+viewRadio : Maybe String -> Choice -> Html Msg
+viewRadio maybeSelection { value, label, description } =
+    let
+        isSelected =
+            maybeSelection
+                |> Maybe.map ((==) value)
+                |> Maybe.withDefault False
+
+        uid =
+            "setup-step-field"
+    in
+        Html.label
+            [ for uid
+            , onClick (UpdateSelection value)
+            , Attr.classList
+                [ ( "field", True )
+                , ( "field--selected", isSelected )
+                ]
+            ]
+            [ div [ class "field__header" ] [ img [ class "field__header__img", Asset.src (Asset.summary value) ] [] ]
+            , input [ type_ "radio", name uid, Attr.value value, Attr.checked isSelected, onFocus (UpdateSelection value), class "visually-hidden" ] []
+            , div [ class "field__content" ]
+                [ p [ class "field__title" ] [ strong [] [ text label ] ]
+                , p [ class "field__description" ] [ text description ]
+                ]
+            ]
 
 
 
@@ -210,28 +278,129 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NextStep ->
-            model => Cmd.none
+            { model | state = (updateNext model.state) } => Cmd.none
 
         PrevStep ->
-            model => Cmd.none
+            { model | state = (updatePrev model.state) } => Cmd.none
 
         UpdateSelection id ->
-            { model | state = (updateSelection id model.state) } => Cmd.none
+            { model | state = (updateAnswer id model.state) } => Cmd.none
 
 
-updateSelection : String -> State -> State
-updateSelection id state =
+updateAnswer : String -> State -> State
+updateAnswer id state =
     case state of
         Summary _ ->
             state
 
-        Setup games steps ->
-            Setup games (SelectList.mapBy (addSelection id) steps)
+        Setup games selection ->
+            case selection of
+                Selection.Empty ->
+                    Setup (SelectList.mapBy (addAnswerToOption id) games) selection
+
+                Selection.OptionOnly _ ->
+                    Setup (SelectList.mapBy (addAnswerToSize id) games) selection
+
+                Selection.OptionAndSize _ _ ->
+                    Setup (SelectList.mapBy (addAnswerToWords id) games) selection
+
+                Selection.Full _ _ _ ->
+                    state
 
 
-addSelection : String -> SelectList.Position -> Step -> Step
-addSelection answer position step =
+addAnswerToOption : String -> SelectList.Position -> Game -> Game
+addAnswerToOption answer position game =
     if position == SelectList.Selected then
-        { step | selection = Just answer }
+        answer
+            |> Step.asAnswerIn game.option
+            |> Games.asOptionIn game
     else
-        step
+        game
+
+
+addAnswerToSize : String -> SelectList.Position -> Game -> Game
+addAnswerToSize answer position game =
+    if position == SelectList.Selected then
+        answer
+            |> Step.asAnswerIn game.size
+            |> Games.asSizeIn game
+    else
+        game
+
+
+addAnswerToWords : String -> SelectList.Position -> Game -> Game
+addAnswerToWords answer position game =
+    if position == SelectList.Selected then
+        Games.asWordSelectionIn game answer
+    else
+        game
+
+
+updateNext : State -> State
+updateNext state =
+    case state of
+        Summary _ ->
+            state
+
+        Setup games selection ->
+            case selection of
+                Selection.Empty ->
+                    Setup games (next (SelectList.selected games |> .option |> .answer) selection)
+
+                Selection.OptionOnly _ ->
+                    Setup games (next (SelectList.selected games |> .size |> .answer) selection)
+
+                Selection.OptionAndSize _ _ ->
+                    Setup games (complete (SelectList.selected games |> .wordSelection) selection)
+
+                Selection.Full _ _ _ ->
+                    Setup games selection
+
+
+next : Maybe String -> Selection -> Selection
+next maybeAnswer selection =
+    case maybeAnswer of
+        Just answer ->
+            case selection of
+                Selection.Empty ->
+                    Selection.addOption (Option.fromString answer)
+
+                Selection.OptionOnly option ->
+                    Selection.addSize option (Size.fromString answer)
+
+                _ ->
+                    selection
+
+        Nothing ->
+            selection
+
+
+updatePrev : State -> State
+updatePrev state =
+    case state of
+        Summary _ ->
+            state
+
+        Setup games selection ->
+            case selection of
+                Selection.Empty ->
+                    Summary games
+
+                Selection.OptionOnly _ ->
+                    Setup games Selection.Empty
+
+                Selection.OptionAndSize option _ ->
+                    Setup games (Selection.OptionOnly option)
+
+                Selection.Full option size _ ->
+                    Setup games (Selection.OptionAndSize option size)
+
+
+complete : List String -> Selection -> Selection
+complete words selection =
+    case selection of
+        Selection.OptionAndSize option size ->
+            Selection.Full option size words
+
+        _ ->
+            selection

@@ -1,4 +1,4 @@
-module Data.Step exposing (Step, Option, decoder, empty)
+module Data.Step exposing (Step, Choice, decoder, empty, answered, setAnswer, asAnswerIn)
 
 import Data.FieldType as FieldType exposing (FieldType)
 import Json.Decode as Decode exposing (Decoder)
@@ -6,15 +6,13 @@ import Json.Decode.Pipeline exposing (decode, custom, required, resolve, hardcod
 
 
 type alias Step =
-    { id : String
-    , name : String
-    , fieldType : FieldType
-    , options : List Option
-    , selection : Maybe String
+    { fieldType : FieldType
+    , choices : List Choice
+    , answer : Maybe String
     }
 
 
-type alias Option =
+type alias Choice =
     { value : String
     , label : String
     , description : String
@@ -24,21 +22,36 @@ type alias Option =
 decoder : Decoder Step
 decoder =
     decode Step
-        |> required "id" Decode.string
-        |> required "name" Decode.string
         |> custom FieldType.decoder
-        |> required "options" (Decode.list decodeOption)
+        |> required "choices" (Decode.list decodeChoice)
         |> hardcoded Nothing
 
 
-decodeOption : Decoder Option
-decodeOption =
-    decode Option
+decodeChoice : Decoder Choice
+decodeChoice =
+    decode Choice
         |> required "value" Decode.string
         |> required "label" Decode.string
         |> required "description" Decode.string
 
 
+answered : Step -> Bool
+answered { answer } =
+    answer
+        |> Maybe.map (\n -> True)
+        |> Maybe.withDefault False
+
+
+setAnswer : String -> Step -> Step
+setAnswer str step =
+    { step | answer = Just str }
+
+
+asAnswerIn : Step -> String -> Step
+asAnswerIn step str =
+    { step | answer = Just str }
+
+
 empty : Step
 empty =
-    Step "" "" FieldType.empty [] Nothing
+    Step FieldType.empty [] Nothing
