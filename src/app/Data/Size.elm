@@ -8,19 +8,35 @@ type Size
     | XL
 
 
+toString : Size -> String
+toString option =
+    case option of
+        S ->
+            "s"
+
+        M ->
+            "m"
+
+        L ->
+            "l"
+
+        XL ->
+            "xl"
+
+
 fromString : String -> Result String Size
 fromString str =
     case str of
-        "small" ->
+        "s" ->
             Ok S
 
-        "medium" ->
+        "m" ->
             Ok M
 
-        "large" ->
+        "l" ->
             Ok L
 
-        "xtralarge" ->
+        "xl" ->
             Ok XL
 
         _ ->

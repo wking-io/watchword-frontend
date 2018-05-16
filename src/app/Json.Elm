@@ -35,22 +35,22 @@ games =
               "type": "radio-vertical",
               "choices": [
                 {
-                  "value": "small",
+                  "value": "s",
                   "label": "Small - 3 Words",
                   "description": "Total words to match will be three so there will be six cards on the board."
                 },
                 {
-                  "value": "medium",
+                  "value": "m",
                   "label": "Medium - 4 Words",
                   "description": "Total words to match will be four so there will be eight cards on the board."
                 },
                 {
-                  "value": "large",
+                  "value": "l",
                   "label": "Large - 5 Words",
                   "description": "Total words to match will be five so there will be ten cards on the board."
                 },
                 {
-                  "value": "xtralarge",
+                  "value": "xl",
                   "label": "ExtraLarge - 6 Words",
                   "description": "Total words to match will be six so there will be twelve cards on the board."
                 }
@@ -86,22 +86,22 @@ games =
               "type": "radio-vertical",
               "choices": [
                 {
-                  "value": "small",
+                  "value": "s",
                   "label": "Small - 3 Words",
                   "description": "Total words to match will be three so there will be six cards on the board."
                 },
                 {
-                  "value": "medium",
+                  "value": "m",
                   "label": "Medium - 4 Words",
                   "description": "Total words to match will be four so there will be eight cards on the board."
                 },
                 {
-                  "value": "large",
+                  "value": "l",
                   "label": "Large - 5 Words",
                   "description": "Total words to match will be five so there will be ten cards on the board."
                 },
                 {
-                  "value": "xtralarge",
+                  "value": "xl",
                   "label": "ExtraLarge - 6 Words",
                   "description": "Total words to match will be six so there will be twelve cards on the board."
                 }

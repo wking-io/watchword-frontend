@@ -6,6 +6,16 @@ type Option
     | Custom
 
 
+toString : Option -> String
+toString option =
+    case option of
+        Random ->
+            "random"
+
+        Custom ->
+            "custom"
+
+
 fromString : String -> Result String Option
 fromString str =
     case str of
