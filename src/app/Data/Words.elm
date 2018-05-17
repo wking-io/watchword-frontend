@@ -6,16 +6,21 @@ module Data.Words
         , duplicate
         , filterByWord
         , filterByGroup
+        , groupByGroup
         , filterByBeginning
         , filterByEnding
         , filterByVowel
         , length
         , toList
         , empty
+        , map
+        , getGroups
+        , getGroupWords
         )
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (decode, required)
+import List.Extra
 
 
 type Words
@@ -87,6 +92,11 @@ filterByVowel =
     filterBy (.vowel)
 
 
+groupByGroup : Words -> List (List Word)
+groupByGroup (Words words) =
+    List.Extra.groupWhile (\x y -> x.group == y.group) words
+
+
 duplicate : Words -> Words
 duplicate (Words words) =
     Words (words ++ words)
@@ -105,3 +115,29 @@ toList (Words words) =
 empty : Words
 empty =
     Words []
+
+
+map : (Word -> a) -> Words -> List a
+map f (Words words) =
+    List.map f words
+
+
+getGroups : Words -> List String
+getGroups (Words words) =
+    List.map .group words
+        |> List.Extra.unique
+
+
+getGroupWords : Words -> List ( String, List Word )
+getGroupWords (Words words) =
+    let
+        groups =
+            List.map .group words
+                |> List.Extra.unique
+                |> List.sort
+
+        wordGroups =
+            List.sortBy .group words
+                |> List.Extra.groupWhile (\x y -> x.group == y.group)
+    in
+        List.Extra.zip groups wordGroups

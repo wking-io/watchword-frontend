@@ -1,4 +1,4 @@
-module Data.Size exposing (Size, fromString, toString, parser)
+module Data.Size exposing (Size, fromString, toString, toInt, parser)
 
 import UrlParser
 
@@ -16,8 +16,8 @@ parser =
 
 
 toString : Size -> String
-toString option =
-    case option of
+toString size =
+    case size of
         S ->
             "s"
 
@@ -29,6 +29,22 @@ toString option =
 
         XL ->
             "xl"
+
+
+toInt : Size -> Int
+toInt size =
+    case size of
+        S ->
+            3
+
+        M ->
+            4
+
+        L ->
+            5
+
+        XL ->
+            6
 
 
 fromString : String -> Result String Size

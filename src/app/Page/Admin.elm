@@ -177,7 +177,7 @@ viewGameSummary { id, name, description, skills } =
             , p [ class "summary__description" ] [ text description ]
             , h2 [ class "summary__subheading" ] [ text "Skills Practiced" ]
             , ul [ class "summary__skill-list" ] (List.map viewSkill skills)
-            , a [ Route.href (Route.AdminSetup (Admin.WithGame id)), class "summary__btn" ] [ text "Setup Game" ]
+            , a [ Route.href (Route.AdminSetup (Admin.WithSetup id)), class "summary__btn" ] [ text "Setup Game" ]
             ]
         ]
 
@@ -197,10 +197,10 @@ viewSetup words game selection =
             viewStep (viewStepNav game selection) (viewFields game.size) "Step Two: Select Word Count" "size"
 
         Selection.OptionAndSize option size ->
-            viewStep (viewStepNav game selection) (viewWords option size words) "Step Three: Select Words" "words"
+            viewStep (viewStepNav game selection) (viewWords option size game.wordSelection words) "Step Three: Select Words" "words"
 
         Selection.Full option size wordSelection ->
-            viewStep (viewStepNav game selection) (viewWords option size words) "Step Three: Select Words" "words"
+            viewStep (viewStepNav game selection) (viewWords option size wordSelection words) "Step Three: Select Words" "words"
 
 
 viewStep : Html Msg -> Html Msg -> String -> String -> Html Msg
@@ -277,9 +277,36 @@ viewNextAction id isComplete isDisabled =
         a [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
 
 
-viewWords : Option -> Size -> Words -> Html Msg
-viewWords option size words =
-    div [] []
+viewWords : Option -> Size -> List String -> Words -> Html Msg
+viewWords option size selected words =
+    case option of
+        Option.Random ->
+            viewWordGroups (Words.getGroups words) selected ((List.length selected) == (Size.toInt size))
+
+        Option.Custom ->
+            viewAllWords (Words.getGroupWords words) selected ((List.length selected) == (Size.toInt size))
+
+
+viewWordGroups : List String -> List String -> Bool -> Html Msg
+viewWordGroups groups selected isMax =
+    div [ class "field-wrapper field-wrapper--random" ] (List.map (viewCheck selected isMax) groups)
+
+
+viewAllWords : List ( String, List Word ) -> List String -> Bool -> Html Msg
+viewAllWords words selected isMax =
+    div [ class "field-wrapper field-wrapper--random" ] (List.map (viewGroupOfWords selected isMax) words)
+
+
+viewGroupOfWords : List String -> Bool -> ( String, List Word ) -> Html Msg
+viewGroupOfWords selected isMax ( group, words ) =
+    let
+        values =
+            List.map .name words
+    in
+        div []
+            [ p [] [ strong [] [ text group ] ]
+            , div [] (List.map (viewCheck selected isMax) values)
+            ]
 
 
 viewFields : Step -> Html Msg
@@ -326,6 +353,62 @@ viewRadio maybeSelection { value, label, description } =
             ]
 
 
+viewWord : Maybe String -> Choice -> Html Msg
+viewWord maybeSelection { value, label, description } =
+    let
+        isSelected =
+            maybeSelection
+                |> Maybe.map ((==) value)
+                |> Maybe.withDefault False
+
+        uid =
+            "setup-step-field"
+    in
+        Html.label
+            [ for uid
+            , onClick (UpdateSelection value)
+            , Attr.classList
+                [ ( "field", True )
+                , ( "field--selected", isSelected )
+                ]
+            ]
+            [ div [ class "field__header" ] [ img [ class "field__header__img", Asset.src (Asset.summary value) ] [] ]
+            , input [ type_ "radio", name uid, Attr.value value, Attr.checked isSelected, onFocus (UpdateSelection value), class "visually-hidden" ] []
+            , div [ class "field__content" ]
+                [ p [ class "field__title" ] [ strong [] [ text label ] ]
+                , p [ class "field__description" ] [ text description ]
+                ]
+            ]
+
+
+viewCheck : List String -> Bool -> String -> Html Msg
+viewCheck selected isMax value =
+    let
+        isSelected =
+            List.member value selected
+
+        uid =
+            "setup-step-field"
+
+        handleEvent =
+            if isMax && (not isSelected) then
+                NoOp
+            else
+                UpdateSelection value
+    in
+        Html.label
+            [ for uid
+            , onClick handleEvent
+            , Attr.classList
+                [ ( "field", True )
+                , ( "field--selected", isSelected )
+                ]
+            ]
+            [ input [ type_ "checkbox", name uid, Attr.value value, Attr.checked isSelected, onFocus handleEvent, class "visually-hidden" ] []
+            , p [ class "field__title" ] [ text value ]
+            ]
+
+
 
 -- UPDATE --
 
@@ -334,6 +417,7 @@ type Msg
     = NextStep
     | PrevStep
     | UpdateSelection String
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -347,6 +431,9 @@ update msg model =
 
         UpdateSelection id ->
             { model | state = (updateAnswer id model.state) } => Cmd.none
+
+        NoOp ->
+            model => Cmd.none
 
 
 updateAnswer : String -> State -> State
