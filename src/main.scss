@@ -351,6 +351,44 @@ body {
       border: none;
     }
   }
+
+  &--custom {
+    flex-direction: column;
+    padding: 6rem 2rem;
+  }
+}
+
+.group-heading {
+  font-size: 5rem;
+  text-transform: uppercase;
+  margin: 0 0 4rem 4rem;
+}
+
+.word {
+  width: calc(100% / 6);
+  text-align: center;
+
+  &__value {
+    padding: 1rem 3rem;
+    border: 1px solid $primary;
+    border-radius: 1rem;
+    margin: 0 4rem 0;
+  }
+
+  &--selected &__value {
+    color: $white;
+    background-color: $primary;
+  }
+
+  &--disabled {
+    opacity: 0.2;
+  }
+
+  &--wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 4rem 0;
+  }
 }
 
 .field {

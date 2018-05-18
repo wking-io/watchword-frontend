@@ -6,7 +6,7 @@ import Data.FieldType as FieldType exposing (FieldType)
 import Data.Size as Size exposing (Size)
 import Data.Step as Step exposing (Step, Choice)
 import Data.Option as Option exposing (Option)
-import Data.Games as Games exposing (Games, Game)
+import Data.Games as Games exposing (Games, Game, Answer)
 import Data.Words as Words exposing (Words, Word)
 import Data.Selection as Selection exposing (Selection)
 import Data.Memory as Memory
@@ -153,7 +153,7 @@ viewGame position { id, name } =
                     , ( "menu-item--active", isActive )
                     ]
                 ]
-                [ a [ class "menu-item__btn", Route.href (Route.AdminSelected (Admin.WithGame id)) ]
+                [ a [ class "menu-item__btn", Route.href (Route.Admin (Admin.WithGame id)) ]
                     [ div [ class "menu-item__btn__icon" ] [ Maybe.withDefault (GameIcon.default isActive) (GameIcon.icons id isActive) ]
                     , text name
                     ]
@@ -191,13 +191,18 @@ viewSetup : Words -> Game -> Selection -> Html Msg
 viewSetup words game selection =
     case selection of
         Selection.Empty ->
-            viewStep (viewStepNav game selection) (viewFields game.option) "Step One: Select Option" "option"
+            viewStep (viewStepNav game selection) (viewFields game.option game.answer) "Step One: Select Option" "option"
 
         Selection.OptionOnly option ->
-            viewStep (viewStepNav game selection) (viewFields game.size) "Step Two: Select Word Count" "size"
+            viewStep (viewStepNav game selection) (viewFields game.size game.answer) "Step Two: Select Word Count" "size"
 
         Selection.OptionAndSize option size ->
-            viewStep (viewStepNav game selection) (viewWords option size game.wordSelection words) "Step Three: Select Words" "words"
+            case game.answer of
+                Games.Multiple xs ->
+                    viewStep (viewStepNav game selection) (viewWords option size xs words) "Step Three: Select Words" "words"
+
+                _ ->
+                    viewStep (viewStepNav game selection) (viewWords option size [] words) "Step Three: Select Words" "words"
 
         Selection.Full option size wordSelection ->
             viewStep (viewStepNav game selection) (viewWords option size wordSelection words) "Step Three: Select Words" "words"
@@ -215,66 +220,60 @@ viewStep stepNav fields title stepId =
 
 
 viewStepNav : Game -> Selection -> Html Msg
-viewStepNav { id, option, size, wordSelection } selection =
+viewStepNav { id, option, size, answer } selection =
     case selection of
         Selection.Empty ->
-            case option.answer of
-                Just answer ->
-                    case (Option.fromString answer) of
+            case answer of
+                Games.Single theAnswer ->
+                    case (Option.fromString theAnswer) of
                         Ok o ->
-                            viewStepNavHelp id False True (Route.AdminSetup (Admin.WithOption id o))
+                            viewStepNavHelp id False True (Route.Admin (Admin.WithGame id)) (Route.AdminSetup (Admin.WithOption id o))
 
                         Err _ ->
-                            viewStepNavHelp id False True (Route.AdminSetup (Admin.WithSetup id))
+                            viewStepNavHelp id False True (Route.Admin (Admin.WithGame id)) (Route.AdminSetup (Admin.WithSetup id))
 
-                Nothing ->
-                    viewStepNavHelp id True True (Route.AdminSetup (Admin.WithSetup id))
+                _ ->
+                    viewStepNavHelp id True True (Route.Admin (Admin.WithGame id)) (Route.AdminSetup (Admin.WithSetup id))
 
         Selection.OptionOnly theOption ->
-            case size.answer of
-                Just answer ->
-                    case (Size.fromString answer) of
+            case answer of
+                Games.Single theAnswer ->
+                    case (Size.fromString theAnswer) of
                         Ok s ->
-                            viewStepNavHelp id False False (Route.AdminSetup (Admin.WithSize id theOption s))
+                            viewStepNavHelp id False False (Route.Admin (Admin.WithSetup id)) (Route.AdminSetup (Admin.WithSize id theOption s))
 
                         Err _ ->
-                            viewStepNavHelp id False False (Route.AdminSetup (Admin.WithOption id theOption))
+                            viewStepNavHelp id False False (Route.Admin (Admin.WithSetup id)) (Route.AdminSetup (Admin.WithOption id theOption))
 
-                Nothing ->
-                    viewStepNavHelp id True False (Route.AdminSetup (Admin.WithOption id theOption))
+                _ ->
+                    viewStepNavHelp id True False (Route.Admin (Admin.WithSetup id)) (Route.AdminSetup (Admin.WithOption id theOption))
 
         Selection.OptionAndSize theOption theSize ->
-            if (List.isEmpty wordSelection) then
-                viewStepNavHelp id True False (Route.AdminSetup (Admin.WithSize id theOption theSize))
-            else
-                viewStepNavHelp id False False (Route.AdminSetup (Admin.WithWords id theOption theSize (Just wordSelection)))
+            case answer of
+                Games.Multiple theAnswer ->
+                    viewStepNavHelp id False False (Route.Admin (Admin.WithOption id theOption)) (Route.AdminSetup (Admin.WithWords id theOption theSize (Just theAnswer)))
+
+                _ ->
+                    viewStepNavHelp id True False (Route.Admin (Admin.WithOption id theOption)) (Route.AdminSetup (Admin.WithSize id theOption theSize))
 
         Selection.Full theOption theSize words ->
-            viewStepNavHelp id True False (Route.MemoryGame (Memory.Slug theOption theSize (Just words)))
+            viewStepNavHelp id True False (Route.Admin (Admin.WithOption id theOption)) (Route.MemoryGame (Memory.Slug theOption theSize (Just words)))
 
 
-viewStepNavHelp : String -> Bool -> Bool -> Route.Route -> Html Msg
-viewStepNavHelp id isDisabled isBeginning route =
+viewStepNavHelp : String -> Bool -> Bool -> Route.Route -> Route.Route -> Html Msg
+viewStepNavHelp id isDisabled isBeginning prevRoute nextRoute =
     div [ class "setup__nav" ]
-        [ viewPrevAction id isBeginning
-        , a [ class "btn btn--primary", Route.href route, Attr.disabled isDisabled ] [ text "Next Step" ]
+        [ viewPrevAction prevRoute isBeginning
+        , a [ class "btn btn--primary", Route.href nextRoute, Attr.disabled isDisabled ] [ text "Next Step" ]
         ]
 
 
-viewPrevAction : String -> Bool -> Html Msg
-viewPrevAction id isBeginning =
+viewPrevAction : Route.Route -> Bool -> Html Msg
+viewPrevAction route isBeginning =
     if isBeginning then
-        a [ class "btn btn--ghost", Route.href (Route.AdminSelected (Admin.WithGame id)) ] [ text "Overview" ]
+        a [ class "btn btn--ghost", Route.href route ] [ text "Overview" ]
     else
-        button [ class "btn btn--ghost", onClick PrevStep ] [ text "Prev Step" ]
-
-
-viewNextAction : String -> Bool -> Bool -> Html Msg
-viewNextAction id isComplete isDisabled =
-    if isComplete then
-        a [ class "btn btn--primary", Route.href (Route.AdminSelected (Admin.WithGame id)), Attr.disabled isDisabled ] [ text "Play Game" ]
-    else
-        a [ class "btn btn--primary", onClick NextStep, Attr.disabled isDisabled ] [ text "Next Step" ]
+        button [ class "btn btn--ghost", Route.href route ] [ text "Prev Step" ]
 
 
 viewWords : Option -> Size -> List String -> Words -> Html Msg
@@ -294,23 +293,22 @@ viewWordGroups groups selected isMax =
 
 viewAllWords : List ( String, List Word ) -> List String -> Bool -> Html Msg
 viewAllWords words selected isMax =
-    div [ class "field-wrapper field-wrapper--random" ] (List.map (viewGroupOfWords selected isMax) words)
+    div [ class "field-wrapper field-wrapper--custom" ] (List.map (viewGroupOfWords selected isMax) words |> List.concat)
 
 
-viewGroupOfWords : List String -> Bool -> ( String, List Word ) -> Html Msg
+viewGroupOfWords : List String -> Bool -> ( String, List Word ) -> List (Html Msg)
 viewGroupOfWords selected isMax ( group, words ) =
     let
         values =
             List.map .name words
     in
-        div []
-            [ p [] [ strong [] [ text group ] ]
-            , div [] (List.map (viewCheck selected isMax) values)
-            ]
+        [ p [ class "group-heading" ] [ strong [] [ text group ] ]
+        , div [ class "word--wrapper" ] (List.map (viewCheck selected isMax) values)
+        ]
 
 
-viewFields : Step -> Html Msg
-viewFields { fieldType, choices, answer } =
+viewFields : Step -> Answer -> Html Msg
+viewFields { fieldType, choices } answer =
     case fieldType of
         FieldType.RadioHorizontal ->
             div [ class "field-wrapper field-wrapper--horizontal" ] (List.map (viewRadio answer) choices)
@@ -318,20 +316,20 @@ viewFields { fieldType, choices, answer } =
         FieldType.RadioVertical ->
             div [ class "field-wrapper field-wrapper--vertical" ] (List.map (viewRadio answer) choices)
 
-        FieldType.WordSelect ->
-            div [ class "" ] []
-
         FieldType.NotFound ->
             div [ class "" ] []
 
 
-viewRadio : Maybe String -> Choice -> Html Msg
-viewRadio maybeSelection { value, label, description } =
+viewRadio : Answer -> Choice -> Html Msg
+viewRadio answer { value, label, description } =
     let
         isSelected =
-            maybeSelection
-                |> Maybe.map ((==) value)
-                |> Maybe.withDefault False
+            case answer of
+                Games.Single _ ->
+                    True
+
+                _ ->
+                    False
 
         uid =
             "setup-step-field"
@@ -390,22 +388,23 @@ viewCheck selected isMax value =
         uid =
             "setup-step-field"
 
-        handleEvent =
+        ( handleEvent, isDisabled ) =
             if isMax && (not isSelected) then
-                NoOp
+                ( NoOp, True )
             else
-                UpdateSelection value
+                ( UpdateSelection value, False )
     in
         Html.label
             [ for uid
             , onClick handleEvent
             , Attr.classList
-                [ ( "field", True )
-                , ( "field--selected", isSelected )
+                [ ( "word", True )
+                , ( "word--selected", isSelected )
+                , ( "word--disabled", isDisabled )
                 ]
             ]
             [ input [ type_ "checkbox", name uid, Attr.value value, Attr.checked isSelected, onFocus handleEvent, class "visually-hidden" ] []
-            , p [ class "field__title" ] [ text value ]
+            , p [ class "word__value" ] [ text value ]
             ]
 
 
@@ -414,21 +413,13 @@ viewCheck selected isMax value =
 
 
 type Msg
-    = NextStep
-    | PrevStep
-    | UpdateSelection String
+    = UpdateSelection String
     | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NextStep ->
-            { model | state = (updateNext model.state) } => Cmd.none
-
-        PrevStep ->
-            { model | state = (updatePrev model.state) } => Cmd.none
-
         UpdateSelection id ->
             { model | state = (updateAnswer id model.state) } => Cmd.none
 
@@ -445,111 +436,21 @@ updateAnswer id state =
         Setup games selection ->
             case selection of
                 Selection.Empty ->
-                    Setup (SelectList.mapBy (addAnswerToOption id) games) selection
+                    Setup (SelectList.mapBy (updateHelper Games.setSingle id) games) selection
 
                 Selection.OptionOnly _ ->
-                    Setup (SelectList.mapBy (addAnswerToSize id) games) selection
+                    Setup (SelectList.mapBy (updateHelper Games.setSingle id) games) selection
 
                 Selection.OptionAndSize _ _ ->
-                    Setup (SelectList.mapBy (addAnswerToWords id) games) selection
+                    Setup (SelectList.mapBy (updateHelper Games.setMultiple id) games) selection
 
                 Selection.Full _ _ _ ->
                     state
 
 
-addAnswerToOption : String -> SelectList.Position -> Game -> Game
-addAnswerToOption answer position game =
+updateHelper : (String -> Game -> Game) -> String -> SelectList.Position -> Game -> Game
+updateHelper f answer position game =
     if position == SelectList.Selected then
-        answer
-            |> Step.asAnswerIn game.option
-            |> Games.asOptionIn game
+        f answer game
     else
         game
-
-
-addAnswerToSize : String -> SelectList.Position -> Game -> Game
-addAnswerToSize answer position game =
-    if position == SelectList.Selected then
-        answer
-            |> Step.asAnswerIn game.size
-            |> Games.asSizeIn game
-    else
-        game
-
-
-addAnswerToWords : String -> SelectList.Position -> Game -> Game
-addAnswerToWords answer position game =
-    if position == SelectList.Selected then
-        Games.asWordSelectionIn game answer
-    else
-        game
-
-
-updateNext : State -> State
-updateNext state =
-    case state of
-        Summary _ ->
-            state
-
-        Setup games selection ->
-            case selection of
-                Selection.Empty ->
-                    Setup games (next (SelectList.selected games |> .option |> .answer) selection)
-
-                Selection.OptionOnly _ ->
-                    Setup games (next (SelectList.selected games |> .size |> .answer) selection)
-
-                Selection.OptionAndSize _ _ ->
-                    Setup games (complete (SelectList.selected games |> .wordSelection) selection)
-
-                Selection.Full _ _ _ ->
-                    Setup games selection
-
-
-next : Maybe String -> Selection -> Selection
-next maybeAnswer selection =
-    case maybeAnswer of
-        Just answer ->
-            case selection of
-                Selection.Empty ->
-                    Selection.addOption (Option.fromString answer)
-
-                Selection.OptionOnly option ->
-                    Selection.addSize option (Size.fromString answer)
-
-                _ ->
-                    selection
-
-        Nothing ->
-            selection
-
-
-updatePrev : State -> State
-updatePrev state =
-    case state of
-        Summary _ ->
-            state
-
-        Setup games selection ->
-            case selection of
-                Selection.Empty ->
-                    Summary games
-
-                Selection.OptionOnly _ ->
-                    Setup games Selection.Empty
-
-                Selection.OptionAndSize option _ ->
-                    Setup games (Selection.OptionOnly option)
-
-                Selection.Full option size _ ->
-                    Setup games (Selection.OptionAndSize option size)
-
-
-complete : List String -> Selection -> Selection
-complete words selection =
-    case selection of
-        Selection.OptionAndSize option size ->
-            Selection.Full option size words
-
-        _ ->
-            selection

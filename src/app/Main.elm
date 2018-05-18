@@ -156,9 +156,6 @@ setRoute maybeRoute model =
             Just (Route.Admin slug) ->
                 isError Admin (Admin.init slug False)
 
-            Just (Route.AdminSelected slug) ->
-                isError Admin (Admin.init slug False)
-
             Just (Route.AdminSetup slug) ->
                 isError Admin (Admin.init slug True)
 

@@ -16,7 +16,6 @@ import UrlParser as Url exposing ((</>), (<?>), Parser, QueryParser, oneOf, pars
 type Route
     = Root Admin.Slug
     | Admin Admin.Slug
-    | AdminSelected Admin.Slug
     | AdminSetup Admin.Slug
     | MemoryGame Memory.Slug
 
@@ -27,7 +26,7 @@ route =
         [ Url.map Admin.Init (s "") |> Url.map Root
         , Url.map Admin.Init (s "dashboard") |> Url.map Admin
         , Url.map Admin.WithGame (s "dashboard" </> Url.string)
-            |> Url.map AdminSelected
+            |> Url.map Admin
         , Url.map Admin.WithSetup (s "dashboard" </> Url.string </> s "setup")
             |> Url.map AdminSetup
         , Url.map Admin.WithOption (s "dashboard" </> Url.string </> s "setup" </> Option.parser)
@@ -62,10 +61,7 @@ routeToString page =
                 Root _ ->
                     [ "dashboard" ]
 
-                Admin _ ->
-                    [ "dashboard" ]
-
-                AdminSelected slug ->
+                Admin slug ->
                     [ "dashboard", (Admin.slugToString slug) ]
 
                 AdminSetup slug ->

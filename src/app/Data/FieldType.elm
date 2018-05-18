@@ -7,7 +7,6 @@ type FieldType
     = NotFound
     | RadioVertical
     | RadioHorizontal
-    | WordSelect
 
 
 decoder : Decoder FieldType
@@ -23,9 +22,6 @@ stringToFieldType fieldType =
 
         "radio-horizontal" ->
             RadioHorizontal
-
-        "word-select" ->
-            WordSelect
 
         _ ->
             NotFound

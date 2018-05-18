@@ -1,4 +1,4 @@
-module Data.Games exposing (Games, Game, decoder, equals, toNav, setOption, asOptionIn, setSize, asSizeIn, setWordSelection, asWordSelectionIn)
+module Data.Games exposing (Games, Game, Answer(..), decoder, equals, toNav, setSingle, setMultiple)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (decode, required, hardcoded)
@@ -17,8 +17,14 @@ type alias Game =
     , skills : List String
     , option : Step
     , size : Step
-    , wordSelection : List String
+    , answer : Answer
     }
+
+
+type Answer
+    = Empty
+    | Single String
+    | Multiple (List String)
 
 
 decoder : Decoder Games
@@ -36,7 +42,7 @@ decodeGame =
         |> required "skills" (Decode.list Decode.string)
         |> required "option" Step.decoder
         |> required "size" Step.decoder
-        |> hardcoded []
+        |> hardcoded Empty
 
 
 toNav : Games -> SelectList Game
@@ -55,7 +61,7 @@ toNav (Games games) =
 
 emptyGame : Game
 emptyGame =
-    Game "error" "No Games Found" "" [] Step.empty Step.empty []
+    Game "error" "No Games Found" "" [] Step.empty Step.empty Empty
 
 
 equals : String -> Game -> Bool
@@ -63,31 +69,34 @@ equals string { id } =
     string == id
 
 
-setOption : Step -> Game -> Game
-setOption newStep game =
-    { game | option = newStep }
+setSingle : String -> Game -> Game
+setSingle answer game =
+    case game.answer of
+        Multiple _ ->
+            game
+
+        _ ->
+            { game | answer = Single answer }
 
 
-asOptionIn : Game -> Step -> Game
-asOptionIn game newStep =
-    { game | option = newStep }
+setMultiple : String -> Game -> Game
+setMultiple answer game =
+    case game.answer of
+        Multiple xs ->
+            let
+                newAnswer =
+                    if (List.member answer xs) then
+                        List.filter ((/=) answer) xs
+                    else
+                        answer :: xs
+            in
+                if List.isEmpty newAnswer then
+                    { game | answer = Empty }
+                else
+                    { game | answer = Multiple newAnswer }
 
+        Empty ->
+            { game | answer = Multiple [ answer ] }
 
-setSize : Step -> Game -> Game
-setSize newStep game =
-    { game | size = newStep }
-
-
-asSizeIn : Game -> Step -> Game
-asSizeIn game newStep =
-    { game | size = newStep }
-
-
-setWordSelection : String -> Game -> Game
-setWordSelection newWord game =
-    { game | wordSelection = newWord :: game.wordSelection }
-
-
-asWordSelectionIn : Game -> String -> Game
-asWordSelectionIn game newWord =
-    { game | wordSelection = newWord :: game.wordSelection }
+        Single _ ->
+            game

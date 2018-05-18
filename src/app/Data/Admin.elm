@@ -1,4 +1,4 @@
-module Data.Admin exposing (Slug(..), slugToString)
+module Data.Admin exposing (Slug(..), slugToString, getPrev)
 
 import Data.Option as Option exposing (Option)
 import Data.Size as Size exposing (Size)
@@ -38,3 +38,30 @@ slugToString slug =
 
                 Nothing ->
                     id ++ "/setup/" ++ (Option.toString option) ++ "/" ++ (Size.toString size) ++ "/"
+
+
+getPrev : Slug -> Slug
+getPrev slug =
+    case slug of
+        Init ->
+            Init
+
+        WithGame id ->
+            WithGame id
+
+        WithSetup id ->
+            WithGame id
+
+        WithOption id option ->
+            WithSetup id
+
+        WithSize id option size ->
+            WithOption id option
+
+        WithWords id option size maybeWords ->
+            case maybeWords of
+                Just words ->
+                    WithWords id option size Nothing
+
+                Nothing ->
+                    WithSize id option size
