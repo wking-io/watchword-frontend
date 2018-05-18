@@ -302,7 +302,7 @@ viewGroupOfWords selected isMax ( group, words ) =
         values =
             List.map .name words
     in
-        [ p [ class "group-heading" ] [ strong [] [ text group ] ]
+        [ p [ class "group-heading" ] [ text "Word Group - ", strong [] [ text (String.toUpper group) ] ]
         , div [ class "word--wrapper" ] (List.map (viewCheck selected isMax) values)
         ]
 
@@ -325,8 +325,8 @@ viewRadio answer { value, label, description } =
     let
         isSelected =
             case answer of
-                Games.Single _ ->
-                    True
+                Games.Single theAnswer ->
+                    theAnswer == value
 
                 _ ->
                     False
