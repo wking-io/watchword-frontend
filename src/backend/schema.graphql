@@ -1,0 +1,33 @@
+# import Game from './generated/prisma.graphql'
+# import Exercise from './generated/prisma.graphql'
+# import User from './generated/prisma.graphql'
+
+type Query {
+  info: String!
+  games: [Game!]!
+  game(id: ID!): Game
+  users: [User!]!
+  user(id: ID!): User
+  exercises: [Exercise!]!
+}
+
+type Mutation {
+  createGame(name: String!, description: String!, slug: String!): Game!
+  updateGame(id: ID!, name: String!, description: String!, slug: String!): Game
+  deleteGame(id: ID!): Game
+  createExercise(gameId: String!): Exercise!
+  signup(name: String!, email: String!, password: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  exercises: [Exercise!]!
+}

@@ -13,7 +13,7 @@ export default merge.smart(common, {
       // This entry is used by hot reloading
       'webpack-hot-middleware/client',
       // This is the main entry
-      AppConfig.entries.main,
+      AppConfig.entries.frontend,
     ],
   },
   output: {

@@ -1,0 +1,5 @@
+endpoint: https://us1.prisma.sh/william-king-4b9a55/school-app/dev
+datamodel: datamodel.graphql
+hooks:
+  post-deploy:
+    - graphql get-schema -p prisma

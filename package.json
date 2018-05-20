@@ -35,5 +35,11 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.19.1",
     "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "graphql-yoga": "1.14.0",
+    "jsonwebtoken": "8.2.1",
+    "prisma-binding": "2.0.0"
   }
 }

@@ -35,7 +35,7 @@ app.use(
 
 // This is single page application, therefore we route all the requests to the index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../src/index.html'));
+  res.sendFile(path.join(__dirname, '../src/frontend/index.html'));
 });
 
 // Start the server

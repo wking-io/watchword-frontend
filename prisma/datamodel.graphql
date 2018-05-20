@@ -1,0 +1,23 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  exercises: [Exercise!]!
+}
+
+type Game {
+  id: ID! @unique
+  createdAt: DateTime!
+  name: String!
+  description: String!
+  slug: String! @unique
+}
+
+type Exercise {
+  id: ID! @unique
+  game: Game!
+  views: Int! @default(value: 0)
+  completed: Int! @default(value: 0)
+  owner: User!
+}
