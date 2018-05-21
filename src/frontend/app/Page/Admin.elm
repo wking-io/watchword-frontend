@@ -46,7 +46,7 @@ init slug isSetup =
         base =
             Result.map3 Model
                 Request.Games.get
-                Request.Words.get
+                Request.Words.getOld
     in
         case slug of
             Admin.Init ->

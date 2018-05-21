@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/william-king-4b9a55/school-app/dev
-# timestamp: Sun May 20 2018 11:07:56 GMT-0500 (CDT)
+# timestamp: Mon May 21 2018 09:52:43 GMT-0500 (CDT)
 
 type AggregateExercise {
   count: Int!
@@ -10,6 +10,10 @@ type AggregateGame {
 }
 
 type AggregateUser {
+  count: Int!
+}
+
+type AggregateWord {
   count: Int!
 }
 
@@ -590,21 +594,27 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createGame(data: GameCreateInput!): Game!
   createExercise(data: ExerciseCreateInput!): Exercise!
+  createWord(data: WordCreateInput!): Word!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateGame(data: GameUpdateInput!, where: GameWhereUniqueInput!): Game
   updateExercise(data: ExerciseUpdateInput!, where: ExerciseWhereUniqueInput!): Exercise
+  updateWord(data: WordUpdateInput!, where: WordWhereUniqueInput!): Word
   deleteUser(where: UserWhereUniqueInput!): User
   deleteGame(where: GameWhereUniqueInput!): Game
   deleteExercise(where: ExerciseWhereUniqueInput!): Exercise
+  deleteWord(where: WordWhereUniqueInput!): Word
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertGame(where: GameWhereUniqueInput!, create: GameCreateInput!, update: GameUpdateInput!): Game!
   upsertExercise(where: ExerciseWhereUniqueInput!, create: ExerciseCreateInput!, update: ExerciseUpdateInput!): Exercise!
+  upsertWord(where: WordWhereUniqueInput!, create: WordCreateInput!, update: WordUpdateInput!): Word!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyGames(data: GameUpdateInput!, where: GameWhereInput): BatchPayload!
   updateManyExercises(data: ExerciseUpdateInput!, where: ExerciseWhereInput): BatchPayload!
+  updateManyWords(data: WordUpdateInput!, where: WordWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyGames(where: GameWhereInput): BatchPayload!
   deleteManyExercises(where: ExerciseWhereInput): BatchPayload!
+  deleteManyWords(where: WordWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -638,12 +648,15 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   games(where: GameWhereInput, orderBy: GameOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Game]!
   exercises(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exercise]!
+  words(where: WordWhereInput, orderBy: WordOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Word]!
   user(where: UserWhereUniqueInput!): User
   game(where: GameWhereUniqueInput!): Game
   exercise(where: ExerciseWhereUniqueInput!): Exercise
+  word(where: WordWhereUniqueInput!): Word
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   gamesConnection(where: GameWhereInput, orderBy: GameOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GameConnection!
   exercisesConnection(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExerciseConnection!
+  wordsConnection(where: WordWhereInput, orderBy: WordOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WordConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -656,6 +669,7 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   game(where: GameSubscriptionWhereInput): GameSubscriptionPayload
   exercise(where: ExerciseSubscriptionWhereInput): ExerciseSubscriptionPayload
+  word(where: WordSubscriptionWhereInput): WordSubscriptionPayload
 }
 
 type User implements Node {
@@ -967,4 +981,371 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+}
+
+type Word implements Node {
+  id: ID!
+  word: String!
+  group: String!
+  beginning: String!
+  ending: String!
+  vowel: String!
+}
+
+"""A connection to a list of items."""
+type WordConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [WordEdge]!
+  aggregate: AggregateWord!
+}
+
+input WordCreateInput {
+  word: String!
+  group: String!
+  beginning: String!
+  ending: String!
+  vowel: String!
+}
+
+"""An edge in a connection."""
+type WordEdge {
+  """The item at the end of the edge."""
+  node: Word!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum WordOrderByInput {
+  id_ASC
+  id_DESC
+  word_ASC
+  word_DESC
+  group_ASC
+  group_DESC
+  beginning_ASC
+  beginning_DESC
+  ending_ASC
+  ending_DESC
+  vowel_ASC
+  vowel_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type WordPreviousValues {
+  id: ID!
+  word: String!
+  group: String!
+  beginning: String!
+  ending: String!
+  vowel: String!
+}
+
+type WordSubscriptionPayload {
+  mutation: MutationType!
+  node: Word
+  updatedFields: [String!]
+  previousValues: WordPreviousValues
+}
+
+input WordSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WordSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WordSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WordSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: WordWhereInput
+}
+
+input WordUpdateInput {
+  word: String
+  group: String
+  beginning: String
+  ending: String
+  vowel: String
+}
+
+input WordWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WordWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WordWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WordWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  word: String
+
+  """All values that are not equal to given value."""
+  word_not: String
+
+  """All values that are contained in given list."""
+  word_in: [String!]
+
+  """All values that are not contained in given list."""
+  word_not_in: [String!]
+
+  """All values less than the given value."""
+  word_lt: String
+
+  """All values less than or equal the given value."""
+  word_lte: String
+
+  """All values greater than the given value."""
+  word_gt: String
+
+  """All values greater than or equal the given value."""
+  word_gte: String
+
+  """All values containing the given string."""
+  word_contains: String
+
+  """All values not containing the given string."""
+  word_not_contains: String
+
+  """All values starting with the given string."""
+  word_starts_with: String
+
+  """All values not starting with the given string."""
+  word_not_starts_with: String
+
+  """All values ending with the given string."""
+  word_ends_with: String
+
+  """All values not ending with the given string."""
+  word_not_ends_with: String
+  group: String
+
+  """All values that are not equal to given value."""
+  group_not: String
+
+  """All values that are contained in given list."""
+  group_in: [String!]
+
+  """All values that are not contained in given list."""
+  group_not_in: [String!]
+
+  """All values less than the given value."""
+  group_lt: String
+
+  """All values less than or equal the given value."""
+  group_lte: String
+
+  """All values greater than the given value."""
+  group_gt: String
+
+  """All values greater than or equal the given value."""
+  group_gte: String
+
+  """All values containing the given string."""
+  group_contains: String
+
+  """All values not containing the given string."""
+  group_not_contains: String
+
+  """All values starting with the given string."""
+  group_starts_with: String
+
+  """All values not starting with the given string."""
+  group_not_starts_with: String
+
+  """All values ending with the given string."""
+  group_ends_with: String
+
+  """All values not ending with the given string."""
+  group_not_ends_with: String
+  beginning: String
+
+  """All values that are not equal to given value."""
+  beginning_not: String
+
+  """All values that are contained in given list."""
+  beginning_in: [String!]
+
+  """All values that are not contained in given list."""
+  beginning_not_in: [String!]
+
+  """All values less than the given value."""
+  beginning_lt: String
+
+  """All values less than or equal the given value."""
+  beginning_lte: String
+
+  """All values greater than the given value."""
+  beginning_gt: String
+
+  """All values greater than or equal the given value."""
+  beginning_gte: String
+
+  """All values containing the given string."""
+  beginning_contains: String
+
+  """All values not containing the given string."""
+  beginning_not_contains: String
+
+  """All values starting with the given string."""
+  beginning_starts_with: String
+
+  """All values not starting with the given string."""
+  beginning_not_starts_with: String
+
+  """All values ending with the given string."""
+  beginning_ends_with: String
+
+  """All values not ending with the given string."""
+  beginning_not_ends_with: String
+  ending: String
+
+  """All values that are not equal to given value."""
+  ending_not: String
+
+  """All values that are contained in given list."""
+  ending_in: [String!]
+
+  """All values that are not contained in given list."""
+  ending_not_in: [String!]
+
+  """All values less than the given value."""
+  ending_lt: String
+
+  """All values less than or equal the given value."""
+  ending_lte: String
+
+  """All values greater than the given value."""
+  ending_gt: String
+
+  """All values greater than or equal the given value."""
+  ending_gte: String
+
+  """All values containing the given string."""
+  ending_contains: String
+
+  """All values not containing the given string."""
+  ending_not_contains: String
+
+  """All values starting with the given string."""
+  ending_starts_with: String
+
+  """All values not starting with the given string."""
+  ending_not_starts_with: String
+
+  """All values ending with the given string."""
+  ending_ends_with: String
+
+  """All values not ending with the given string."""
+  ending_not_ends_with: String
+  vowel: String
+
+  """All values that are not equal to given value."""
+  vowel_not: String
+
+  """All values that are contained in given list."""
+  vowel_in: [String!]
+
+  """All values that are not contained in given list."""
+  vowel_not_in: [String!]
+
+  """All values less than the given value."""
+  vowel_lt: String
+
+  """All values less than or equal the given value."""
+  vowel_lte: String
+
+  """All values greater than the given value."""
+  vowel_gt: String
+
+  """All values greater than or equal the given value."""
+  vowel_gte: String
+
+  """All values containing the given string."""
+  vowel_contains: String
+
+  """All values not containing the given string."""
+  vowel_not_contains: String
+
+  """All values starting with the given string."""
+  vowel_starts_with: String
+
+  """All values not starting with the given string."""
+  vowel_not_starts_with: String
+
+  """All values ending with the given string."""
+  vowel_ends_with: String
+
+  """All values not ending with the given string."""
+  vowel_not_ends_with: String
+}
+
+input WordWhereUniqueInput {
+  id: ID
+  word: String
 }

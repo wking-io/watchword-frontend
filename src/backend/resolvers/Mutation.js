@@ -66,9 +66,20 @@ function createExercise(_, { gameId }, context, info) {
   );
 }
 
+function createWord(_, args, context, info) {
+  const userId = getUserId(context);
+  return context.db.mutation.createWord(
+    {
+      data: args,
+    },
+    info
+  );
+}
+
 module.exports = {
   signup,
   login,
   createGame,
   createExercise,
+  createWord,
 };

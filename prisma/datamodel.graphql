@@ -21,3 +21,12 @@ type Exercise {
   completed: Int! @default(value: 0)
   owner: User!
 }
+
+type Word {
+  id: ID! @unique
+  word: String! @unique
+  group: String!
+  beginning: String!
+  ending: String!
+  vowel: String!
+}

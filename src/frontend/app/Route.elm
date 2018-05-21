@@ -18,6 +18,7 @@ type Route
     | Admin Admin.Slug
     | AdminSetup Admin.Slug
     | MemoryGame Memory.Slug
+    | Test
 
 
 route : Parser (Route -> a) a
@@ -37,6 +38,7 @@ route =
             |> Url.map AdminSetup
         , Url.map Memory.Slug (s "memory" </> s "game" </> Option.parser </> Size.parser <?> listParam "selection")
             |> Url.map MemoryGame
+        , Url.map Test (s "test")
         ]
 
 
@@ -69,6 +71,9 @@ routeToString page =
 
                 MemoryGame slug ->
                     [ "memory", "game", (Memory.toString slug) ]
+
+                Test ->
+                    [ "test" ]
     in
         "#/" ++ String.join "/" pieces
 

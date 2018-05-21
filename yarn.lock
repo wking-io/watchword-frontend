@@ -1830,6 +1830,12 @@ elm-format@^0.6.1-alpha:
   dependencies:
     binwrap "^0.1.4"
 
+elm-format@^0.7.0-exp:
+  version "0.7.0-exp"
+  resolved "https://registry.yarnpkg.com/elm-format/-/elm-format-0.7.0-exp.tgz#75b9d9f3f0b67195b44e804fce5a6be0f45af408"
+  dependencies:
+    binwrap "^0.1.4"
+
 elm-webpack-loader@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/elm-webpack-loader/-/elm-webpack-loader-4.4.0.tgz#dd7a3b628b7abc4fac38e3045d3ab6e57187e9b6"
@@ -2448,6 +2454,16 @@ graceful-fs@~3.0.2:
   dependencies:
     natives "^1.1.0"
 
+graphqelm@3.1.12:
+  version "3.1.12"
+  resolved "https://registry.yarnpkg.com/graphqelm/-/graphqelm-3.1.12.tgz#fe98be8318c881fb26e0715f77c9e4d728be3a3b"
+  dependencies:
+    elm-format "^0.7.0-exp"
+    glob "^7.1.2"
+    graphql-request "^1.4.0"
+    minimist "^1.2.0"
+    request "^2.83.0"
+
 graphql-binding@2:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/graphql-binding/-/graphql-binding-2.0.0.tgz#6dce5842fef724327a2c469c5366cdf6ba903f30"
@@ -2575,7 +2591,7 @@ graphql-yoga@1.14.0:
     graphql-tools "^2.23.1"
     subscriptions-transport-ws "^0.9.8"
 
-"graphql@^0.11.0 || ^0.12.0 || ^0.13.0":
+graphql@0.13.2, "graphql@^0.11.0 || ^0.12.0 || ^0.13.0":
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.13.2.tgz#4c740ae3c222823e7004096f832e7b93b2108270"
   dependencies:
@@ -4712,6 +4728,31 @@ request@2.81.0:
     tough-cookie "~2.3.0"
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
+
+request@^2.83.0:
+  version "2.87.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.87.0.tgz#32f00235cd08d482b4d0d68db93a829c0ed5756e"
+  dependencies:
+    aws-sign2 "~0.7.0"
+    aws4 "^1.6.0"
+    caseless "~0.12.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.1"
+    forever-agent "~0.6.1"
+    form-data "~2.3.1"
+    har-validator "~5.0.3"
+    http-signature "~1.2.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.17"
+    oauth-sign "~0.8.2"
+    performance-now "^2.1.0"
+    qs "~6.5.1"
+    safe-buffer "^5.1.1"
+    tough-cookie "~2.3.3"
+    tunnel-agent "^0.6.0"
+    uuid "^3.1.0"
 
 request@~2.79.0:
   version "2.79.0"

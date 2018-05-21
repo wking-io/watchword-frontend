@@ -3,6 +3,7 @@ module Main exposing (main)
 import Html exposing (Html, program, text, div, ul, li, img, p)
 import Page.Admin as Admin
 import Page.Memory.Game as MemoryGame
+import Page.Test as Test
 import Page.NotFound as NotFound
 import Page.Errored as Errored exposing (PageLoadError)
 import Navigation exposing (Location)
@@ -10,6 +11,7 @@ import Route exposing (Route)
 import Util.Infix exposing ((=>))
 import Random exposing (Generator)
 import View.Page as Page
+import Task
 
 
 type Page
@@ -20,6 +22,7 @@ type Page
     | AdminSelected Admin.Model
     | AdminSetup Admin.Model
     | MemoryGame MemoryGame.Model
+    | Test Test.Model
 
 
 type PageState
@@ -110,6 +113,11 @@ viewPage isLoading page =
                     |> frame
                     |> Html.map MemoryGameMsg
 
+            Test subModel ->
+                Test.view subModel
+                    |> frame
+                    |> Html.map TestMsg
+
 
 
 -- UPDATE --
@@ -118,9 +126,11 @@ viewPage isLoading page =
 type Msg
     = SetRoute (Maybe Route)
     | AdminLoaded (Result PageLoadError Admin.Model)
+    | TestLoaded (Result PageLoadError Test.Model)
     | MemoryGameLoaded MemoryGame.Model
     | AdminMsg Admin.Msg
     | MemoryGameMsg MemoryGame.Msg
+    | TestMsg Test.Msg
 
 
 setRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -145,6 +155,10 @@ setRoute maybeRoute model =
 
         errored =
             pageErrored model
+
+        transition toMsg task =
+            { model | pageState = TransitioningFrom (getPage model.pageState) }
+                => Task.attempt toMsg task
     in
         case maybeRoute of
             Nothing ->
@@ -161,6 +175,9 @@ setRoute maybeRoute model =
 
             Just (Route.MemoryGame slug) ->
                 generate MemoryGameLoaded (MemoryGame.init slug)
+
+            Just Route.Test ->
+                transition TestLoaded Test.init
 
 
 pageErrored : Model -> String -> ( Model, Cmd msg )
@@ -198,6 +215,12 @@ updatePage page msg model =
                 { model | pageState = Loaded (Admin subModel) } => Cmd.none
 
             ( AdminLoaded (Err error), _ ) ->
+                { model | pageState = Loaded (Errored error) } => Cmd.none
+
+            ( TestLoaded (Ok subModel), _ ) ->
+                { model | pageState = Loaded (Test subModel) } => Cmd.none
+
+            ( TestLoaded (Err error), _ ) ->
                 { model | pageState = Loaded (Errored error) } => Cmd.none
 
             ( MemoryGameLoaded subModel, _ ) ->
