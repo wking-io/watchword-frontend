@@ -1,6 +1,9 @@
-node_modules
-elm-stuff
-dist
-build
+.vscode/
+node_modules/
 .DS_Store
-yarn-error.log
+*.tgz
+lerna-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/.changelog

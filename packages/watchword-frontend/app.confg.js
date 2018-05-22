@@ -11,8 +11,7 @@ const AppConfig = {
     dist: path.resolve(__dirname, 'dist'), // dir to output production build
   },
   entries: {
-    frontend: path.resolve(__dirname, 'src/frontend/main.js'),
-    backend: path.resolve(__dirname, 'src/backend/main.js')
+    main: path.resolve(__dirname, 'src/main.js'),
   },
 };
 

@@ -1,52 +1,18 @@
 {
-  "name": "school-apps",
-  "version": "0.1.0",
-  "main": "src/index.js",
-  "repository": "https://github.com/wking-io/school-apps",
-  "author": "William King <contactg@wking.io>",
-  "license": "MIT",
+  "private": true,
+  "workspaces": ["packages/*"],
   "scripts": {
-    "start:dev": "babel-node tools/devServer.js",
-    "start": "run-p start:dev",
-    "build": "babel-node tools/build.js",
-    "postbuild": "babel-node tools/prodServer.js",
-    "format": "elm-format --yes",
-    "api":
-      "graphqelm http://localhost:8000/graphql --output src/frontend/GraphQL",
-    "prisma": "prisma deploy",
-    "start:server": "node src/backend/main.js",
-    "start:playground": "graphql playground"
+    "start:dev:frontend": "lerna run --scope=watchword-frontend start:dev",
+    "start:frontend": "lerna run --scope=watchword-frontend start",
+    "build:frontend": "lerna run --scope=watchword-frontend build",
+    "postbuild:frontend": "lerna run --scope=watchword-frontend postbuild",
+    "format:frontend": "lerna run --scope=watchword-frontend format",
+    "api:frontend": "lerna run --scope=watchword-frontend api",
+    "start:api": "lerna run --scope=watchword-api start",
+    "playground:api": "lerna run --scope=watchword-api playground",
+    "prisma:api": "lerna run --scope=watchword-api prisma"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "chalk": "^2.1.0",
-    "clean-webpack-plugin": "^0.1.16",
-    "css-loader": "^0.28.7",
-    "elm-format": "^0.6.1-alpha",
-    "elm-webpack-loader": "^4.4.0",
-    "express": "^4.15.4",
-    "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^1.1.5",
-    "graphqelm": "3.1.12",
-    "html-webpack-plugin": "^2.30.1",
-    "node-sass": "^4.5.3",
-    "npm-run-all": "^4.1.1",
-    "opn": "^5.1.0",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "url-loader": "^0.6.2",
-    "webpack": "^3.5.6",
-    "webpack-dev-middleware": "^1.12.0",
-    "webpack-hot-middleware": "^2.19.1",
-    "webpack-merge": "^4.1.0"
-  },
-  "dependencies": {
-    "bcryptjs": "2.4.3",
-    "graphql": "0.13.2",
-    "graphql-yoga": "1.14.0",
-    "jsonwebtoken": "8.2.1",
-    "prisma-binding": "2.0.0"
+    "lerna": "^2.11.0"
   }
 }

@@ -11,7 +11,7 @@ const resolvers = {
 };
 
 const server = new GraphQLServer({
-  typeDefs: 'src/backend/schema.graphql',
+  typeDefs: 'src/schema.graphql',
   resolvers,
   resolverValidationOptions: {
     requireResolversForResolveType: false,
@@ -19,7 +19,7 @@ const server = new GraphQLServer({
   context: req => ({
     ...req,
     db: new Prisma({
-      typeDefs: 'src/backend/generated/prisma.graphql',
+      typeDefs: 'src/generated/prisma.graphql',
       endpoint: 'https://us1.prisma.sh/contact/watchword/dev',
     }),
   }),

@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
   "summary": "School education apps built with Elm",
-  "repository": "https://github.com/grrinchas/school-apps.git",
+  "repository": "https://github.com/wking-io/watchword.git",
   "license": "MIT",
-  "source-directories": ["src/frontend/app/", "src/frontend/GraphQL"],
+  "source-directories": ["src/app", "src/GraphQL"],
   "exposed-modules": [],
   "dependencies": {
     "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

@@ -44,7 +44,7 @@ export default {
   plugins: [
     // plugin for automatically injecting bundled js file into html
     new HtmlWebpackPlugin({
-      template: 'src/frontend/index.html',
+      template: 'src/index.html',
       inject: true,
     }),
   ],

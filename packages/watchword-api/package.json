@@ -1,0 +1,20 @@
+{
+  "name": "watchword-api",
+  "version": "0.1.0",
+  "main": "src/main.js",
+  "repository": "https://github.com/wking-io/watchword",
+  "author": "William King <contactg@wking.io>",
+  "license": "MIT",
+  "scripts": {
+    "prisma": "prisma deploy",
+    "start": "node src/main.js",
+    "playground": "graphql playground"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "graphql": "0.13.2",
+    "graphql-yoga": "1.14.0",
+    "jsonwebtoken": "8.2.1",
+    "prisma-binding": "2.0.0"
+  }
+}
