@@ -20,7 +20,7 @@ const server = new GraphQLServer({
     ...req,
     db: new Prisma({
       typeDefs: 'src/backend/generated/prisma.graphql',
-      endpoint: 'https://us1.prisma.sh/william-king-4b9a55/school-app/dev',
+      endpoint: 'https://us1.prisma.sh/contact/watchword/dev',
     }),
   }),
 });
