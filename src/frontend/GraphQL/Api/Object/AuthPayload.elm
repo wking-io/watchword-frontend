@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Object.AggregateWord exposing (..)
+module Api.Object.AuthPayload exposing (..)
 
 import Api.InputObject
 import Api.Interface
@@ -20,11 +20,18 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.AggregateWord
+selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.AuthPayload
 selection constructor =
     Object.selection constructor
 
 
-count : Field Int Api.Object.AggregateWord
-count =
-    Object.fieldDecoder "count" [] Decode.int
+{-| -}
+token : Field (Maybe String) Api.Object.AuthPayload
+token =
+    Object.fieldDecoder "token" [] (Decode.string |> Decode.nullable)
+
+
+{-| -}
+user : SelectionSet decodesTo Api.Object.User -> Field (Maybe decodesTo) Api.Object.AuthPayload
+user object =
+    Object.selectionField "user" [] object (identity >> Decode.nullable)

@@ -25,31 +25,37 @@ selection constructor =
     Object.selection constructor
 
 
+{-| -}
 id : Field Api.Scalar.Id Api.Object.Word
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
 
 
+{-| -}
 word : Field String Api.Object.Word
 word =
     Object.fieldDecoder "word" [] Decode.string
 
 
+{-| -}
 group : Field String Api.Object.Word
 group =
     Object.fieldDecoder "group" [] Decode.string
 
 
+{-| -}
 beginning : Field String Api.Object.Word
 beginning =
     Object.fieldDecoder "beginning" [] Decode.string
 
 
+{-| -}
 ending : Field String Api.Object.Word
 ending =
     Object.fieldDecoder "ending" [] Decode.string
 
 
+{-| -}
 vowel : Field String Api.Object.Word
 vowel =
     Object.fieldDecoder "vowel" [] Decode.string

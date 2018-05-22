@@ -11,7 +11,3 @@ type DateTime
 
 type Id
     = Id String
-
-
-type Long
-    = Long String

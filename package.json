@@ -12,7 +12,7 @@
     "postbuild": "babel-node tools/prodServer.js",
     "format": "elm-format --yes",
     "api":
-      "graphqelm https://us1.prisma.sh/william-king-4b9a55/school-app/dev --output src/frontend/GraphQL",
+      "graphqelm http://localhost:8000/graphql --output src/frontend/GraphQL",
     "prisma": "prisma deploy",
     "start:server": "node src/backend/main.js",
     "start:playground": "graphql playground"

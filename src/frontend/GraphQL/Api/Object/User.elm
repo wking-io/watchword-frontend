@@ -4,7 +4,6 @@
 
 module Api.Object.User exposing (..)
 
-import Api.Enum.ExerciseOrderByInput
 import Api.InputObject
 import Api.Interface
 import Api.Object
@@ -26,43 +25,25 @@ selection constructor =
     Object.selection constructor
 
 
+{-| -}
 id : Field Api.Scalar.Id Api.Object.User
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
 
 
+{-| -}
 name : Field String Api.Object.User
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
+{-| -}
 email : Field String Api.Object.User
 email =
     Object.fieldDecoder "email" [] Decode.string
 
 
-password : Field String Api.Object.User
-password =
-    Object.fieldDecoder "password" [] Decode.string
-
-
-type alias ExercisesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.ExerciseWhereInput, orderBy : OptionalArgument Api.Enum.ExerciseOrderByInput.ExerciseOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-exercises : (ExercisesOptionalArguments -> ExercisesOptionalArguments) -> SelectionSet decodesTo Api.Object.Exercise -> Field (Maybe (List decodesTo)) Api.Object.User
-exercises fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeExerciseWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.ExerciseOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "exercises" optionalArgs object (identity >> Decode.list >> Decode.nullable)
+{-| -}
+exercises : SelectionSet decodesTo Api.Object.Exercise -> Field (List decodesTo) Api.Object.User
+exercises object =
+    Object.selectionField "exercises" [] object (identity >> Decode.list)

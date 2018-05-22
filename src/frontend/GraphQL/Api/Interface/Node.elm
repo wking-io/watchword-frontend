@@ -32,19 +32,14 @@ selection constructor typeSpecificDecoders =
     Object.interfaceSelection typeSpecificDecoders constructor
 
 
-onExercise : SelectionSet decodesTo Api.Object.Exercise -> FragmentSelectionSet decodesTo Api.Interface.Node
-onExercise (SelectionSet fields decoder) =
-    FragmentSelectionSet "Exercise" fields decoder
-
-
 onGame : SelectionSet decodesTo Api.Object.Game -> FragmentSelectionSet decodesTo Api.Interface.Node
 onGame (SelectionSet fields decoder) =
     FragmentSelectionSet "Game" fields decoder
 
 
-onUser : SelectionSet decodesTo Api.Object.User -> FragmentSelectionSet decodesTo Api.Interface.Node
-onUser (SelectionSet fields decoder) =
-    FragmentSelectionSet "User" fields decoder
+onExercise : SelectionSet decodesTo Api.Object.Exercise -> FragmentSelectionSet decodesTo Api.Interface.Node
+onExercise (SelectionSet fields decoder) =
+    FragmentSelectionSet "Exercise" fields decoder
 
 
 onWord : SelectionSet decodesTo Api.Object.Word -> FragmentSelectionSet decodesTo Api.Interface.Node

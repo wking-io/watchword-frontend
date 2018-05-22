@@ -25,6 +25,7 @@ selection constructor =
     Object.selection constructor
 
 
+{-| -}
 id : Field Api.Scalar.Id Api.Object.Exercise
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
@@ -52,11 +53,13 @@ game fillInOptionals object =
     Object.selectionField "game" optionalArgs object identity
 
 
+{-| -}
 views : Field Int Api.Object.Exercise
 views =
     Object.fieldDecoder "views" [] Decode.int
 
 
+{-| -}
 completed : Field Int Api.Object.Exercise
 completed =
     Object.fieldDecoder "completed" [] Decode.int

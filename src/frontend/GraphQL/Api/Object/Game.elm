@@ -25,26 +25,31 @@ selection constructor =
     Object.selection constructor
 
 
+{-| -}
 id : Field Api.Scalar.Id Api.Object.Game
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
 
 
+{-| -}
 createdAt : Field Api.Scalar.DateTime Api.Object.Game
 createdAt =
     Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
 
 
+{-| -}
 name : Field String Api.Object.Game
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
+{-| -}
 description : Field String Api.Object.Game
 description =
     Object.fieldDecoder "description" [] Decode.string
 
 
+{-| -}
 slug : Field String Api.Object.Game
 slug =
     Object.fieldDecoder "slug" [] Decode.string

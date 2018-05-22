@@ -4,10 +4,6 @@
 
 module Api.Query exposing (..)
 
-import Api.Enum.ExerciseOrderByInput
-import Api.Enum.GameOrderByInput
-import Api.Enum.UserOrderByInput
-import Api.Enum.WordOrderByInput
 import Api.InputObject
 import Api.Interface
 import Api.Object
@@ -31,227 +27,87 @@ selection constructor =
     Object.selection constructor
 
 
-type alias UsersOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.UserWhereInput, orderBy : OptionalArgument Api.Enum.UserOrderByInput.UserOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+{-| -}
+info : Field String RootQuery
+info =
+    Object.fieldDecoder "info" [] Decode.string
 
 
-{-|
-
-  - where_ -
-
--}
-users : (UsersOptionalArguments -> UsersOptionalArguments) -> SelectionSet decodesTo Api.Object.User -> Field (List (Maybe decodesTo)) RootQuery
-users fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeUserWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.UserOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "users" optionalArgs object (identity >> Decode.nullable >> Decode.list)
-
-
-type alias GamesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.GameWhereInput, orderBy : OptionalArgument Api.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Api.Object.Game -> Field (List (Maybe decodesTo)) RootQuery
-games fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "games" optionalArgs object (identity >> Decode.nullable >> Decode.list)
-
-
-type alias ExercisesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.ExerciseWhereInput, orderBy : OptionalArgument Api.Enum.ExerciseOrderByInput.ExerciseOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-exercises : (ExercisesOptionalArguments -> ExercisesOptionalArguments) -> SelectionSet decodesTo Api.Object.Exercise -> Field (List (Maybe decodesTo)) RootQuery
-exercises fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeExerciseWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.ExerciseOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "exercises" optionalArgs object (identity >> Decode.nullable >> Decode.list)
-
-
-type alias WordsOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.WordWhereInput, orderBy : OptionalArgument Api.Enum.WordOrderByInput.WordOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-words : (WordsOptionalArguments -> WordsOptionalArguments) -> SelectionSet decodesTo Api.Object.Word -> Field (List (Maybe decodesTo)) RootQuery
-words fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeWordWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.WordOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "words" optionalArgs object (identity >> Decode.nullable >> Decode.list)
-
-
-type alias UserRequiredArguments =
-    { where_ : Api.InputObject.UserWhereUniqueInput }
-
-
-user : UserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field (Maybe decodesTo) RootQuery
-user requiredArgs object =
-    Object.selectionField "user" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeUserWhereUniqueInput ] object (identity >> Decode.nullable)
+{-| -}
+games : SelectionSet decodesTo Api.Object.Game -> Field (List decodesTo) RootQuery
+games object =
+    Object.selectionField "games" [] object (identity >> Decode.list)
 
 
 type alias GameRequiredArguments =
-    { where_ : Api.InputObject.GameWhereUniqueInput }
-
-
-game : GameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe decodesTo) RootQuery
-game requiredArgs object =
-    Object.selectionField "game" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeGameWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias ExerciseRequiredArguments =
-    { where_ : Api.InputObject.ExerciseWhereUniqueInput }
-
-
-exercise : ExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field (Maybe decodesTo) RootQuery
-exercise requiredArgs object =
-    Object.selectionField "exercise" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeExerciseWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias WordRequiredArguments =
-    { where_ : Api.InputObject.WordWhereUniqueInput }
-
-
-word : WordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field (Maybe decodesTo) RootQuery
-word requiredArgs object =
-    Object.selectionField "word" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeWordWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias UsersConnectionOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.UserWhereInput, orderBy : OptionalArgument Api.Enum.UserOrderByInput.UserOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-usersConnection : (UsersConnectionOptionalArguments -> UsersConnectionOptionalArguments) -> SelectionSet decodesTo Api.Object.UserConnection -> Field decodesTo RootQuery
-usersConnection fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeUserWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.UserOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "usersConnection" optionalArgs object identity
-
-
-type alias GamesConnectionOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.GameWhereInput, orderBy : OptionalArgument Api.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-gamesConnection : (GamesConnectionOptionalArguments -> GamesConnectionOptionalArguments) -> SelectionSet decodesTo Api.Object.GameConnection -> Field decodesTo RootQuery
-gamesConnection fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "gamesConnection" optionalArgs object identity
-
-
-type alias ExercisesConnectionOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.ExerciseWhereInput, orderBy : OptionalArgument Api.Enum.ExerciseOrderByInput.ExerciseOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-exercisesConnection : (ExercisesConnectionOptionalArguments -> ExercisesConnectionOptionalArguments) -> SelectionSet decodesTo Api.Object.ExerciseConnection -> Field decodesTo RootQuery
-exercisesConnection fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeExerciseWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.ExerciseOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "exercisesConnection" optionalArgs object identity
-
-
-type alias WordsConnectionOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.WordWhereInput, orderBy : OptionalArgument Api.Enum.WordOrderByInput.WordOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - where_ -
-
--}
-wordsConnection : (WordsConnectionOptionalArguments -> WordsConnectionOptionalArguments) -> SelectionSet decodesTo Api.Object.WordConnection -> Field decodesTo RootQuery
-wordsConnection fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeWordWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.WordOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "wordsConnection" optionalArgs object identity
-
-
-type alias NodeRequiredArguments =
     { id : Api.Scalar.Id }
 
 
-{-| Fetches an object given its ID
+{-|
 
-  - id - The ID of an object
+  - id -
 
 -}
-node : NodeRequiredArguments -> SelectionSet decodesTo Api.Interface.Node -> Field (Maybe decodesTo) RootQuery
-node requiredArgs object =
-    Object.selectionField "node" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+game : GameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe decodesTo) RootQuery
+game requiredArgs object =
+    Object.selectionField "game" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+
+
+{-| -}
+users : SelectionSet decodesTo Api.Object.User -> Field (List decodesTo) RootQuery
+users object =
+    Object.selectionField "users" [] object (identity >> Decode.list)
+
+
+type alias UserRequiredArguments =
+    { id : Api.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+user : UserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field (Maybe decodesTo) RootQuery
+user requiredArgs object =
+    Object.selectionField "user" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+
+
+{-| -}
+exercises : SelectionSet decodesTo Api.Object.Exercise -> Field (List decodesTo) RootQuery
+exercises object =
+    Object.selectionField "exercises" [] object (identity >> Decode.list)
+
+
+type alias ExerciseRequiredArguments =
+    { id : Api.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+exercise : ExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field (Maybe decodesTo) RootQuery
+exercise requiredArgs object =
+    Object.selectionField "exercise" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+
+
+{-| -}
+words : SelectionSet decodesTo Api.Object.Word -> Field (List decodesTo) RootQuery
+words object =
+    Object.selectionField "words" [] object (identity >> Decode.list)
+
+
+type alias WordRequiredArguments =
+    { id : Api.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+word : WordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field (Maybe decodesTo) RootQuery
+word requiredArgs object =
+    Object.selectionField "word" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)

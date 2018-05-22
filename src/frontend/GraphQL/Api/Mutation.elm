@@ -27,337 +27,123 @@ selection constructor =
     Object.selection constructor
 
 
-type alias CreateUserRequiredArguments =
-    { data : Api.InputObject.UserCreateInput }
-
-
-createUser : CreateUserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field decodesTo RootMutation
-createUser requiredArgs object =
-    Object.selectionField "createUser" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeUserCreateInput ] object identity
-
-
 type alias CreateGameRequiredArguments =
-    { data : Api.InputObject.GameCreateInput }
+    { name : String, description : String, slug : String }
 
 
+{-|
+
+  - name -
+  - description -
+  - slug -
+
+-}
 createGame : CreateGameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field decodesTo RootMutation
 createGame requiredArgs object =
-    Object.selectionField "createGame" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeGameCreateInput ] object identity
-
-
-type alias CreateExerciseRequiredArguments =
-    { data : Api.InputObject.ExerciseCreateInput }
-
-
-createExercise : CreateExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field decodesTo RootMutation
-createExercise requiredArgs object =
-    Object.selectionField "createExercise" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeExerciseCreateInput ] object identity
-
-
-type alias CreateWordRequiredArguments =
-    { data : Api.InputObject.WordCreateInput }
-
-
-createWord : CreateWordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field decodesTo RootMutation
-createWord requiredArgs object =
-    Object.selectionField "createWord" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeWordCreateInput ] object identity
-
-
-type alias UpdateUserRequiredArguments =
-    { data : Api.InputObject.UserUpdateInput, where_ : Api.InputObject.UserWhereUniqueInput }
-
-
-updateUser : UpdateUserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field (Maybe decodesTo) RootMutation
-updateUser requiredArgs object =
-    Object.selectionField "updateUser" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeUserUpdateInput, Argument.required "where" requiredArgs.where_ Api.InputObject.encodeUserWhereUniqueInput ] object (identity >> Decode.nullable)
+    Object.selectionField "createGame" [ Argument.required "name" requiredArgs.name Encode.string, Argument.required "description" requiredArgs.description Encode.string, Argument.required "slug" requiredArgs.slug Encode.string ] object identity
 
 
 type alias UpdateGameRequiredArguments =
-    { data : Api.InputObject.GameUpdateInput, where_ : Api.InputObject.GameWhereUniqueInput }
+    { id : Api.Scalar.Id, name : String, description : String, slug : String }
 
 
+{-|
+
+  - id -
+  - name -
+  - description -
+  - slug -
+
+-}
 updateGame : UpdateGameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe decodesTo) RootMutation
 updateGame requiredArgs object =
-    Object.selectionField "updateGame" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeGameUpdateInput, Argument.required "where" requiredArgs.where_ Api.InputObject.encodeGameWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias UpdateExerciseRequiredArguments =
-    { data : Api.InputObject.ExerciseUpdateInput, where_ : Api.InputObject.ExerciseWhereUniqueInput }
-
-
-updateExercise : UpdateExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field (Maybe decodesTo) RootMutation
-updateExercise requiredArgs object =
-    Object.selectionField "updateExercise" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeExerciseUpdateInput, Argument.required "where" requiredArgs.where_ Api.InputObject.encodeExerciseWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias UpdateWordRequiredArguments =
-    { data : Api.InputObject.WordUpdateInput, where_ : Api.InputObject.WordWhereUniqueInput }
-
-
-updateWord : UpdateWordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field (Maybe decodesTo) RootMutation
-updateWord requiredArgs object =
-    Object.selectionField "updateWord" [ Argument.required "data" requiredArgs.data Api.InputObject.encodeWordUpdateInput, Argument.required "where" requiredArgs.where_ Api.InputObject.encodeWordWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias DeleteUserRequiredArguments =
-    { where_ : Api.InputObject.UserWhereUniqueInput }
-
-
-deleteUser : DeleteUserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field (Maybe decodesTo) RootMutation
-deleteUser requiredArgs object =
-    Object.selectionField "deleteUser" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeUserWhereUniqueInput ] object (identity >> Decode.nullable)
+    Object.selectionField "updateGame" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw), Argument.required "name" requiredArgs.name Encode.string, Argument.required "description" requiredArgs.description Encode.string, Argument.required "slug" requiredArgs.slug Encode.string ] object (identity >> Decode.nullable)
 
 
 type alias DeleteGameRequiredArguments =
-    { where_ : Api.InputObject.GameWhereUniqueInput }
+    { id : Api.Scalar.Id }
 
 
+{-|
+
+  - id -
+
+-}
 deleteGame : DeleteGameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe decodesTo) RootMutation
 deleteGame requiredArgs object =
-    Object.selectionField "deleteGame" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeGameWhereUniqueInput ] object (identity >> Decode.nullable)
+    Object.selectionField "deleteGame" [ Argument.required "id" requiredArgs.id (\(Api.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
-type alias DeleteExerciseRequiredArguments =
-    { where_ : Api.InputObject.ExerciseWhereUniqueInput }
-
-
-deleteExercise : DeleteExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field (Maybe decodesTo) RootMutation
-deleteExercise requiredArgs object =
-    Object.selectionField "deleteExercise" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeExerciseWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias DeleteWordRequiredArguments =
-    { where_ : Api.InputObject.WordWhereUniqueInput }
-
-
-deleteWord : DeleteWordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field (Maybe decodesTo) RootMutation
-deleteWord requiredArgs object =
-    Object.selectionField "deleteWord" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeWordWhereUniqueInput ] object (identity >> Decode.nullable)
-
-
-type alias UpsertUserRequiredArguments =
-    { where_ : Api.InputObject.UserWhereUniqueInput, create : Api.InputObject.UserCreateInput, update : Api.InputObject.UserUpdateInput }
-
-
-upsertUser : UpsertUserRequiredArguments -> SelectionSet decodesTo Api.Object.User -> Field decodesTo RootMutation
-upsertUser requiredArgs object =
-    Object.selectionField "upsertUser" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeUserWhereUniqueInput, Argument.required "create" requiredArgs.create Api.InputObject.encodeUserCreateInput, Argument.required "update" requiredArgs.update Api.InputObject.encodeUserUpdateInput ] object identity
-
-
-type alias UpsertGameRequiredArguments =
-    { where_ : Api.InputObject.GameWhereUniqueInput, create : Api.InputObject.GameCreateInput, update : Api.InputObject.GameUpdateInput }
-
-
-upsertGame : UpsertGameRequiredArguments -> SelectionSet decodesTo Api.Object.Game -> Field decodesTo RootMutation
-upsertGame requiredArgs object =
-    Object.selectionField "upsertGame" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeGameWhereUniqueInput, Argument.required "create" requiredArgs.create Api.InputObject.encodeGameCreateInput, Argument.required "update" requiredArgs.update Api.InputObject.encodeGameUpdateInput ] object identity
-
-
-type alias UpsertExerciseRequiredArguments =
-    { where_ : Api.InputObject.ExerciseWhereUniqueInput, create : Api.InputObject.ExerciseCreateInput, update : Api.InputObject.ExerciseUpdateInput }
-
-
-upsertExercise : UpsertExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field decodesTo RootMutation
-upsertExercise requiredArgs object =
-    Object.selectionField "upsertExercise" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeExerciseWhereUniqueInput, Argument.required "create" requiredArgs.create Api.InputObject.encodeExerciseCreateInput, Argument.required "update" requiredArgs.update Api.InputObject.encodeExerciseUpdateInput ] object identity
-
-
-type alias UpsertWordRequiredArguments =
-    { where_ : Api.InputObject.WordWhereUniqueInput, create : Api.InputObject.WordCreateInput, update : Api.InputObject.WordUpdateInput }
-
-
-upsertWord : UpsertWordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field decodesTo RootMutation
-upsertWord requiredArgs object =
-    Object.selectionField "upsertWord" [ Argument.required "where" requiredArgs.where_ Api.InputObject.encodeWordWhereUniqueInput, Argument.required "create" requiredArgs.create Api.InputObject.encodeWordCreateInput, Argument.required "update" requiredArgs.update Api.InputObject.encodeWordUpdateInput ] object identity
-
-
-type alias UpdateManyUsersOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.UserWhereInput }
-
-
-type alias UpdateManyUsersRequiredArguments =
-    { data : Api.InputObject.UserUpdateInput }
+type alias CreateExerciseRequiredArguments =
+    { gameId : String }
 
 
 {-|
 
-  - where_ -
+  - gameId -
 
 -}
-updateManyUsers : (UpdateManyUsersOptionalArguments -> UpdateManyUsersOptionalArguments) -> UpdateManyUsersRequiredArguments -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-updateManyUsers fillInOptionals requiredArgs object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeUserWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "updateManyUsers" (optionalArgs ++ [ Argument.required "data" requiredArgs.data Api.InputObject.encodeUserUpdateInput ]) object identity
+createExercise : CreateExerciseRequiredArguments -> SelectionSet decodesTo Api.Object.Exercise -> Field decodesTo RootMutation
+createExercise requiredArgs object =
+    Object.selectionField "createExercise" [ Argument.required "gameId" requiredArgs.gameId Encode.string ] object identity
 
 
-type alias UpdateManyGamesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.GameWhereInput }
+type alias CreateWordOptionalArguments =
+    { ending : OptionalArgument String, vowel : OptionalArgument String }
 
 
-type alias UpdateManyGamesRequiredArguments =
-    { data : Api.InputObject.GameUpdateInput }
+type alias CreateWordRequiredArguments =
+    { word : String, group : String, beginning : String }
 
 
 {-|
 
-  - where_ -
+  - word -
+  - group -
+  - beginning -
+  - ending -
+  - vowel -
 
 -}
-updateManyGames : (UpdateManyGamesOptionalArguments -> UpdateManyGamesOptionalArguments) -> UpdateManyGamesRequiredArguments -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-updateManyGames fillInOptionals requiredArgs object =
+createWord : (CreateWordOptionalArguments -> CreateWordOptionalArguments) -> CreateWordRequiredArguments -> SelectionSet decodesTo Api.Object.Word -> Field decodesTo RootMutation
+createWord fillInOptionals requiredArgs object =
     let
         filledInOptionals =
-            fillInOptionals { where_ = Absent }
+            fillInOptionals { ending = Absent, vowel = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeGameWhereInput ]
+            [ Argument.optional "ending" filledInOptionals.ending Encode.string, Argument.optional "vowel" filledInOptionals.vowel Encode.string ]
                 |> List.filterMap identity
     in
-    Object.selectionField "updateManyGames" (optionalArgs ++ [ Argument.required "data" requiredArgs.data Api.InputObject.encodeGameUpdateInput ]) object identity
+    Object.selectionField "createWord" (optionalArgs ++ [ Argument.required "word" requiredArgs.word Encode.string, Argument.required "group" requiredArgs.group Encode.string, Argument.required "beginning" requiredArgs.beginning Encode.string ]) object identity
 
 
-type alias UpdateManyExercisesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.ExerciseWhereInput }
-
-
-type alias UpdateManyExercisesRequiredArguments =
-    { data : Api.InputObject.ExerciseUpdateInput }
+type alias SignupRequiredArguments =
+    { name : String, email : String, password : String }
 
 
 {-|
 
-  - where_ -
+  - name -
+  - email -
+  - password -
 
 -}
-updateManyExercises : (UpdateManyExercisesOptionalArguments -> UpdateManyExercisesOptionalArguments) -> UpdateManyExercisesRequiredArguments -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-updateManyExercises fillInOptionals requiredArgs object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeExerciseWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "updateManyExercises" (optionalArgs ++ [ Argument.required "data" requiredArgs.data Api.InputObject.encodeExerciseUpdateInput ]) object identity
+signup : SignupRequiredArguments -> SelectionSet decodesTo Api.Object.AuthPayload -> Field (Maybe decodesTo) RootMutation
+signup requiredArgs object =
+    Object.selectionField "signup" [ Argument.required "name" requiredArgs.name Encode.string, Argument.required "email" requiredArgs.email Encode.string, Argument.required "password" requiredArgs.password Encode.string ] object (identity >> Decode.nullable)
 
 
-type alias UpdateManyWordsOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.WordWhereInput }
-
-
-type alias UpdateManyWordsRequiredArguments =
-    { data : Api.InputObject.WordUpdateInput }
+type alias LoginRequiredArguments =
+    { email : String, password : String }
 
 
 {-|
 
-  - where_ -
+  - email -
+  - password -
 
 -}
-updateManyWords : (UpdateManyWordsOptionalArguments -> UpdateManyWordsOptionalArguments) -> UpdateManyWordsRequiredArguments -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-updateManyWords fillInOptionals requiredArgs object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeWordWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "updateManyWords" (optionalArgs ++ [ Argument.required "data" requiredArgs.data Api.InputObject.encodeWordUpdateInput ]) object identity
-
-
-type alias DeleteManyUsersOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.UserWhereInput }
-
-
-{-|
-
-  - where_ -
-
--}
-deleteManyUsers : (DeleteManyUsersOptionalArguments -> DeleteManyUsersOptionalArguments) -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-deleteManyUsers fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeUserWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "deleteManyUsers" optionalArgs object identity
-
-
-type alias DeleteManyGamesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.GameWhereInput }
-
-
-{-|
-
-  - where_ -
-
--}
-deleteManyGames : (DeleteManyGamesOptionalArguments -> DeleteManyGamesOptionalArguments) -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-deleteManyGames fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeGameWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "deleteManyGames" optionalArgs object identity
-
-
-type alias DeleteManyExercisesOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.ExerciseWhereInput }
-
-
-{-|
-
-  - where_ -
-
--}
-deleteManyExercises : (DeleteManyExercisesOptionalArguments -> DeleteManyExercisesOptionalArguments) -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-deleteManyExercises fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeExerciseWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "deleteManyExercises" optionalArgs object identity
-
-
-type alias DeleteManyWordsOptionalArguments =
-    { where_ : OptionalArgument Api.InputObject.WordWhereInput }
-
-
-{-|
-
-  - where_ -
-
--}
-deleteManyWords : (DeleteManyWordsOptionalArguments -> DeleteManyWordsOptionalArguments) -> SelectionSet decodesTo Api.Object.BatchPayload -> Field decodesTo RootMutation
-deleteManyWords fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { where_ = Absent }
-
-        optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeWordWhereInput ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "deleteManyWords" optionalArgs object identity
+login : LoginRequiredArguments -> SelectionSet decodesTo Api.Object.AuthPayload -> Field (Maybe decodesTo) RootMutation
+login requiredArgs object =
+    Object.selectionField "login" [ Argument.required "email" requiredArgs.email Encode.string, Argument.required "password" requiredArgs.password Encode.string ] object (identity >> Decode.nullable)

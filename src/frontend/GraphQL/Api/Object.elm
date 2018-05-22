@@ -5,105 +5,21 @@
 module Api.Object exposing (..)
 
 
-type AggregateExercise
-    = AggregateExercise
-
-
-type AggregateGame
-    = AggregateGame
-
-
-type AggregateUser
-    = AggregateUser
-
-
-type AggregateWord
-    = AggregateWord
-
-
-type BatchPayload
-    = BatchPayload
+type AuthPayload
+    = AuthPayload
 
 
 type Exercise
     = Exercise
 
 
-type ExerciseConnection
-    = ExerciseConnection
-
-
-type ExerciseEdge
-    = ExerciseEdge
-
-
-type ExercisePreviousValues
-    = ExercisePreviousValues
-
-
-type ExerciseSubscriptionPayload
-    = ExerciseSubscriptionPayload
-
-
 type Game
     = Game
-
-
-type GameConnection
-    = GameConnection
-
-
-type GameEdge
-    = GameEdge
-
-
-type GamePreviousValues
-    = GamePreviousValues
-
-
-type GameSubscriptionPayload
-    = GameSubscriptionPayload
-
-
-type PageInfo
-    = PageInfo
 
 
 type User
     = User
 
 
-type UserConnection
-    = UserConnection
-
-
-type UserEdge
-    = UserEdge
-
-
-type UserPreviousValues
-    = UserPreviousValues
-
-
-type UserSubscriptionPayload
-    = UserSubscriptionPayload
-
-
 type Word
     = Word
-
-
-type WordConnection
-    = WordConnection
-
-
-type WordEdge
-    = WordEdge
-
-
-type WordPreviousValues
-    = WordPreviousValues
-
-
-type WordSubscriptionPayload
-    = WordSubscriptionPayload
