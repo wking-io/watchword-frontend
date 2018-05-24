@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "summary": "School education apps built with Elm",
-  "repository": "https://github.com/wking-io/watchword.git",
+  "repository": "https://github.com/wking-io/watchword-frontend.git",
   "license": "MIT",
   "source-directories": ["src/app", "src/GraphQL"],
   "exposed-modules": [],

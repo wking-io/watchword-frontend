@@ -1,8 +1,7 @@
 [build]
-  base    = "packages/watchword-frontend/"
-  publish = "packages/watchword-frontend/dist"
+  publish = "dist"
   command = "yarn build:prod"
 
 [context.dev]
-    publish = "packages/watchword-frontend/build"
+    publish = "build"
     command = "yarn build:dev"
