@@ -8,8 +8,11 @@
   "scripts": {
     "start:dev": "babel-node tools/devServer.js",
     "build": "NODE_ENV=production babel-node tools/build.js",
-    "build:prod": "NODE_ENV=production babel-node tools/build.js ",
+    "build:prod":
+      "NODE_ENV=production babel-node tools/build.js && yarn copy-redirects:prod",
     "build:dev": "NODE_ENV=development babel-node tools/build.js",
+    "copy-redirects:prod": "cp _redirects dist/",
+    "copy-redirects:dev": "cp _redirects build/",
     "postbuild": "babel-node tools/prodServer.js",
     "format": "elm-format --yes",
     "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL"
