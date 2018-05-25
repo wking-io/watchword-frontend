@@ -14,7 +14,6 @@
     "copy-redirects:prod": "cp _redirects dist/",
     "copy-redirects:dev": "cp _redirects build/",
     "postbuild": "babel-node tools/prodServer.js",
-    "format": "elm-format --yes",
     "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL"
   },
   "devDependencies": {
