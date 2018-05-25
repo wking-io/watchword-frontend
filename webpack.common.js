@@ -1,9 +1,9 @@
 /**
  * Common webpack configuration used by development and production.
  */
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-export default {
+module.exports = {
   target: 'web',
   output: { filename: '[name].js' },
   module: {

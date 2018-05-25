@@ -1,19 +1,19 @@
 /**
  * Webpack configuration for production
  */
-import UglifyJsWebpackPlugin from 'uglifyjs-webpack-plugin';
-import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
-import Webpack from 'webpack';
-import merge from 'webpack-merge';
-import common from './webpack.common';
-import AppConfig from '../../app.confg';
+const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const Webpack = require('webpack');
+const merge = require('webpack-merge');
+const common = require('./webpack.common');
+const AppConfig = require('./app.confg');
 
-export default merge.smart(common, {
+module.exports = merge.smart(common, {
+  mode: 'production',
   // let's include source map for easier debugging
   devtool: 'source-map',
   entry: { main: AppConfig.entries.main },
-
   output: {
     publicPath: './',
     path: AppConfig.paths.dist,

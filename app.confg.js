@@ -1,9 +1,9 @@
 /**
  * Stores paths used by webpack
  */
-import path from 'path';
+const path = require('path');
 
-const AppConfig = {
+module.exports = {
   paths: {
     root: path.resolve(__dirname),
     src: path.resolve(__dirname, 'src'), // dir for source filed to compile
@@ -14,5 +14,3 @@ const AppConfig = {
     main: path.resolve(__dirname, 'src/main.js'),
   },
 };
-
-export default AppConfig;
