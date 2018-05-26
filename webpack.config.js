@@ -25,6 +25,7 @@ module.exports = env => {
     entry: { main: './src/main.js' },
     output: {
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
       filename: '[name].[hash].js',
     },
     devServer: {
