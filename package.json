@@ -9,9 +9,9 @@
     "start":
       "webpack-dev-server --env.NODE_ENV=development --mode development --hot --open --port 4000",
     "build:prod":
-      "webpack --env.NODE_ENV=production --mode production && copy-redirects",
+      "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
     "build:dev":
-      "webpack --env.NODE_ENV=development -mode development && copy-redirects",
+      "webpack --env.NODE_ENV=development -mode development && yarn copy-redirects",
     "copy-redirects": "cp _redirects dist/",
     "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL"
   },
