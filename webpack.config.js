@@ -25,7 +25,6 @@ module.exports = env => {
     entry: { main: './src/main.js' },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: '/',
       filename: '[name].[hash].js',
     },
     devServer: {
@@ -74,7 +73,7 @@ module.exports = env => {
       new CleanWebpackPlugin('dist', {}),
       new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
       new HtmlWebpackPlugin({
-        inject: false,
+        inject: true,
         hash: true,
         template: './src/index.html',
         filename: 'index.html',

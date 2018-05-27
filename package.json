@@ -6,11 +6,13 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --env.NODE_ENV=development --mode development --hot --open --port 4000",
-    "build:prod": "webpack --env.NODE_ENV=production --mode production",
-    "build:dev": "webpack --env.NODE_ENV=development -mode development",
-    "copy-redirects:prod": "cp _redirects dist/",
-    "copy-redirects:dev": "cp _redirects build/",
+    "start":
+      "webpack-dev-server --env.NODE_ENV=development --mode development --hot --open --port 4000",
+    "build:prod":
+      "webpack --env.NODE_ENV=production --mode production && copy-redirects",
+    "build:dev":
+      "webpack --env.NODE_ENV=development -mode development && copy-redirects",
+    "copy-redirects": "cp _redirects dist/",
     "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL"
   },
   "devDependencies": {
