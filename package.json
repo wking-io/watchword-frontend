@@ -6,7 +6,8 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL",
+    "api":
+      "graphqelm https://watchword-api.now.sh/graphql --output src/GraphQL",
     "build:dev":
       "webpack --env.NODE_ENV=development -mode development && yarn copy-redirects",
     "build:prod":
