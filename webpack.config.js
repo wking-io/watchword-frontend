@@ -6,22 +6,22 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = env => {
-  const elmOptions =
-    env.NODE_ENV === 'production'
-      ? ''
-      : '?verbose=true&warn=true&forceWatch=true&debug=true';
+  const isProd = env.NODE_ENV === 'production';
+  const elmOptions = isProd
+    ? ''
+    : '?verbose=true&warn=true&forceWatch=true&debug=true';
 
-  const cssLoader =
-    env.NODE_ENV === 'production'
-      ? [
-          'style-loader',
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
-        ]
-      : ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'];
+  const cssLoader = isProd
+    ? [
+        'style-loader',
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+        'postcss-loader',
+        'sass-loader',
+      ]
+    : ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'];
   return {
+    mode: isProd && !process.env.WEBPACK_SERVE ? 'production' : 'development',
     entry: { main: './src/main.js' },
     output: {
       path: path.resolve(__dirname, 'dist'),

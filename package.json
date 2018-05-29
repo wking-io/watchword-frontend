@@ -6,12 +6,9 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "start":
-      "webpack-dev-server --env.NODE_ENV=development --mode development --hot --open --port 4000",
-    "build:prod":
-      "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
-    "build:dev":
-      "webpack --env.NODE_ENV=development -mode development && yarn copy-redirects",
+    "start": "webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000",
+    "build:prod": "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
+    "build:dev": "webpack --env.NODE_ENV=development -mode development && yarn copy-redirects",
     "copy-redirects": "cp _redirects dist/",
     "api": "graphqelm http://localhost:8000/graphql --output src/GraphQL"
   },
@@ -37,7 +34,7 @@
     "url-loader": "1.0.1",
     "webpack": "4.8.3",
     "webpack-cli": "2.1.4",
-    "webpack-dev-server": "3.1.4",
-    "webpack-md5-hash": "0.0.6"
+    "webpack-md5-hash": "0.0.6",
+    "webpack-serve": "1.0.2"
   }
 }
