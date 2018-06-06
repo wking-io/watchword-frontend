@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WebpackDash = require('webpack-dashboard/plugin');
 const webpack = require('webpack');
 
 module.exports = env => {
@@ -20,6 +21,21 @@ module.exports = env => {
         'sass-loader',
       ]
     : ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'];
+
+  const commonPlugins = [
+    new CleanWebpackPlugin('dist', {}),
+    new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      hash: true,
+      template: './src/index.html',
+      filename: 'index.html',
+    }),
+    new WebpackMd5Hash(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  ];
+
   return {
     mode: isProd && !process.env.WEBPACK_SERVE ? 'production' : 'development',
     entry: { main: './src/main.js' },
@@ -69,18 +85,6 @@ module.exports = env => {
         },
       ],
     },
-    plugins: [
-      new CleanWebpackPlugin('dist', {}),
-      new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
-      new HtmlWebpackPlugin({
-        inject: true,
-        hash: true,
-        template: './src/index.html',
-        filename: 'index.html',
-      }),
-      new WebpackMd5Hash(),
-      new webpack.NamedModulesPlugin(),
-      new webpack.HotModuleReplacementPlugin(),
-    ],
+    plugins: isProd ? commonPlugins : [...commonPlugins, new WebpackDash()],
   };
 };

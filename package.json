@@ -14,7 +14,7 @@
       "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
     "copy-redirects": "cp _redirects dist/",
     "start":
-      "webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000"
+      "webpack-dashboard -c magenta -- webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000"
   },
   "devDependencies": {
     "autoprefixer": "8.5.1",
@@ -38,6 +38,7 @@
     "url-loader": "1.0.1",
     "webpack": "4.8.3",
     "webpack-cli": "2.1.4",
+    "webpack-dashboard": "2.0.0",
     "webpack-md5-hash": "0.0.6",
     "webpack-serve": "1.0.2"
   }
