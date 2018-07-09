@@ -2,9 +2,11 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Object.Word exposing (..)
+module Api.Object.Pattern exposing (..)
 
+import Api.Enum.FocusType
 import Api.Enum.GameOrderByInput
+import Api.Enum.PatternType
 import Api.InputObject
 import Api.Interface
 import Api.Object
@@ -21,45 +23,51 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.Word
+selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.Pattern
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Api.Scalar.Id Api.Object.Word
+id : Field Api.Scalar.Id Api.Object.Pattern
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
 
 
 {-| -}
-word : Field String Api.Object.Word
-word =
-    Object.fieldDecoder "word" [] Decode.string
+createdAt : Field Api.Scalar.DateTime Api.Object.Pattern
+createdAt =
+    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
 
 
 {-| -}
-group : Field String Api.Object.Word
-group =
-    Object.fieldDecoder "group" [] Decode.string
+updatedAt : Field Api.Scalar.DateTime Api.Object.Pattern
+updatedAt =
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
 
 
 {-| -}
-beginning : Field String Api.Object.Word
-beginning =
-    Object.fieldDecoder "beginning" [] Decode.string
+name : Field String Api.Object.Pattern
+name =
+    Object.fieldDecoder "name" [] Decode.string
 
 
 {-| -}
-ending : Field String Api.Object.Word
-ending =
-    Object.fieldDecoder "ending" [] Decode.string
+description : Field String Api.Object.Pattern
+description =
+    Object.fieldDecoder "description" [] Decode.string
 
 
 {-| -}
-vowel : Field String Api.Object.Word
-vowel =
-    Object.fieldDecoder "vowel" [] Decode.string
+pattern : Field Api.Enum.PatternType.PatternType Api.Object.Pattern
+pattern =
+    Object.fieldDecoder "pattern" [] Api.Enum.PatternType.decoder
+
+
+{-| -}
+focusType : Field Api.Enum.FocusType.FocusType Api.Object.Pattern
+focusType =
+    Object.fieldDecoder "focusType" [] Api.Enum.FocusType.decoder
 
 
 type alias GamesOptionalArguments =
@@ -77,7 +85,7 @@ type alias GamesOptionalArguments =
   - last -
 
 -}
-games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe (List decodesTo)) Api.Object.Word
+games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Api.Object.Game -> Field (Maybe (List decodesTo)) Api.Object.Pattern
 games fillInOptionals object =
     let
         filledInOptionals =

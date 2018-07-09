@@ -2,9 +2,8 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Object.User exposing (..)
+module Api.Object.Session exposing (..)
 
-import Api.Enum.UserRole
 import Api.InputObject
 import Api.Interface
 import Api.Object
@@ -21,48 +20,64 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.User
+selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.Session
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Api.Scalar.Id Api.Object.User
+id : Field Api.Scalar.Id Api.Object.Session
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.Id)
 
 
 {-| -}
-createdAt : Field Api.Scalar.DateTime Api.Object.User
-createdAt =
-    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
-
-
-{-| -}
-updatedAt : Field Api.Scalar.DateTime Api.Object.User
-updatedAt =
-    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
-
-
-{-| -}
-name : Field String Api.Object.User
+name : Field String Api.Object.Session
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
 {-| -}
-email : Field String Api.Object.User
-email =
-    Object.fieldDecoder "email" [] Decode.string
+createdAt : Field Api.Scalar.DateTime Api.Object.Session
+createdAt =
+    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
 
 
 {-| -}
-games : SelectionSet decodesTo Api.Object.Game -> Field (List decodesTo) Api.Object.User
-games object =
-    Object.selectionField "games" [] object (identity >> Decode.list)
+updatedAt : Field Api.Scalar.DateTime Api.Object.Session
+updatedAt =
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
 
 
 {-| -}
-role : Field Api.Enum.UserRole.UserRole Api.Object.User
-role =
-    Object.fieldDecoder "role" [] Api.Enum.UserRole.decoder
+complete : Field Bool Api.Object.Session
+complete =
+    Object.fieldDecoder "complete" [] Decode.bool
+
+
+{-| -}
+completedAt : Field (Maybe Api.Scalar.DateTime) Api.Object.Session
+completedAt =
+    Object.fieldDecoder "completedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime |> Decode.nullable)
+
+
+type alias GameOptionalArguments =
+    { where_ : OptionalArgument Api.InputObject.GameWhereInput }
+
+
+{-|
+
+  - where_ -
+
+-}
+game : (GameOptionalArguments -> GameOptionalArguments) -> SelectionSet decodesTo Api.Object.Game -> Field decodesTo Api.Object.Session
+game fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeGameWhereInput ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "game" optionalArgs object identity

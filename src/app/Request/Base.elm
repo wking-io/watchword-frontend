@@ -6,9 +6,12 @@ import Graphqelm.SelectionSet exposing (SelectionSet)
 import Task exposing (Task)
 
 
-makeRequest : SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
-makeRequest query =
+makeRequest : String -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
+makeRequest token query =
     query
-        |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh/graphql"
-        |> Graphqelm.Http.withHeader "authorization" "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjamhodXUyaHA1c2o1MGI2MjJtcmVjcWtjIiwiaWF0IjoxNTI3MDA0MTMzfQ.k615sHbHSzgU7nE90ue5iql8x1Z63Ua8mvzj_wwkr6s"
+        |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh"
+        |> Graphqelm.Http.withHeader "authorization"
+            ("Bearer "
+                ++ token
+            )
         |> Graphqelm.Http.toTask

@@ -5,6 +5,7 @@ import Api.Object
 import Api.Object.Word as Word
 import Graphqelm.Http
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Null, Present))
 import Request.Base exposing (makeRequest)
 import Task exposing (Task)
 import Data.Card as Card exposing (Card)
@@ -31,7 +32,7 @@ type alias Word =
 get : Task (Graphqelm.Http.Error (List Word)) (List Word)
 get =
     Query.selection identity
-        |> SelectionSet.with (Query.words getWord)
+        |> SelectionSet.with (Query.words Null getWord)
         |> makeRequest
 
 

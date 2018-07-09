@@ -9,12 +9,20 @@ type AuthPayload
     = AuthPayload
 
 
-type Exercise
-    = Exercise
-
-
 type Game
     = Game
+
+
+type Pattern
+    = Pattern
+
+
+type Session
+    = Session
+
+
+type SuccessMessage
+    = SuccessMessage
 
 
 type User

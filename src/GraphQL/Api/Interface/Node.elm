@@ -37,9 +37,14 @@ onGame (SelectionSet fields decoder) =
     FragmentSelectionSet "Game" fields decoder
 
 
-onExercise : SelectionSet decodesTo Api.Object.Exercise -> FragmentSelectionSet decodesTo Api.Interface.Node
-onExercise (SelectionSet fields decoder) =
-    FragmentSelectionSet "Exercise" fields decoder
+onPattern : SelectionSet decodesTo Api.Object.Pattern -> FragmentSelectionSet decodesTo Api.Interface.Node
+onPattern (SelectionSet fields decoder) =
+    FragmentSelectionSet "Pattern" fields decoder
+
+
+onSession : SelectionSet decodesTo Api.Object.Session -> FragmentSelectionSet decodesTo Api.Interface.Node
+onSession (SelectionSet fields decoder) =
+    FragmentSelectionSet "Session" fields decoder
 
 
 onWord : SelectionSet decodesTo Api.Object.Word -> FragmentSelectionSet decodesTo Api.Interface.Node

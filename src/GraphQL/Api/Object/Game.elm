@@ -4,6 +4,9 @@
 
 module Api.Object.Game exposing (..)
 
+import Api.Enum.Focus
+import Api.Enum.SessionOrderByInput
+import Api.Enum.WordOrderByInput
 import Api.InputObject
 import Api.Interface
 import Api.Object
@@ -38,18 +41,124 @@ createdAt =
 
 
 {-| -}
+updatedAt : Field Api.Scalar.DateTime Api.Object.Game
+updatedAt =
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Api.Scalar.DateTime)
+
+
+type alias PatternOptionalArguments =
+    { where_ : OptionalArgument Api.InputObject.PatternWhereInput }
+
+
+{-|
+
+  - where_ -
+
+-}
+pattern : (PatternOptionalArguments -> PatternOptionalArguments) -> SelectionSet decodesTo Api.Object.Pattern -> Field decodesTo Api.Object.Game
+pattern fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodePatternWhereInput ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "pattern" optionalArgs object identity
+
+
+type alias SessionsOptionalArguments =
+    { where_ : OptionalArgument Api.InputObject.SessionWhereInput, orderBy : OptionalArgument Api.Enum.SessionOrderByInput.SessionOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+
+
+{-|
+
+  - where_ -
+  - orderBy -
+  - skip -
+  - after -
+  - before -
+  - first -
+  - last -
+
+-}
+sessions : (SessionsOptionalArguments -> SessionsOptionalArguments) -> SelectionSet decodesTo Api.Object.Session -> Field (Maybe (List decodesTo)) Api.Object.Game
+sessions fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeSessionWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.SessionOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "sessions" optionalArgs object (identity >> Decode.list >> Decode.nullable)
+
+
+type alias OwnerOptionalArguments =
+    { where_ : OptionalArgument Api.InputObject.UserWhereInput }
+
+
+{-|
+
+  - where_ -
+
+-}
+owner : (OwnerOptionalArguments -> OwnerOptionalArguments) -> SelectionSet decodesTo Api.Object.User -> Field decodesTo Api.Object.Game
+owner fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeUserWhereInput ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "owner" optionalArgs object identity
+
+
+{-| -}
+focus : Field Api.Enum.Focus.Focus Api.Object.Game
+focus =
+    Object.fieldDecoder "focus" [] Api.Enum.Focus.decoder
+
+
+{-| -}
+size : Field Int Api.Object.Game
+size =
+    Object.fieldDecoder "size" [] Decode.int
+
+
+type alias WordsOptionalArguments =
+    { where_ : OptionalArgument Api.InputObject.WordWhereInput, orderBy : OptionalArgument Api.Enum.WordOrderByInput.WordOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+
+
+{-|
+
+  - where_ -
+  - orderBy -
+  - skip -
+  - after -
+  - before -
+  - first -
+  - last -
+
+-}
+words : (WordsOptionalArguments -> WordsOptionalArguments) -> SelectionSet decodesTo Api.Object.Word -> Field (Maybe (List decodesTo)) Api.Object.Game
+words fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Api.InputObject.encodeWordWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Api.Enum.WordOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "words" optionalArgs object (identity >> Decode.list >> Decode.nullable)
+
+
+{-| -}
 name : Field String Api.Object.Game
 name =
     Object.fieldDecoder "name" [] Decode.string
-
-
-{-| -}
-description : Field String Api.Object.Game
-description =
-    Object.fieldDecoder "description" [] Decode.string
-
-
-{-| -}
-slug : Field String Api.Object.Game
-slug =
-    Object.fieldDecoder "slug" [] Decode.string
