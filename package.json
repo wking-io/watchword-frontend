@@ -6,7 +6,7 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "api": "graphqelm https://watchword-api.now.sh --output src/graphql",
+    "api": "graphqelm https://watchword-api.now.sh --output src/api",
     "build:dev":
       "webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000",
     "build:prod":
