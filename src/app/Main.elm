@@ -1,5 +1,9 @@
 module Main exposing (main)
 
+import Data.Session exposing (Session)
+import Data.User as User exposing (User)
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode exposing (Value)
 import Html exposing (Html, program, text, div, ul, li, img, p)
 import Page.Admin as Admin
 import Page.Memory.Game as MemoryGame
@@ -45,12 +49,25 @@ getPage pageState =
 
 
 type alias Model =
-    { pageState : PageState }
+    { session : Session
+    , pageState : PageState
+    }
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
-    setRoute (Route.fromLocation location) (Model (Loaded initialPage))
+init : Value -> Location -> ( Model, Cmd Msg )
+init val location =
+    setRoute (Route.fromLocation location)
+        { pageState = Loaded initialPage
+        , session = { user = decodeUserFromJson val }
+        }
+
+
+decodeUserFromJson : Value -> Maybe User
+decodeUserFromJson json =
+    json
+        |> Decode.decodeValue Decode.string
+        |> Result.toMaybe
+        |> Maybe.andThen (Decode.decodeString User.decoder >> Result.toMaybe)
 
 
 initialPage : Page
@@ -177,7 +194,7 @@ setRoute maybeRoute model =
                 generate MemoryGameLoaded (MemoryGame.init slug)
 
             Just Route.Test ->
-                transition TestLoaded Test.init
+                transition TestLoaded (Test.init model.session)
 
 
 pageErrored : Model -> String -> ( Model, Cmd msg )
@@ -247,9 +264,9 @@ updatePage page msg model =
 -- MAIN
 
 
-main : Program Never Model Msg
+main : Program Value Model Msg
 main =
-    Navigation.program (Route.fromLocation >> SetRoute)
+    Navigation.programWithFlags (Route.fromLocation >> SetRoute)
         { init = init
         , view = view
         , update = update

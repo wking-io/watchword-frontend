@@ -3,7 +3,7 @@
   "summary": "School education apps built with Elm",
   "repository": "https://github.com/wking-io/watchword-frontend.git",
   "license": "MIT",
-  "source-directories": ["src/app", "src/GraphQL"],
+  "source-directories": ["src/app", "src/api"],
   "exposed-modules": [],
   "dependencies": {
     "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

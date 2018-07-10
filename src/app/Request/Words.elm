@@ -5,15 +5,16 @@ import Api.Object
 import Api.Object.Word as Word
 import Graphqelm.Http
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Null, Present))
 import Request.Base exposing (makeRequest)
 import Task exposing (Task)
 import Data.Card as Card exposing (Card)
 import Data.Words as Words exposing (Words)
+import Data.AuthToken as AuthToken exposing (AuthToken)
 import Json
 import Json.Decode as Decode exposing (decodeString, field)
 import Random exposing (Generator)
 import Random.List exposing (shuffle)
+import Util.Maybe
 
 
 type alias Response =
@@ -29,11 +30,18 @@ type alias Word =
     }
 
 
-get : Task (Graphqelm.Http.Error (List Word)) (List Word)
-get =
+maybeToEmpty : List (Maybe a) -> List a
+maybeToEmpty val =
+    Util.Maybe.combine val
+        |> Maybe.withDefault []
+
+
+get : Maybe AuthToken -> Task (Graphqelm.Http.Error (List (Maybe Word))) (List Word)
+get token =
     Query.selection identity
-        |> SelectionSet.with (Query.words Null getWord)
-        |> makeRequest
+        |> SelectionSet.with (Query.words identity getWord)
+        |> makeRequest token
+        |> Task.map maybeToEmpty
 
 
 getWord : SelectionSet Word Api.Object.Word

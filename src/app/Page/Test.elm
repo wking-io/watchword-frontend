@@ -1,5 +1,6 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
+import Data.Session exposing (Session)
 import Html exposing (Html, text, div, ul, li)
 import Request.Words as Words exposing (Response, Word)
 import Page.Errored exposing (PageLoadError, pageLoadError)
@@ -12,13 +13,16 @@ type alias Model =
     }
 
 
-init : Task PageLoadError Model
-init =
+init : Session -> Task PageLoadError Model
+init session =
     let
         handleLoadError _ =
-            pageLoadError "Testpage is currently unavailable."
+            pageLoadError "Test page is currently unavailable."
+
+        maybeAuthToken =
+            Maybe.map .token session.user
     in
-        Task.map Model Words.get
+        Task.map Model (Words.get maybeAuthToken)
             |> Task.mapError handleLoadError
 
 

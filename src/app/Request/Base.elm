@@ -4,14 +4,12 @@ import Graphqelm.Http
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Task exposing (Task)
+import Data.AuthToken exposing (AuthToken, withAuthorization)
 
 
-makeRequest : String -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
+makeRequest : Maybe AuthToken -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
 makeRequest token query =
     query
         |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh"
-        |> Graphqelm.Http.withHeader "authorization"
-            ("Bearer "
-                ++ token
-            )
+        |> withAuthorization token
         |> Graphqelm.Http.toTask
