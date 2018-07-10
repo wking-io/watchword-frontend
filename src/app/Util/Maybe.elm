@@ -1,4 +1,4 @@
-module Util.Maybe exposing (combine)
+module Util.Maybe exposing (combine, forceList)
 
 
 traverse : (a -> Maybe b) -> List a -> Maybe (List b)
@@ -18,3 +18,9 @@ traverse f =
 combine : List (Maybe a) -> Maybe (List a)
 combine =
     traverse identity
+
+
+forceList : List (Maybe a) -> List a
+forceList val =
+    combine val
+        |> Maybe.withDefault []

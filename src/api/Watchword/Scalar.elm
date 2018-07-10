@@ -2,9 +2,12 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Union exposing (..)
+module Watchword.Scalar exposing (..)
 
 
-placeholder : String
-placeholder =
-    ""
+type DateTime
+    = DateTime String
+
+
+type Id
+    = Id String

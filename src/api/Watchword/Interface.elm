@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Interface exposing (..)
+module Watchword.Interface exposing (..)
 
 
 type Node

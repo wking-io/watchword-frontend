@@ -1,4 +1,4 @@
-module Request.Base exposing (makeRequest)
+module Request exposing (make)
 
 import Graphqelm.Http
 import Graphqelm.Operation exposing (RootQuery)
@@ -7,8 +7,8 @@ import Task exposing (Task)
 import Data.AuthToken exposing (AuthToken, withAuthorization)
 
 
-makeRequest : Maybe AuthToken -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
-makeRequest token query =
+make : Maybe AuthToken -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
+make token query =
     query
         |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh"
         |> withAuthorization token

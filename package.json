@@ -6,14 +6,11 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "api": "graphqelm https://watchword-api.now.sh --output src/api",
-    "build:dev":
-      "webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000",
-    "build:prod":
-      "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
+    "api": "graphqelm https://watchword-api.now.sh --base Watchword --output src/api",
+    "build:dev": "webpack-serve --env.NODE_ENV=development --mode development --hot --open",
+    "build:prod": "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
     "copy-redirects": "cp _redirects dist/",
-    "start":
-      "webpack-dashboard -c magenta -- webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000"
+    "start": "webpack-dashboard -c magenta -- webpack-serve --env.NODE_ENV=development --mode development --hot --open --port 4000"
   },
   "devDependencies": {
     "autoprefixer": "8.5.1",

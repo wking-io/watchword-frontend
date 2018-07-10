@@ -300,7 +300,7 @@ viewGroupOfWords : List String -> Bool -> ( String, List Word ) -> List (Html Ms
 viewGroupOfWords selected isMax ( group, words ) =
     let
         values =
-            List.map .name words
+            List.map .word words
     in
         [ p [ class "group-heading" ] [ text "Word Group - ", strong [] [ text (String.toUpper group) ] ]
         , div [ class "word--wrapper" ] (List.map (viewCheck selected isMax) values)

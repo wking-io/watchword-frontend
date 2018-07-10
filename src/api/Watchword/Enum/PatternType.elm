@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Enum.PatternType exposing (..)
+module Watchword.Enum.PatternType exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 

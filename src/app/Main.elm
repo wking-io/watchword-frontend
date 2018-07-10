@@ -5,8 +5,11 @@ import Data.User as User exposing (User)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode exposing (Value)
 import Html exposing (Html, program, text, div, ul, li, img, p)
-import Page.Admin as Admin
-import Page.Memory.Game as MemoryGame
+
+
+-- import Page.Admin as Admin
+-- import Page.Memory.Game as MemoryGame
+
 import Page.Test as Test
 import Page.NotFound as NotFound
 import Page.Errored as Errored exposing (PageLoadError)
@@ -22,10 +25,10 @@ type Page
     = Blank
     | NotFound
     | Errored PageLoadError
-    | Admin Admin.Model
-    | AdminSelected Admin.Model
-    | AdminSetup Admin.Model
-    | MemoryGame MemoryGame.Model
+      -- | Admin Admin.Model
+      -- | AdminSelected Admin.Model
+      -- | AdminSetup Admin.Model
+      -- | MemoryGame MemoryGame.Model
     | Test Test.Model
 
 
@@ -110,26 +113,22 @@ viewPage isLoading page =
                 Errored.view subModel
                     |> frame
 
-            Admin subModel ->
-                Admin.view subModel
-                    |> frame
-                    |> Html.map AdminMsg
-
-            AdminSelected subModel ->
-                Admin.view subModel
-                    |> frame
-                    |> Html.map AdminMsg
-
-            AdminSetup subModel ->
-                Admin.view subModel
-                    |> frame
-                    |> Html.map AdminMsg
-
-            MemoryGame subModel ->
-                MemoryGame.view subModel
-                    |> frame
-                    |> Html.map MemoryGameMsg
-
+            -- Admin subModel ->
+            --     Admin.view subModel
+            --         |> frame
+            --         |> Html.map AdminMsg
+            -- AdminSelected subModel ->
+            --     Admin.view subModel
+            --         |> frame
+            --         |> Html.map AdminMsg
+            -- AdminSetup subModel ->
+            --     Admin.view subModel
+            --         |> frame
+            --         |> Html.map AdminMsg
+            -- MemoryGame subModel ->
+            --     MemoryGame.view subModel
+            --         |> frame
+            --         |> Html.map MemoryGameMsg
             Test subModel ->
                 Test.view subModel
                     |> frame
@@ -142,11 +141,11 @@ viewPage isLoading page =
 
 type Msg
     = SetRoute (Maybe Route)
-    | AdminLoaded (Result PageLoadError Admin.Model)
+      -- | AdminLoaded (Result PageLoadError Admin.Model)
     | TestLoaded (Result PageLoadError Test.Model)
-    | MemoryGameLoaded MemoryGame.Model
-    | AdminMsg Admin.Msg
-    | MemoryGameMsg MemoryGame.Msg
+      -- | MemoryGameLoaded MemoryGame.Model
+      -- | AdminMsg Admin.Msg
+      -- | MemoryGameMsg MemoryGame.Msg
     | TestMsg Test.Msg
 
 
@@ -181,18 +180,15 @@ setRoute maybeRoute model =
             Nothing ->
                 { model | pageState = Loaded NotFound } => Cmd.none
 
-            Just (Route.Root slug) ->
-                model => Route.modifyUrl (Route.Admin slug)
+            Just Route.Root ->
+                transition TestLoaded (Test.init model.session)
 
-            Just (Route.Admin slug) ->
-                isError Admin (Admin.init slug False)
-
-            Just (Route.AdminSetup slug) ->
-                isError Admin (Admin.init slug True)
-
-            Just (Route.MemoryGame slug) ->
-                generate MemoryGameLoaded (MemoryGame.init slug)
-
+            -- Just (Route.Admin slug) ->
+            --     isError Admin (Admin.init slug False)
+            -- Just (Route.AdminSetup slug) ->
+            --     isError Admin (Admin.init slug True)
+            -- Just (Route.MemoryGame slug) ->
+            --     generate MemoryGameLoaded (MemoryGame.init slug)
             Just Route.Test ->
                 transition TestLoaded (Test.init model.session)
 
@@ -228,27 +224,22 @@ updatePage page msg model =
             ( SetRoute route, _ ) ->
                 setRoute route model
 
-            ( AdminLoaded (Ok subModel), _ ) ->
-                { model | pageState = Loaded (Admin subModel) } => Cmd.none
-
-            ( AdminLoaded (Err error), _ ) ->
-                { model | pageState = Loaded (Errored error) } => Cmd.none
-
+            -- ( AdminLoaded (Ok subModel), _ ) ->
+            --     { model | pageState = Loaded (Admin subModel) } => Cmd.none
+            -- ( AdminLoaded (Err error), _ ) ->
+            --     { model | pageState = Loaded (Errored error) } => Cmd.none
             ( TestLoaded (Ok subModel), _ ) ->
                 { model | pageState = Loaded (Test subModel) } => Cmd.none
 
             ( TestLoaded (Err error), _ ) ->
                 { model | pageState = Loaded (Errored error) } => Cmd.none
 
-            ( MemoryGameLoaded subModel, _ ) ->
-                { model | pageState = Loaded (MemoryGame subModel) } => Cmd.none
-
-            ( AdminMsg subMsg, Admin subModel ) ->
-                toPage Admin AdminMsg Admin.update subMsg subModel
-
-            ( MemoryGameMsg subMsg, MemoryGame subModel ) ->
-                toPage MemoryGame MemoryGameMsg MemoryGame.update subMsg subModel
-
+            -- ( MemoryGameLoaded subModel, _ ) ->
+            --     { model | pageState = Loaded (MemoryGame subModel) } => Cmd.none
+            -- ( AdminMsg subMsg, Admin subModel ) ->
+            --     toPage Admin AdminMsg Admin.update subMsg subModel
+            -- ( MemoryGameMsg subMsg, MemoryGame subModel ) ->
+            --     toPage MemoryGame MemoryGameMsg MemoryGame.update subMsg subModel
             ( _, NotFound ) ->
                 -- Disregard incoming messages when we're on the
                 -- NotFound page.

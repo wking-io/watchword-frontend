@@ -11,8 +11,8 @@ type alias Card =
 
 
 fromWord : Int -> Word -> Card
-fromWord int { name } =
-    Card name int (name ++ "-" ++ (toString int))
+fromWord int { word } =
+    Card word int (word ++ "-" ++ (toString int))
 
 
 equals : Card -> Card -> Bool

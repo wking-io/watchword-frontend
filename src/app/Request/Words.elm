@@ -1,52 +1,38 @@
-module Request.Words exposing (Response, Word, get, getOld, getDeck, getDeckBy)
+module Request.Words exposing (get, getAll)
 
-import Api.Query as Query
-import Api.Object
-import Api.Object.Word as Word
-import Graphqelm.Http
-import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import Request.Base exposing (makeRequest)
-import Task exposing (Task)
-import Data.Card as Card exposing (Card)
+import Data.Word as Word exposing (Word)
 import Data.Words as Words exposing (Words)
-import Data.AuthToken as AuthToken exposing (AuthToken)
-import Json
-import Json.Decode as Decode exposing (decodeString, field)
-import Random exposing (Generator)
-import Random.List exposing (shuffle)
+import Graphqelm.Field as Field exposing (Field)
+import Graphqelm.Operation exposing (RootQuery)
+import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import Watchword.Query as Query exposing (WordsOptionalArguments)
+import Watchword.Object
+import Watchword.Object.Word as Word
 import Util.Maybe
 
 
-type alias Response =
-    List (Maybe Word)
+-- import Data.Card as Card exposing (Card)
+-- import Json
+-- import Json.Decode as Decode exposing (decodeString, field)
+-- import Random exposing (Generator)
+-- import Random.List exposing (shuffle)
 
 
-type alias Word =
-    { word : String
-    , group : String
-    , beginning : String
-    , ending : String
-    , vowel : String
-    }
+get : (WordsOptionalArguments -> WordsOptionalArguments) -> Field Words RootQuery
+get with =
+    Query.words with getWord
+        |> Field.map (Words.fromList << Util.Maybe.forceList)
 
 
-maybeToEmpty : List (Maybe a) -> List a
-maybeToEmpty val =
-    Util.Maybe.combine val
-        |> Maybe.withDefault []
+getAll : Field Words RootQuery
+getAll =
+    get identity
 
 
-get : Maybe AuthToken -> Task (Graphqelm.Http.Error (List (Maybe Word))) (List Word)
-get token =
-    Query.selection identity
-        |> SelectionSet.with (Query.words identity getWord)
-        |> makeRequest token
-        |> Task.map maybeToEmpty
-
-
-getWord : SelectionSet Word Api.Object.Word
+getWord : SelectionSet Word Watchword.Object.Word
 getWord =
     Word.selection Word
+        |> with Word.id
         |> with Word.word
         |> with Word.group
         |> with Word.beginning
@@ -54,36 +40,26 @@ getWord =
         |> with Word.vowel
 
 
-getOld : Result String Words
-getOld =
-    decodeString Words.decoder Json.words
 
-
-getBy : (Words -> Words) -> Result String Words
-getBy pred =
-    getOld
-        |> Result.map pred
-
-
-getDeck : Result String (Generator (List Card))
-getDeck =
-    getOld
-        |> Result.map Words.duplicate
-        |> Result.map shuffleDeck
-
-
-getDeckBy : (Words -> Words) -> Result String (Generator (List Card))
-getDeckBy pred =
-    getBy pred
-        |> Result.map Words.duplicate
-        |> Result.map shuffleDeck
-
-
-
--- HELPERS --
-
-
-shuffleDeck : Words -> Generator (List Card)
-shuffleDeck words =
-    (shuffle << Words.toList) words
-        |> Random.map (List.indexedMap Card.fromWord)
+-- getOld : Result String Words
+-- getOld =
+--     decodeString Words.decoder Json.words
+-- getBy : (Words -> Words) -> Result String Words
+-- getBy pred =
+--     getOld
+--         |> Result.map pred
+-- getDeck : Result String (Generator (List Card))
+-- getDeck =
+--     getOld
+--         |> Result.map Words.duplicate
+--         |> Result.map shuffleDeck
+-- getDeckBy : (Words -> Words) -> Result String (Generator (List Card))
+-- getDeckBy pred =
+--     getBy pred
+--         |> Result.map Words.duplicate
+--         |> Result.map shuffleDeck
+-- -- HELPERS --
+-- shuffleDeck : Words -> Generator (List Card)
+-- shuffleDeck words =
+--     (shuffle << Words.toList) words
+--         |> Random.map (List.indexedMap Card.fromWord)

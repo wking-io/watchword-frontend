@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Enum.UserRole exposing (..)
+module Watchword.Enum.UserRole exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 

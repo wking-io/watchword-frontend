@@ -1,15 +1,18 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
 import Data.Session exposing (Session)
-import Html exposing (Html, text, div, ul, li)
-import Request.Words as Words exposing (Response, Word)
+import Data.Word as Word exposing (Word)
+import Data.Words as Words exposing (Words)
+import Html exposing (Html)
+import Request
+import Request.Test as Test
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
 
 
 type alias Model =
-    { words : List Word
+    { words : Words
     }
 
 
@@ -22,19 +25,22 @@ init session =
         maybeAuthToken =
             Maybe.map .token session.user
     in
-        Task.map Model (Words.get maybeAuthToken)
+        Request.make maybeAuthToken Test.get
+            |> Task.map Model
             |> Task.mapError handleLoadError
 
 
 view : Model -> Html Msg
 view { words } =
-    div []
-        [ ul [] (List.map viewWord words) ]
+    Html.div []
+        [ Html.h2 [] [ Html.text "Words" ]
+        , Html.ul [] (Words.toList words |> List.map viewWord)
+        ]
 
 
 viewWord : Word -> Html Msg
 viewWord { word } =
-    li [] [ text word ]
+    Html.li [] [ Html.text word ]
 
 
 type Msg

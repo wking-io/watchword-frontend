@@ -2,13 +2,8 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Object.SuccessMessage exposing (..)
+module Watchword.Object.SuccessMessage exposing (..)
 
-import Api.InputObject
-import Api.Interface
-import Api.Object
-import Api.Scalar
-import Api.Union
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphqelm.Internal.Builder.Object as Object
@@ -16,16 +11,21 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
+import Watchword.InputObject
+import Watchword.Interface
+import Watchword.Object
+import Watchword.Scalar
+import Watchword.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Api.Object.SuccessMessage
+selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.SuccessMessage
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-message : Field String Api.Object.SuccessMessage
+message : Field String Watchword.Object.SuccessMessage
 message =
     Object.fieldDecoder "message" [] Decode.string

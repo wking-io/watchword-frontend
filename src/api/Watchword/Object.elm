@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Api.Object exposing (..)
+module Watchword.Object exposing (..)
 
 
 type AuthPayload
