@@ -6,7 +6,7 @@
   "author": "William King <contactg@wking.io>",
   "license": "MIT",
   "scripts": {
-    "api": "graphqelm https://watchword-api.now.sh --base Watchword --output src/api",
+    "api": "graphqelm https://watchword-api.now.sh/graphql --base Watchword --output src/api",
     "build:dev": "webpack-serve --env.NODE_ENV=development --mode development --hot --open",
     "build:prod": "webpack --env.NODE_ENV=production --mode production && yarn copy-redirects",
     "copy-redirects": "cp _redirects dist/",

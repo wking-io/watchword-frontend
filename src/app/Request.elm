@@ -10,6 +10,6 @@ import Data.AuthToken exposing (AuthToken, withAuthorization)
 make : Maybe AuthToken -> SelectionSet decodesTo RootQuery -> Task (Graphqelm.Http.Error decodesTo) decodesTo
 make token query =
     query
-        |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh"
+        |> Graphqelm.Http.queryRequest "https://watchword-api.now.sh/graphql"
         |> withAuthorization token
         |> Graphqelm.Http.toTask

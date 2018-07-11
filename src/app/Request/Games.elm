@@ -1,25 +1,35 @@
--- module Request.Games exposing (get)
+module Request.Games exposing (get)
 
--- import Data.AuthToken as AuthToken exposing (AuthToken)
--- import Data.Games as Games exposing (Games, Game)
--- import Data.Word as Word exposing (Word)
--- import Data.Words as Words exposing (Words)
--- import Graphqelm.Http
--- import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
--- import Request.Base exposing (makeRequest)
--- import Task exposing (Task)
--- import Watchword.Query as Query
--- import Watchword.Object
--- import Watchword.Object.Word as Word
+import Data.Game as Game exposing (Game)
+import Data.Games as Games exposing (Games)
+import Graphqelm.Field as Field exposing (Field)
+import Graphqelm.Operation exposing (RootQuery)
+import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import Watchword.Query as Query exposing (GamesOptionalArguments)
+import Watchword.Object
+import Watchword.Object.Game as ApiGame
 
 
--- get : Result String Games
--- get =
---     decodeString Games.decoder Json.games
+get : (GamesOptionalArguments -> GamesOptionalArguments) -> Field Games RootQuery
+get with =
+    Query.words with getGame
+        |> Field.map Games.fromList
 
 
+getAll : Field Games RootQuery
+getAll =
+    get identity
 
--- getNav : Result String (SelectList Game)
--- getNav =
---     get
---         |> Result.map Games.toNav
+
+getGame : SelectionSet Game Watchword.Object.Game
+getGame =
+    ApiGame.selection Game
+        |> with ApiGame.id
+        |> with ApiGame.createdAt
+        |> with ApiGame.updatedAt
+        |> with ApiGame.name
+        |> with ApiGame.focus
+        |> with ApiGame.size
+        |> with ApiGame.pattern
+        |> with ApiGame.sessions
+        |> with ApiGame.words
