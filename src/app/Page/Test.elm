@@ -1,18 +1,18 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
+import Data.AuthToken exposing (testToken)
 import Data.Session exposing (Session)
-import Data.Word as Word exposing (Word)
-import Data.Words as Words exposing (Words)
 import Html exposing (Html)
+import Html.Attributes as HA
 import Request
-import Request.Test as Test
+import Request.Dashboard as Dashboard exposing (Response)
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
 
 
 type alias Model =
-    { words : Words
+    { data : Response
     }
 
 
@@ -23,24 +23,31 @@ init session =
             pageLoadError "Test page is currently unavailable."
 
         maybeAuthToken =
-            Maybe.map .token session.user
+            Just testToken
     in
-        Request.make maybeAuthToken Test.get
+        Request.make maybeAuthToken Dashboard.get
             |> Task.map Model
+            |> Debug.log "Error: "
             |> Task.mapError handleLoadError
 
 
 view : Model -> Html Msg
-view { words } =
+view { data } =
     Html.div []
-        [ Html.h2 [] [ Html.text "Words" ]
-        , Html.ul [] (Words.toList words |> List.map viewWord)
+        [ Html.h2 [] [ Html.text "Data" ]
+        , Html.pre
+            [ HA.style
+                [ ( "display", "block" )
+                , ( "padding", "4rem" )
+                , ( "color", "black" )
+                , ( "background-color", "rgba(0, 0, 0, 0.05)" )
+                , ( "white-space", "pre-wrap" )
+                , ( "word-break", "break-word" )
+                , ( "line-height", "1.6" )
+                ]
+            ]
+            [ Html.text (toString data) ]
         ]
-
-
-viewWord : Word -> Html Msg
-viewWord { word } =
-    Html.li [] [ Html.text word ]
 
 
 type Msg

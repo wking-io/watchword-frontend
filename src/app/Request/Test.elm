@@ -4,7 +4,6 @@ import Data.Words exposing (Words)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import Request.Words as Words
-import Request.Games as Games
 import Watchword.Query as Query
 
 
