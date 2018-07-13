@@ -26,12 +26,12 @@ selection constructor =
 
 
 {-| -}
-token : Field (Maybe String) Watchword.Object.AuthPayload
+token : Field String Watchword.Object.AuthPayload
 token =
-    Object.fieldDecoder "token" [] (Decode.string |> Decode.nullable)
+    Object.fieldDecoder "token" [] Decode.string
 
 
 {-| -}
-user : SelectionSet decodesTo Watchword.Object.User -> Field (Maybe decodesTo) Watchword.Object.AuthPayload
+user : SelectionSet decodesTo Watchword.Object.User -> Field decodesTo Watchword.Object.AuthPayload
 user object =
-    Object.selectionField "user" [] object (identity >> Decode.nullable)
+    Object.selectionField "user" [] object identity

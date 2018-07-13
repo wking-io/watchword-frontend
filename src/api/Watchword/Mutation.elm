@@ -162,9 +162,9 @@ type alias LoginRequiredArguments =
   - input -
 
 -}
-login : LoginRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field (Maybe decodesTo) RootMutation
+login : LoginRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
 login requiredArgs object =
-    Object.selectionField "login" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeLoginInput ] object (identity >> Decode.nullable)
+    Object.selectionField "login" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeLoginInput ] object identity
 
 
 type alias RecoverRequiredArguments =
@@ -176,9 +176,9 @@ type alias RecoverRequiredArguments =
   - input -
 
 -}
-recover : RecoverRequiredArguments -> SelectionSet decodesTo Watchword.Object.User -> Field (Maybe decodesTo) RootMutation
+recover : RecoverRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
 recover requiredArgs object =
-    Object.selectionField "recover" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeRecoverInput ] object (identity >> Decode.nullable)
+    Object.selectionField "recover" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeRecoverInput ] object identity
 
 
 type alias ResetRequiredArguments =
@@ -205,9 +205,9 @@ type alias SignupRequiredArguments =
   - input -
 
 -}
-signup : SignupRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field (Maybe decodesTo) RootMutation
+signup : SignupRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
 signup requiredArgs object =
-    Object.selectionField "signup" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeSignupInput ] object (identity >> Decode.nullable)
+    Object.selectionField "signup" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeSignupInput ] object identity
 
 
 type alias UpdateGameRequiredArguments =

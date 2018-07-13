@@ -5,14 +5,19 @@ import Data.Session exposing (Session)
 import Html exposing (Html)
 import Html.Attributes as HA
 import Request
-import Request.Dashboard as Dashboard exposing (Response)
+
+
+-- import Request.Dashboard as Dashboard exposing (Response)
+
+import Data.Session exposing (Session)
+import Request.Auth as Auth
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
 
 
 type alias Model =
-    { data : Response
+    { data : Session
     }
 
 
@@ -24,8 +29,14 @@ init session =
 
         maybeAuthToken =
             Just testToken
+
+        input =
+            { email = "contact@wking.io"
+            , password = "AIRsoft.9"
+            }
     in
-        Request.make maybeAuthToken Dashboard.get
+        Auth.login input
+            |> Request.mutation maybeAuthToken
             |> Task.map Model
             |> Debug.log "Error: "
             |> Task.mapError handleLoadError
