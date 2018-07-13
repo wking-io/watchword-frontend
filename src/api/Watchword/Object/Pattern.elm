@@ -96,3 +96,25 @@ games fillInOptionals object =
                 |> List.filterMap identity
     in
     Object.selectionField "games" optionalArgs object (identity >> Decode.list >> Decode.nullable)
+
+
+type alias DemoOptionalArguments =
+    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput }
+
+
+{-|
+
+  - where_ -
+
+-}
+demo : (DemoOptionalArguments -> DemoOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe decodesTo) Watchword.Object.Pattern
+demo fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { where_ = Absent }
+
+        optionalArgs =
+            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "demo" optionalArgs object (identity >> Decode.nullable)
