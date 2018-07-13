@@ -12,11 +12,6 @@ type AuthToken
     = AuthToken String
 
 
-testToken : AuthToken
-testToken =
-    AuthToken "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjamhodXUyaHA1c2o1MGI2MjJtcmVjcWtjIiwiaWF0IjoxNTMwODg1NDc3fQ.6mSY0JT6sWimjavi6g8CGj_ktY-zahDQTW6oaCDMol8"
-
-
 fieldDecoder : Field AuthToken Watchword.Object.AuthPayload
 fieldDecoder =
     AuthPayload.token |> Field.map AuthToken
