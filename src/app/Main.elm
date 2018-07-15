@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Data.Session exposing (Session)
+import Data.UserSession exposing (UserSession)
 import Data.User as User exposing (User)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode exposing (Value)
@@ -52,7 +52,7 @@ getPage pageState =
 
 
 type alias Model =
-    { session : Session
+    { session : UserSession
     , pageState : PageState
     }
 

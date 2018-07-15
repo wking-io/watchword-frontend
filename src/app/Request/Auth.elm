@@ -1,7 +1,7 @@
 module Request.Auth exposing (login, signup, recover, reset)
 
 import Data.AuthToken as AuthToken exposing (AuthToken)
-import Data.Session as Session exposing (Session)
+import Data.UserSession as UserSession exposing (UserSession)
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Operation exposing (RootMutation)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
@@ -29,7 +29,7 @@ type alias RequestUser =
     }
 
 
-base : (SelectionSet Session Watchword.Object.AuthPayload -> Field Session RootMutation) -> Field Session RootMutation
+base : (SelectionSet UserSession Watchword.Object.AuthPayload -> Field UserSession RootMutation) -> Field UserSession RootMutation
 base toField =
     AuthPayload.selection Response
         |> with AuthToken.fieldDecoder
@@ -38,46 +38,46 @@ base toField =
         |> toField
 
 
-login : LoginInputRequiredFields -> SelectionSet Session RootMutation
+login : LoginInputRequiredFields -> SelectionSet UserSession RootMutation
 login input =
     Mutation.selection identity
         |> with (getLogin input)
 
 
-getLogin : LoginInputRequiredFields -> Field Session RootMutation
+getLogin : LoginInputRequiredFields -> Field UserSession RootMutation
 getLogin input =
     base <| Mutation.login { input = buildLoginInput input }
 
 
-signup : SignupInputRequiredFields -> SelectionSet Session RootMutation
+signup : SignupInputRequiredFields -> SelectionSet UserSession RootMutation
 signup input =
     Mutation.selection identity
         |> with (getSignup input)
 
 
-getSignup : SignupInputRequiredFields -> Field Session RootMutation
+getSignup : SignupInputRequiredFields -> Field UserSession RootMutation
 getSignup input =
     base <| Mutation.signup { input = buildSignupInput input }
 
 
-recover : RecoverInputRequiredFields -> SelectionSet Session RootMutation
+recover : RecoverInputRequiredFields -> SelectionSet UserSession RootMutation
 recover input =
     Mutation.selection identity
         |> with (getRecover input)
 
 
-getRecover : RecoverInputRequiredFields -> Field Session RootMutation
+getRecover : RecoverInputRequiredFields -> Field UserSession RootMutation
 getRecover input =
     base <| Mutation.recover { input = buildRecoverInput input }
 
 
-reset : String -> ResetInputRequiredFields -> SelectionSet Session RootMutation
+reset : String -> ResetInputRequiredFields -> SelectionSet UserSession RootMutation
 reset token input =
     Mutation.selection identity
         |> with (getReset token input)
 
 
-getReset : String -> ResetInputRequiredFields -> Field Session RootMutation
+getReset : String -> ResetInputRequiredFields -> Field UserSession RootMutation
 getReset token input =
     base <| Mutation.reset { resetToken = token, input = buildResetInput input }
 
@@ -93,7 +93,7 @@ getUser =
         |> AuthPayload.user
 
 
-buildSession : Response -> Session
+buildSession : Response -> UserSession
 buildSession { token, user } =
     { user =
         Just

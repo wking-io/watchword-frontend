@@ -1,4 +1,4 @@
-module Data.AuthToken exposing (AuthToken, fieldDecoder, decoder, encode, withAuthorization, testToken)
+module Data.AuthToken exposing (AuthToken, fieldDecoder, decoder, encode, withAuthorization)
 
 import Graphqelm.Http
 import Graphqelm.Field as Field exposing (Field)

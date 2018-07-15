@@ -9,19 +9,24 @@ import Request
 
 -- import Request.Dashboard as Dashboard exposing (Response)
 
-import Data.Session exposing (Session)
-import Request.Auth as Auth
+import Data.UserSession exposing (UserSession)
+import Data.Games exposing (Games)
+
+
+-- import Request.Auth as Auth
+
+import Request.Dashboard as Dashboard
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
 
 
 type alias Model =
-    { data : Session
+    { data : Games
     }
 
 
-init : Session -> Task PageLoadError Model
+init : UserSession -> Task PageLoadError Model
 init session =
     let
         handleLoadError _ =
@@ -32,13 +37,16 @@ init session =
 
         input =
             { email = "contact@wking.io"
-            , password = "AIRsoft.9"
+            , password = "AIRsoft9"
             }
+
+        resetToken =
+            "f25e8de7d36fab872f0a29b9add2e1ebae5459c91531616933395"
     in
-        Auth.login input
-            |> Request.mutation maybeAuthToken
+        Dashboard.get
+            |> Request.query maybeAuthToken
             |> Task.map Model
-            |> Debug.log "Error: "
+            |> Task.mapError (Debug.log "Error: ")
             |> Task.mapError handleLoadError
 
 

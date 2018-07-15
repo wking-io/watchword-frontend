@@ -1,7 +1,14 @@
 module Data.Session exposing (Session)
 
-import Data.User exposing (User)
+import Watchword.Scalar exposing (Id, DateTime)
 
 
 type alias Session =
-    { user : Maybe User }
+    { id : Id
+    , name : String
+    , createdAt : DateTime
+    , updatedAt : DateTime
+    , complete : Bool
+    , completedAt : Maybe DateTime
+    , game : Id
+    }

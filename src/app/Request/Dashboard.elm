@@ -1,62 +1,36 @@
-module Request.Dashboard exposing (Response, get)
+module Request.Dashboard exposing (get)
 
+import Data.Game as Game exposing (Game)
+import Data.Games as Games exposing (Games)
+import Data.Session as Session exposing (Session)
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
-import Watchword.Enum.Focus exposing (Focus)
 import Watchword.Enum.PatternType exposing (PatternType)
 import Watchword.Query as Query exposing (GamesOptionalArguments)
 import Watchword.Object
-import Watchword.Object.Game as Game
-import Watchword.Object.Pattern as Pattern
-import Watchword.Object.Session as Session
-import Watchword.Object.Word as Word
+import Watchword.Object.Game
+import Watchword.Object.Pattern
+import Watchword.Object.Session
+import Watchword.Object.Word
 import Watchword.Scalar exposing (Id, DateTime)
 
 
-type alias Response =
-    List RequestGame
-
-
-type alias RequestGame =
-    { id : Id
-    , createdAt : DateTime
-    , updatedAt : DateTime
-    , name : String
-    , focus : Focus
-    , size : Int
-    , pattern : PatternType
-    , sessions : List RequestSession
-    , words : List String
-    }
-
-
-type alias RequestSession =
-    { id : Id
-    , name : String
-    , createdAt : DateTime
-    , updatedAt : DateTime
-    , complete : Bool
-    , completedAt : Maybe DateTime
-    , game : Id
-    }
-
-
-get : SelectionSet Response RootQuery
+get : SelectionSet Games RootQuery
 get =
-    Query.selection identity
+    Query.selection Games.fromList
         |> with getGames
 
 
-getGames : Field (List RequestGame) RootQuery
+getGames : Field (List Game) RootQuery
 getGames =
-    Game.selection RequestGame
-        |> with Game.id
-        |> with Game.createdAt
-        |> with Game.updatedAt
-        |> with Game.name
-        |> with Game.focus
-        |> with Game.size
+    Watchword.Object.Game.selection Game
+        |> with Watchword.Object.Game.id
+        |> with Watchword.Object.Game.createdAt
+        |> with Watchword.Object.Game.updatedAt
+        |> with Watchword.Object.Game.name
+        |> with Watchword.Object.Game.focus
+        |> with Watchword.Object.Game.size
         |> with getPattern
         |> with getSessions
         |> with getWords
@@ -65,32 +39,32 @@ getGames =
 
 getGameId : Field Id Watchword.Object.Session
 getGameId =
-    fieldSelection Game.id
-        |> Session.game identity
+    fieldSelection Watchword.Object.Game.id
+        |> Watchword.Object.Session.game identity
 
 
 getPattern : Field PatternType Watchword.Object.Game
 getPattern =
-    fieldSelection Pattern.pattern
-        |> Game.pattern identity
+    fieldSelection Watchword.Object.Pattern.pattern
+        |> Watchword.Object.Game.pattern identity
 
 
-getSessions : Field (List RequestSession) Watchword.Object.Game
+getSessions : Field (List Session) Watchword.Object.Game
 getSessions =
-    Session.selection RequestSession
-        |> with Session.id
-        |> with Session.name
-        |> with Session.createdAt
-        |> with Session.updatedAt
-        |> with Session.complete
-        |> with Session.completedAt
+    Watchword.Object.Session.selection Session
+        |> with Watchword.Object.Session.id
+        |> with Watchword.Object.Session.name
+        |> with Watchword.Object.Session.createdAt
+        |> with Watchword.Object.Session.updatedAt
+        |> with Watchword.Object.Session.complete
+        |> with Watchword.Object.Session.completedAt
         |> with getGameId
-        |> Game.sessions identity
+        |> Watchword.Object.Game.sessions identity
         |> Field.map (Maybe.withDefault [])
 
 
 getWords : Field (List String) Watchword.Object.Game
 getWords =
-    fieldSelection Word.word
-        |> Game.words identity
+    fieldSelection Watchword.Object.Word.word
+        |> Watchword.Object.Game.words identity
         |> Field.map (Maybe.withDefault [])
