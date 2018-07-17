@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Enum.GameOrderByInput exposing (..)
+module WatchWord.Enum.GameOrderByInput exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 

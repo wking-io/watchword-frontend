@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object.Session exposing (..)
+module WatchWord.Object.Session exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,58 +11,58 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.Session
+selection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Object.Session
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Watchword.Scalar.Id Watchword.Object.Session
+id : Field WatchWord.Scalar.Id WatchWord.Object.Session
 id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.Id)
+    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)
 
 
 {-| -}
-name : Field String Watchword.Object.Session
+name : Field String WatchWord.Object.Session
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
 {-| -}
-createdAt : Field Watchword.Scalar.DateTime Watchword.Object.Session
+createdAt : Field WatchWord.Scalar.DateTime WatchWord.Object.Session
 createdAt =
-    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-updatedAt : Field Watchword.Scalar.DateTime Watchword.Object.Session
+updatedAt : Field WatchWord.Scalar.DateTime WatchWord.Object.Session
 updatedAt =
-    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-complete : Field Bool Watchword.Object.Session
+complete : Field Bool WatchWord.Object.Session
 complete =
     Object.fieldDecoder "complete" [] Decode.bool
 
 
 {-| -}
-completedAt : Field (Maybe Watchword.Scalar.DateTime) Watchword.Object.Session
+completedAt : Field (Maybe WatchWord.Scalar.DateTime) WatchWord.Object.Session
 completedAt =
-    Object.fieldDecoder "completedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime |> Decode.nullable)
+    Object.fieldDecoder "completedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime |> Decode.nullable)
 
 
 type alias GameOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput }
+    { where_ : OptionalArgument WatchWord.InputObject.GameWhereInput }
 
 
 {-|
@@ -70,14 +70,14 @@ type alias GameOptionalArguments =
   - where_ -
 
 -}
-game : (GameOptionalArguments -> GameOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field decodesTo Watchword.Object.Session
+game : (GameOptionalArguments -> GameOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Game -> Field decodesTo WatchWord.Object.Session
 game fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeGameWhereInput ]
                 |> List.filterMap identity
     in
     Object.selectionField "game" optionalArgs object identity

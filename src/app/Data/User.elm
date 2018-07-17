@@ -6,8 +6,8 @@ import Data.UserRole as UserRole
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
-import Watchword.Enum.UserRole exposing (UserRole)
-import Watchword.Scalar exposing (DateTime)
+import WatchWord.Enum.UserRole exposing (UserRole)
+import WatchWord.Scalar exposing (DateTime)
 
 
 type alias User =

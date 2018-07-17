@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object.Pattern exposing (..)
+module WatchWord.Object.Pattern exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,67 +11,67 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import Watchword.Enum.FocusType
-import Watchword.Enum.GameOrderByInput
-import Watchword.Enum.PatternType
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.Enum.FocusType
+import WatchWord.Enum.GameOrderByInput
+import WatchWord.Enum.PatternType
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.Pattern
+selection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Object.Pattern
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Watchword.Scalar.Id Watchword.Object.Pattern
+id : Field WatchWord.Scalar.Id WatchWord.Object.Pattern
 id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.Id)
+    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)
 
 
 {-| -}
-createdAt : Field Watchword.Scalar.DateTime Watchword.Object.Pattern
+createdAt : Field WatchWord.Scalar.DateTime WatchWord.Object.Pattern
 createdAt =
-    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-updatedAt : Field Watchword.Scalar.DateTime Watchword.Object.Pattern
+updatedAt : Field WatchWord.Scalar.DateTime WatchWord.Object.Pattern
 updatedAt =
-    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-name : Field String Watchword.Object.Pattern
+name : Field String WatchWord.Object.Pattern
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
 {-| -}
-description : Field String Watchword.Object.Pattern
+description : Field String WatchWord.Object.Pattern
 description =
     Object.fieldDecoder "description" [] Decode.string
 
 
 {-| -}
-pattern : Field Watchword.Enum.PatternType.PatternType Watchword.Object.Pattern
+pattern : Field WatchWord.Enum.PatternType.PatternType WatchWord.Object.Pattern
 pattern =
-    Object.fieldDecoder "pattern" [] Watchword.Enum.PatternType.decoder
+    Object.fieldDecoder "pattern" [] WatchWord.Enum.PatternType.decoder
 
 
 {-| -}
-focusType : Field Watchword.Enum.FocusType.FocusType Watchword.Object.Pattern
+focusType : Field WatchWord.Enum.FocusType.FocusType WatchWord.Object.Pattern
 focusType =
-    Object.fieldDecoder "focusType" [] Watchword.Enum.FocusType.decoder
+    Object.fieldDecoder "focusType" [] WatchWord.Enum.FocusType.decoder
 
 
 type alias GamesOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput, orderBy : OptionalArgument Watchword.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.GameWhereInput, orderBy : OptionalArgument WatchWord.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -85,21 +85,21 @@ type alias GamesOptionalArguments =
   - last -
 
 -}
-games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe (List decodesTo)) Watchword.Object.Pattern
+games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe (List decodesTo)) WatchWord.Object.Pattern
 games fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
     Object.selectionField "games" optionalArgs object (identity >> Decode.list >> Decode.nullable)
 
 
 type alias DemoOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput }
+    { where_ : OptionalArgument WatchWord.InputObject.GameWhereInput }
 
 
 {-|
@@ -107,14 +107,14 @@ type alias DemoOptionalArguments =
   - where_ -
 
 -}
-demo : (DemoOptionalArguments -> DemoOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe decodesTo) Watchword.Object.Pattern
+demo : (DemoOptionalArguments -> DemoOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) WatchWord.Object.Pattern
 demo fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeGameWhereInput ]
                 |> List.filterMap identity
     in
     Object.selectionField "demo" optionalArgs object (identity >> Decode.nullable)

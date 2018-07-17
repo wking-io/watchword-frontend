@@ -1,12 +1,14 @@
 module Data.Pattern exposing (Pattern)
 
-import Watchword.Scalar exposing (Id, DateTime)
-import Watchword.Enum.PatternType exposing (PatternType)
+import WatchWord.Scalar exposing (Id, DateTime)
+import WatchWord.Enum.PatternType exposing (PatternType)
+import WatchWord.Enum.FocusType exposing (FocusType)
 
 
 type alias Pattern =
     { pattern : PatternType
     , name : String
     , description : String
-    , demo : Id
+    , focusType : FocusType
+    , demo : Maybe Id
     }

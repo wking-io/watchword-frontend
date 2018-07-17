@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object.User exposing (..)
+module WatchWord.Object.User exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,58 +11,58 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import Watchword.Enum.UserRole
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.Enum.UserRole
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.User
+selection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Object.User
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Watchword.Scalar.Id Watchword.Object.User
+id : Field WatchWord.Scalar.Id WatchWord.Object.User
 id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.Id)
+    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)
 
 
 {-| -}
-createdAt : Field Watchword.Scalar.DateTime Watchword.Object.User
+createdAt : Field WatchWord.Scalar.DateTime WatchWord.Object.User
 createdAt =
-    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "createdAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-updatedAt : Field Watchword.Scalar.DateTime Watchword.Object.User
+updatedAt : Field WatchWord.Scalar.DateTime WatchWord.Object.User
 updatedAt =
-    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.DateTime)
+    Object.fieldDecoder "updatedAt" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.DateTime)
 
 
 {-| -}
-name : Field String Watchword.Object.User
+name : Field String WatchWord.Object.User
 name =
     Object.fieldDecoder "name" [] Decode.string
 
 
 {-| -}
-email : Field String Watchword.Object.User
+email : Field String WatchWord.Object.User
 email =
     Object.fieldDecoder "email" [] Decode.string
 
 
 {-| -}
-games : SelectionSet decodesTo Watchword.Object.Game -> Field (List decodesTo) Watchword.Object.User
+games : SelectionSet decodesTo WatchWord.Object.Game -> Field (List decodesTo) WatchWord.Object.User
 games object =
     Object.selectionField "games" [] object (identity >> Decode.list)
 
 
 {-| -}
-role : Field Watchword.Enum.UserRole.UserRole Watchword.Object.User
+role : Field WatchWord.Enum.UserRole.UserRole WatchWord.Object.User
 role =
-    Object.fieldDecoder "role" [] Watchword.Enum.UserRole.decoder
+    Object.fieldDecoder "role" [] WatchWord.Enum.UserRole.decoder

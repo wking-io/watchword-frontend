@@ -1,9 +1,10 @@
 module Data.Game exposing (Game)
 
-import Data.Session exposing (Session)
-import Watchword.Scalar exposing (Id, DateTime)
-import Watchword.Enum.Focus exposing (Focus)
-import Watchword.Enum.PatternType exposing (PatternType)
+import Data.Sessions exposing (Sessions)
+import Data.Words exposing (Words)
+import WatchWord.Scalar exposing (Id, DateTime)
+import WatchWord.Enum.Focus exposing (Focus)
+import WatchWord.Enum.PatternType exposing (PatternType)
 
 
 type alias Game =
@@ -14,6 +15,6 @@ type alias Game =
     , focus : Focus
     , size : Int
     , pattern : PatternType
-    , sessions : List Session
-    , words : List String
+    , sessions : Sessions
+    , words : Words
     }

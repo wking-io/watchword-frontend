@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Query exposing (..)
+module WatchWord.Query exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -12,17 +12,17 @@ import Graphqelm.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
-import Watchword.Enum.GameOrderByInput
-import Watchword.Enum.PatternOrderByInput
-import Watchword.Enum.PatternType
-import Watchword.Enum.SessionOrderByInput
-import Watchword.Enum.UserOrderByInput
-import Watchword.Enum.WordOrderByInput
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.Enum.GameOrderByInput
+import WatchWord.Enum.PatternOrderByInput
+import WatchWord.Enum.PatternType
+import WatchWord.Enum.SessionOrderByInput
+import WatchWord.Enum.UserOrderByInput
+import WatchWord.Enum.WordOrderByInput
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a top-level query. The request can be sent with
@@ -34,7 +34,7 @@ selection constructor =
 
 
 type alias GamesOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput, orderBy : OptionalArgument Watchword.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.GameWhereInput, orderBy : OptionalArgument WatchWord.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -48,21 +48,21 @@ type alias GamesOptionalArguments =
   - last -
 
 -}
-games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field (List decodesTo) RootQuery
+games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Game -> Field (List decodesTo) RootQuery
 games fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
     Object.selectionField "games" optionalArgs object (identity >> Decode.list)
 
 
 type alias GameRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -70,19 +70,19 @@ type alias GameRequiredArguments =
   - id -
 
 -}
-game : GameRequiredArguments -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe decodesTo) RootQuery
+game : GameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) RootQuery
 game requiredArgs object =
-    Object.selectionField "game" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "game" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 {-| -}
-me : SelectionSet decodesTo Watchword.Object.User -> Field (Maybe decodesTo) RootQuery
+me : SelectionSet decodesTo WatchWord.Object.User -> Field (Maybe decodesTo) RootQuery
 me object =
     Object.selectionField "me" [] object (identity >> Decode.nullable)
 
 
 type alias PatternsOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.PatternWhereInput, orderBy : OptionalArgument Watchword.Enum.PatternOrderByInput.PatternOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.PatternWhereInput, orderBy : OptionalArgument WatchWord.Enum.PatternOrderByInput.PatternOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -96,21 +96,21 @@ type alias PatternsOptionalArguments =
   - last -
 
 -}
-patterns : (PatternsOptionalArguments -> PatternsOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Pattern -> Field (List (Maybe decodesTo)) RootQuery
+patterns : (PatternsOptionalArguments -> PatternsOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Pattern -> Field (List decodesTo) RootQuery
 patterns fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodePatternWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.PatternOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodePatternWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.PatternOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
-    Object.selectionField "patterns" optionalArgs object (identity >> Decode.nullable >> Decode.list)
+    Object.selectionField "patterns" optionalArgs object (identity >> Decode.list)
 
 
 type alias PatternRequiredArguments =
-    { pattern : Watchword.Enum.PatternType.PatternType }
+    { pattern : WatchWord.Enum.PatternType.PatternType }
 
 
 {-|
@@ -118,13 +118,27 @@ type alias PatternRequiredArguments =
   - pattern -
 
 -}
-pattern : PatternRequiredArguments -> SelectionSet decodesTo Watchword.Object.Pattern -> Field (Maybe decodesTo) RootQuery
+pattern : PatternRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Pattern -> Field (Maybe decodesTo) RootQuery
 pattern requiredArgs object =
-    Object.selectionField "pattern" [ Argument.required "pattern" requiredArgs.pattern (Encode.enum Watchword.Enum.PatternType.toString) ] object (identity >> Decode.nullable)
+    Object.selectionField "pattern" [ Argument.required "pattern" requiredArgs.pattern (Encode.enum WatchWord.Enum.PatternType.toString) ] object (identity >> Decode.nullable)
+
+
+type alias PlayRequiredArguments =
+    { id : WatchWord.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+play : PlayRequiredArguments -> SelectionSet decodesTo WatchWord.Union.PlayData -> Field decodesTo RootQuery
+play requiredArgs object =
+    Object.selectionField "play" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object identity
 
 
 type alias SessionsOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.SessionWhereInput, orderBy : OptionalArgument Watchword.Enum.SessionOrderByInput.SessionOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.SessionWhereInput, orderBy : OptionalArgument WatchWord.Enum.SessionOrderByInput.SessionOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -138,21 +152,21 @@ type alias SessionsOptionalArguments =
   - last -
 
 -}
-sessions : (SessionsOptionalArguments -> SessionsOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Session -> Field (List decodesTo) RootQuery
+sessions : (SessionsOptionalArguments -> SessionsOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Session -> Field (List decodesTo) RootQuery
 sessions fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeSessionWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.SessionOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeSessionWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.SessionOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
     Object.selectionField "sessions" optionalArgs object (identity >> Decode.list)
 
 
 type alias SessionRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -160,13 +174,13 @@ type alias SessionRequiredArguments =
   - id -
 
 -}
-session : SessionRequiredArguments -> SelectionSet decodesTo Watchword.Object.Session -> Field (Maybe decodesTo) RootQuery
+session : SessionRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Session -> Field (Maybe decodesTo) RootQuery
 session requiredArgs object =
-    Object.selectionField "session" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "session" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias UsersOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.UserWhereInput, orderBy : OptionalArgument Watchword.Enum.UserOrderByInput.UserOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.UserWhereInput, orderBy : OptionalArgument WatchWord.Enum.UserOrderByInput.UserOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -180,21 +194,21 @@ type alias UsersOptionalArguments =
   - last -
 
 -}
-users : (UsersOptionalArguments -> UsersOptionalArguments) -> SelectionSet decodesTo Watchword.Object.User -> Field (List (Maybe decodesTo)) RootQuery
+users : (UsersOptionalArguments -> UsersOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.User -> Field (List decodesTo) RootQuery
 users fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeUserWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.UserOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeUserWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.UserOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
-    Object.selectionField "users" optionalArgs object (identity >> Decode.nullable >> Decode.list)
+    Object.selectionField "users" optionalArgs object (identity >> Decode.list)
 
 
 type alias UserRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -202,13 +216,13 @@ type alias UserRequiredArguments =
   - id -
 
 -}
-user : UserRequiredArguments -> SelectionSet decodesTo Watchword.Object.User -> Field (Maybe decodesTo) RootQuery
+user : UserRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field (Maybe decodesTo) RootQuery
 user requiredArgs object =
-    Object.selectionField "user" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "user" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias WordsOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.WordWhereInput, orderBy : OptionalArgument Watchword.Enum.WordOrderByInput.WordOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.WordWhereInput, orderBy : OptionalArgument WatchWord.Enum.WordOrderByInput.WordOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -222,21 +236,21 @@ type alias WordsOptionalArguments =
   - last -
 
 -}
-words : (WordsOptionalArguments -> WordsOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Word -> Field (List decodesTo) RootQuery
+words : (WordsOptionalArguments -> WordsOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Word -> Field (List decodesTo) RootQuery
 words fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeWordWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.WordOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeWordWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.WordOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
     Object.selectionField "words" optionalArgs object (identity >> Decode.list)
 
 
 type alias WordRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -244,6 +258,6 @@ type alias WordRequiredArguments =
   - id -
 
 -}
-word : WordRequiredArguments -> SelectionSet decodesTo Watchword.Object.Word -> Field (Maybe decodesTo) RootQuery
+word : WordRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Word -> Field (Maybe decodesTo) RootQuery
 word requiredArgs object =
-    Object.selectionField "word" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "word" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)

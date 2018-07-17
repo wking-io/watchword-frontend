@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Enum.Focus exposing (..)
+module WatchWord.Enum.Focus exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 

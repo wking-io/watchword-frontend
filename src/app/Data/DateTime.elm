@@ -2,7 +2,7 @@ module Data.DateTime exposing (decoder, encode)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import Watchword.Scalar exposing (DateTime(..))
+import WatchWord.Scalar exposing (DateTime(..))
 
 
 decoder : Decoder DateTime

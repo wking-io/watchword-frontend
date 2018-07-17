@@ -1,6 +1,6 @@
 module Data.Session exposing (Session)
 
-import Watchword.Scalar exposing (Id, DateTime)
+import WatchWord.Scalar exposing (Id, DateTime)
 
 
 type alias Session =

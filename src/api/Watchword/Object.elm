@@ -2,15 +2,35 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object exposing (..)
+module WatchWord.Object exposing (..)
 
 
 type AuthPayload
     = AuthPayload
 
 
+type ConnectData
+    = ConnectData
+
+
+type FilterData
+    = FilterData
+
+
 type Game
     = Game
+
+
+type IdentifyData
+    = IdentifyData
+
+
+type MemorizeData
+    = MemorizeData
+
+
+type OrderData
+    = OrderData
 
 
 type Pattern

@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Mutation exposing (..)
+module WatchWord.Mutation exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -12,11 +12,11 @@ import Graphqelm.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a top-level mutation. The request can be sent with
@@ -28,7 +28,7 @@ selection constructor =
 
 
 type alias CreateGameRequiredArguments =
-    { input : Watchword.InputObject.GameInput }
+    { input : WatchWord.InputObject.GameInput }
 
 
 {-|
@@ -36,13 +36,13 @@ type alias CreateGameRequiredArguments =
   - input -
 
 -}
-createGame : CreateGameRequiredArguments -> SelectionSet decodesTo Watchword.Object.Game -> Field decodesTo RootMutation
+createGame : CreateGameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field decodesTo RootMutation
 createGame requiredArgs object =
-    Object.selectionField "createGame" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeGameInput ] object identity
+    Object.selectionField "createGame" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeGameInput ] object identity
 
 
 type alias CreatePatternRequiredArguments =
-    { input : Watchword.InputObject.PatternInput }
+    { input : WatchWord.InputObject.PatternInput }
 
 
 {-|
@@ -50,13 +50,13 @@ type alias CreatePatternRequiredArguments =
   - input -
 
 -}
-createPattern : CreatePatternRequiredArguments -> SelectionSet decodesTo Watchword.Object.Pattern -> Field decodesTo RootMutation
+createPattern : CreatePatternRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Pattern -> Field decodesTo RootMutation
 createPattern requiredArgs object =
-    Object.selectionField "createPattern" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodePatternInput ] object identity
+    Object.selectionField "createPattern" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodePatternInput ] object identity
 
 
 type alias CreateSessionRequiredArguments =
-    { input : Watchword.InputObject.SessionInput }
+    { input : WatchWord.InputObject.SessionInput }
 
 
 {-|
@@ -64,13 +64,13 @@ type alias CreateSessionRequiredArguments =
   - input -
 
 -}
-createSession : CreateSessionRequiredArguments -> SelectionSet decodesTo Watchword.Object.Session -> Field decodesTo RootMutation
+createSession : CreateSessionRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Session -> Field decodesTo RootMutation
 createSession requiredArgs object =
-    Object.selectionField "createSession" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeSessionInput ] object identity
+    Object.selectionField "createSession" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeSessionInput ] object identity
 
 
 type alias CreateWordRequiredArguments =
-    { input : Watchword.InputObject.WordInput }
+    { input : WatchWord.InputObject.WordInput }
 
 
 {-|
@@ -78,13 +78,13 @@ type alias CreateWordRequiredArguments =
   - input -
 
 -}
-createWord : CreateWordRequiredArguments -> SelectionSet decodesTo Watchword.Object.Word -> Field decodesTo RootMutation
+createWord : CreateWordRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Word -> Field decodesTo RootMutation
 createWord requiredArgs object =
-    Object.selectionField "createWord" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeWordInput ] object identity
+    Object.selectionField "createWord" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeWordInput ] object identity
 
 
 type alias CompleteSessionRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -92,13 +92,13 @@ type alias CompleteSessionRequiredArguments =
   - id -
 
 -}
-completeSession : CompleteSessionRequiredArguments -> SelectionSet decodesTo Watchword.Object.Session -> Field decodesTo RootMutation
+completeSession : CompleteSessionRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Session -> Field decodesTo RootMutation
 completeSession requiredArgs object =
-    Object.selectionField "completeSession" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object identity
+    Object.selectionField "completeSession" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object identity
 
 
 type alias DeleteGameRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -106,13 +106,13 @@ type alias DeleteGameRequiredArguments =
   - id -
 
 -}
-deleteGame : DeleteGameRequiredArguments -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe decodesTo) RootMutation
+deleteGame : DeleteGameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) RootMutation
 deleteGame requiredArgs object =
-    Object.selectionField "deleteGame" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "deleteGame" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias DeletePatternRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -120,13 +120,13 @@ type alias DeletePatternRequiredArguments =
   - id -
 
 -}
-deletePattern : DeletePatternRequiredArguments -> SelectionSet decodesTo Watchword.Object.Pattern -> Field (Maybe decodesTo) RootMutation
+deletePattern : DeletePatternRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Pattern -> Field (Maybe decodesTo) RootMutation
 deletePattern requiredArgs object =
-    Object.selectionField "deletePattern" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "deletePattern" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias DeleteSessionRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -134,13 +134,13 @@ type alias DeleteSessionRequiredArguments =
   - id -
 
 -}
-deleteSession : DeleteSessionRequiredArguments -> SelectionSet decodesTo Watchword.Object.Session -> Field (Maybe decodesTo) RootMutation
+deleteSession : DeleteSessionRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Session -> Field (Maybe decodesTo) RootMutation
 deleteSession requiredArgs object =
-    Object.selectionField "deleteSession" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "deleteSession" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias DeleteWordRequiredArguments =
-    { id : Watchword.Scalar.Id }
+    { id : WatchWord.Scalar.Id }
 
 
 {-|
@@ -148,13 +148,13 @@ type alias DeleteWordRequiredArguments =
   - id -
 
 -}
-deleteWord : DeleteWordRequiredArguments -> SelectionSet decodesTo Watchword.Object.Word -> Field (Maybe decodesTo) RootMutation
+deleteWord : DeleteWordRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Word -> Field (Maybe decodesTo) RootMutation
 deleteWord requiredArgs object =
-    Object.selectionField "deleteWord" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+    Object.selectionField "deleteWord" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias LoginRequiredArguments =
-    { input : Watchword.InputObject.LoginInput }
+    { input : WatchWord.InputObject.LoginInput }
 
 
 {-|
@@ -162,13 +162,13 @@ type alias LoginRequiredArguments =
   - input -
 
 -}
-login : LoginRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
+login : LoginRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
 login requiredArgs object =
-    Object.selectionField "login" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeLoginInput ] object identity
+    Object.selectionField "login" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeLoginInput ] object identity
 
 
 type alias RecoverRequiredArguments =
-    { input : Watchword.InputObject.RecoverInput }
+    { input : WatchWord.InputObject.RecoverInput }
 
 
 {-|
@@ -176,13 +176,13 @@ type alias RecoverRequiredArguments =
   - input -
 
 -}
-recover : RecoverRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
+recover : RecoverRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
 recover requiredArgs object =
-    Object.selectionField "recover" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeRecoverInput ] object identity
+    Object.selectionField "recover" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeRecoverInput ] object identity
 
 
 type alias ResetRequiredArguments =
-    { resetToken : String, input : Watchword.InputObject.ResetInput }
+    { resetToken : String, input : WatchWord.InputObject.ResetInput }
 
 
 {-|
@@ -191,13 +191,13 @@ type alias ResetRequiredArguments =
   - input -
 
 -}
-reset : ResetRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
+reset : ResetRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
 reset requiredArgs object =
-    Object.selectionField "reset" [ Argument.required "resetToken" requiredArgs.resetToken Encode.string, Argument.required "input" requiredArgs.input Watchword.InputObject.encodeResetInput ] object identity
+    Object.selectionField "reset" [ Argument.required "resetToken" requiredArgs.resetToken Encode.string, Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeResetInput ] object identity
 
 
 type alias SignupRequiredArguments =
-    { input : Watchword.InputObject.SignupInput }
+    { input : WatchWord.InputObject.SignupInput }
 
 
 {-|
@@ -205,13 +205,13 @@ type alias SignupRequiredArguments =
   - input -
 
 -}
-signup : SignupRequiredArguments -> SelectionSet decodesTo Watchword.Object.AuthPayload -> Field decodesTo RootMutation
+signup : SignupRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
 signup requiredArgs object =
-    Object.selectionField "signup" [ Argument.required "input" requiredArgs.input Watchword.InputObject.encodeSignupInput ] object identity
+    Object.selectionField "signup" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeSignupInput ] object identity
 
 
 type alias UpdateGameRequiredArguments =
-    { id : Watchword.Scalar.Id, input : Watchword.InputObject.GameInput }
+    { id : WatchWord.Scalar.Id, input : WatchWord.InputObject.GameInput }
 
 
 {-|
@@ -220,13 +220,13 @@ type alias UpdateGameRequiredArguments =
   - input -
 
 -}
-updateGame : UpdateGameRequiredArguments -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe decodesTo) RootMutation
+updateGame : UpdateGameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) RootMutation
 updateGame requiredArgs object =
-    Object.selectionField "updateGame" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input Watchword.InputObject.encodeGameInput ] object (identity >> Decode.nullable)
+    Object.selectionField "updateGame" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeGameInput ] object (identity >> Decode.nullable)
 
 
 type alias UpdatePatternRequiredArguments =
-    { id : Watchword.Scalar.Id, input : Watchword.InputObject.PatternUpdateInput }
+    { id : WatchWord.Scalar.Id, input : WatchWord.InputObject.PatternUpdateInput }
 
 
 {-|
@@ -235,13 +235,13 @@ type alias UpdatePatternRequiredArguments =
   - input -
 
 -}
-updatePattern : UpdatePatternRequiredArguments -> SelectionSet decodesTo Watchword.Object.Pattern -> Field (Maybe decodesTo) RootMutation
+updatePattern : UpdatePatternRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Pattern -> Field (Maybe decodesTo) RootMutation
 updatePattern requiredArgs object =
-    Object.selectionField "updatePattern" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input Watchword.InputObject.encodePatternUpdateInput ] object (identity >> Decode.nullable)
+    Object.selectionField "updatePattern" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input WatchWord.InputObject.encodePatternUpdateInput ] object (identity >> Decode.nullable)
 
 
 type alias UpdateSessionRequiredArguments =
-    { id : Watchword.Scalar.Id, input : Watchword.InputObject.SessionUpdateInput }
+    { id : WatchWord.Scalar.Id, input : WatchWord.InputObject.SessionUpdateInput }
 
 
 {-|
@@ -250,13 +250,13 @@ type alias UpdateSessionRequiredArguments =
   - input -
 
 -}
-updateSession : UpdateSessionRequiredArguments -> SelectionSet decodesTo Watchword.Object.Session -> Field (Maybe decodesTo) RootMutation
+updateSession : UpdateSessionRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Session -> Field (Maybe decodesTo) RootMutation
 updateSession requiredArgs object =
-    Object.selectionField "updateSession" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input Watchword.InputObject.encodeSessionUpdateInput ] object (identity >> Decode.nullable)
+    Object.selectionField "updateSession" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeSessionUpdateInput ] object (identity >> Decode.nullable)
 
 
 type alias UpdateWordRequiredArguments =
-    { id : Watchword.Scalar.Id, input : Watchword.InputObject.WordUpdateInput }
+    { id : WatchWord.Scalar.Id, input : WatchWord.InputObject.WordUpdateInput }
 
 
 {-|
@@ -265,6 +265,6 @@ type alias UpdateWordRequiredArguments =
   - input -
 
 -}
-updateWord : UpdateWordRequiredArguments -> SelectionSet decodesTo Watchword.Object.Word -> Field (Maybe decodesTo) RootMutation
+updateWord : UpdateWordRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Word -> Field (Maybe decodesTo) RootMutation
 updateWord requiredArgs object =
-    Object.selectionField "updateWord" [ Argument.required "id" requiredArgs.id (\(Watchword.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input Watchword.InputObject.encodeWordUpdateInput ] object (identity >> Decode.nullable)
+    Object.selectionField "updateWord" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw), Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeWordUpdateInput ] object (identity >> Decode.nullable)

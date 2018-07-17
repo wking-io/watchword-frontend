@@ -3,68 +3,76 @@ module Request.Dashboard exposing (get)
 import Data.Game as Game exposing (Game)
 import Data.Games as Games exposing (Games)
 import Data.Session as Session exposing (Session)
+import Data.Word as Word exposing (Word)
+import Data.Words as Words exposing (Words)
+import WatchWord.Enum.PatternType exposing (PatternType)
 import Graphqelm.Field as Field exposing (Field)
+import WatchWord.Object
+import WatchWord.Object.Game
+import WatchWord.Object.Pattern
+import WatchWord.Object.Session
+import WatchWord.Object.Word
 import Graphqelm.Operation exposing (RootQuery)
+import WatchWord.Query as Query
+import WatchWord.Scalar exposing (Id)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
-import Watchword.Enum.PatternType exposing (PatternType)
-import Watchword.Query as Query exposing (GamesOptionalArguments)
-import Watchword.Object
-import Watchword.Object.Game
-import Watchword.Object.Pattern
-import Watchword.Object.Session
-import Watchword.Object.Word
-import Watchword.Scalar exposing (Id, DateTime)
 
 
 get : SelectionSet Games RootQuery
 get =
-    Query.selection Games.fromList
+    Query.selection identity
         |> with getGames
 
 
-getGames : Field (List Game) RootQuery
+getGames : Field Games RootQuery
 getGames =
-    Watchword.Object.Game.selection Game
-        |> with Watchword.Object.Game.id
-        |> with Watchword.Object.Game.createdAt
-        |> with Watchword.Object.Game.updatedAt
-        |> with Watchword.Object.Game.name
-        |> with Watchword.Object.Game.focus
-        |> with Watchword.Object.Game.size
+    WatchWord.Object.Game.selection Game
+        |> with WatchWord.Object.Game.id
+        |> with WatchWord.Object.Game.createdAt
+        |> with WatchWord.Object.Game.updatedAt
+        |> with WatchWord.Object.Game.name
+        |> with WatchWord.Object.Game.focus
+        |> with WatchWord.Object.Game.size
         |> with getPattern
         |> with getSessions
         |> with getWords
         |> Query.games identity
 
 
-getGameId : Field Id Watchword.Object.Session
-getGameId =
-    fieldSelection Watchword.Object.Game.id
-        |> Watchword.Object.Session.game identity
-
-
-getPattern : Field PatternType Watchword.Object.Game
+getPattern : Field PatternType WatchWord.Object.Game
 getPattern =
-    fieldSelection Watchword.Object.Pattern.pattern
-        |> Watchword.Object.Game.pattern identity
+    fieldSelection WatchWord.Object.Pattern.pattern
+        |> WatchWord.Object.Game.pattern identity
 
 
-getSessions : Field (List Session) Watchword.Object.Game
+getSessions : Field (List Session) WatchWord.Object.Game
 getSessions =
-    Watchword.Object.Session.selection Session
-        |> with Watchword.Object.Session.id
-        |> with Watchword.Object.Session.name
-        |> with Watchword.Object.Session.createdAt
-        |> with Watchword.Object.Session.updatedAt
-        |> with Watchword.Object.Session.complete
-        |> with Watchword.Object.Session.completedAt
+    WatchWord.Object.Session.selection Session
+        |> with WatchWord.Object.Session.id
+        |> with WatchWord.Object.Session.name
+        |> with WatchWord.Object.Session.createdAt
+        |> with WatchWord.Object.Session.updatedAt
+        |> with WatchWord.Object.Session.complete
+        |> with WatchWord.Object.Session.completedAt
         |> with getGameId
-        |> Watchword.Object.Game.sessions identity
+        |> WatchWord.Object.Game.sessions identity
         |> Field.map (Maybe.withDefault [])
 
 
-getWords : Field (List String) Watchword.Object.Game
+getGameId : Field Id WatchWord.Object.Session
+getGameId =
+    fieldSelection WatchWord.Object.Game.id
+        |> WatchWord.Object.Session.game identity
+
+
+getWords : Field Words WatchWord.Object.Game
 getWords =
-    fieldSelection Watchword.Object.Word.word
-        |> Watchword.Object.Game.words identity
+    WatchWord.Object.Word.selection Word
+        |> with WatchWord.Object.Word.id
+        |> with WatchWord.Object.Word.word
+        |> with WatchWord.Object.Word.group
+        |> with WatchWord.Object.Word.beginning
+        |> with WatchWord.Object.Word.ending
+        |> with WatchWord.Object.Word.vowel
+        |> WatchWord.Object.Game.words identity
         |> Field.map (Maybe.withDefault [])

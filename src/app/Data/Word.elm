@@ -1,11 +1,8 @@
-module Data.Word exposing (Word, idToHtml)
+module Data.Word exposing (Word, WordWithOptions, idToHtml, addOptions)
 
 import Html exposing (Html)
-import Watchword.Scalar exposing (Id(..))
-
-
-type Words
-    = Words (List Word)
+import WatchWord.Enum.Focus exposing (Focus(..))
+import WatchWord.Scalar exposing (Id(..))
 
 
 type alias Word =
@@ -18,8 +15,21 @@ type alias Word =
     }
 
 
+type alias WordWithOptions =
+    { word : Word
+    , options : List String
+    }
+
+
 idToHtml : Word -> Html msg
 idToHtml { id } =
     case id of
         Id id ->
             Html.text id
+
+
+addOptions : Word -> String -> WordWithOptions
+addOptions w optionsString =
+    { word = w
+    , options = String.split "/" optionsString
+    }

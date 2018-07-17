@@ -1,18 +1,23 @@
-module Data.AuthToken exposing (AuthToken, fieldDecoder, decoder, encode, withAuthorization)
+module Data.AuthToken exposing (AuthToken, fieldDecoder, decoder, encode, withAuthorization, testToken)
 
 import Graphqelm.Http
 import Graphqelm.Field as Field exposing (Field)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import Watchword.Object
-import Watchword.Object.AuthPayload as AuthPayload
+import WatchWord.Object
+import WatchWord.Object.AuthPayload as AuthPayload
 
 
 type AuthToken
     = AuthToken String
 
 
-fieldDecoder : Field AuthToken Watchword.Object.AuthPayload
+testToken : AuthToken
+testToken =
+    AuthToken "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjamhodXUyaHA1c2o1MGI2MjJtcmVjcWtjIiwiaWF0IjoxNTMxNjE2MTczfQ.GtU5rIsiMUgbp7hNqhkWOFRO1VUFFmV8Wp-820rBxjs"
+
+
+fieldDecoder : Field AuthToken WatchWord.Object.AuthPayload
 fieldDecoder =
     AuthPayload.token |> Field.map AuthToken
 

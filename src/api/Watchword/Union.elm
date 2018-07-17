@@ -2,9 +2,8 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Union exposing (..)
+module WatchWord.Union exposing (..)
 
 
-placeholder : String
-placeholder =
-    ""
+type PlayData
+    = PlayData

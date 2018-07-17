@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Interface.Node exposing (..)
+module WatchWord.Interface.Node exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,49 +11,49 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (FragmentSelectionSet(FragmentSelectionSet), SelectionSet(SelectionSet))
 import Json.Decode as Decode
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select only common fields from the interface.
 -}
-commonSelection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Interface.Node
+commonSelection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Interface.Node
 commonSelection constructor =
     Object.selection constructor
 
 
 {-| Select both common and type-specific fields from the interface.
 -}
-selection : (Maybe typeSpecific -> a -> constructor) -> List (FragmentSelectionSet typeSpecific Watchword.Interface.Node) -> SelectionSet (a -> constructor) Watchword.Interface.Node
+selection : (Maybe typeSpecific -> a -> constructor) -> List (FragmentSelectionSet typeSpecific WatchWord.Interface.Node) -> SelectionSet (a -> constructor) WatchWord.Interface.Node
 selection constructor typeSpecificDecoders =
     Object.interfaceSelection typeSpecificDecoders constructor
 
 
-onGame : SelectionSet decodesTo Watchword.Object.Game -> FragmentSelectionSet decodesTo Watchword.Interface.Node
+onGame : SelectionSet decodesTo WatchWord.Object.Game -> FragmentSelectionSet decodesTo WatchWord.Interface.Node
 onGame (SelectionSet fields decoder) =
     FragmentSelectionSet "Game" fields decoder
 
 
-onPattern : SelectionSet decodesTo Watchword.Object.Pattern -> FragmentSelectionSet decodesTo Watchword.Interface.Node
+onPattern : SelectionSet decodesTo WatchWord.Object.Pattern -> FragmentSelectionSet decodesTo WatchWord.Interface.Node
 onPattern (SelectionSet fields decoder) =
     FragmentSelectionSet "Pattern" fields decoder
 
 
-onSession : SelectionSet decodesTo Watchword.Object.Session -> FragmentSelectionSet decodesTo Watchword.Interface.Node
+onSession : SelectionSet decodesTo WatchWord.Object.Session -> FragmentSelectionSet decodesTo WatchWord.Interface.Node
 onSession (SelectionSet fields decoder) =
     FragmentSelectionSet "Session" fields decoder
 
 
-onWord : SelectionSet decodesTo Watchword.Object.Word -> FragmentSelectionSet decodesTo Watchword.Interface.Node
+onWord : SelectionSet decodesTo WatchWord.Object.Word -> FragmentSelectionSet decodesTo WatchWord.Interface.Node
 onWord (SelectionSet fields decoder) =
     FragmentSelectionSet "Word" fields decoder
 
 
 {-| The id of the object.
 -}
-id : Field Watchword.Scalar.Id Watchword.Interface.Node
+id : Field WatchWord.Scalar.Id WatchWord.Interface.Node
 id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.Id)
+    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)

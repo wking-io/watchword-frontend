@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object.Word exposing (..)
+module WatchWord.Object.Word exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,59 +11,59 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import Watchword.Enum.GameOrderByInput
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.Enum.GameOrderByInput
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.Word
+selection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Object.Word
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-id : Field Watchword.Scalar.Id Watchword.Object.Word
+id : Field WatchWord.Scalar.Id WatchWord.Object.Word
 id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map Watchword.Scalar.Id)
+    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)
 
 
 {-| -}
-word : Field String Watchword.Object.Word
+word : Field String WatchWord.Object.Word
 word =
     Object.fieldDecoder "word" [] Decode.string
 
 
 {-| -}
-group : Field String Watchword.Object.Word
+group : Field String WatchWord.Object.Word
 group =
     Object.fieldDecoder "group" [] Decode.string
 
 
 {-| -}
-beginning : Field String Watchword.Object.Word
+beginning : Field String WatchWord.Object.Word
 beginning =
     Object.fieldDecoder "beginning" [] Decode.string
 
 
 {-| -}
-ending : Field String Watchword.Object.Word
+ending : Field String WatchWord.Object.Word
 ending =
     Object.fieldDecoder "ending" [] Decode.string
 
 
 {-| -}
-vowel : Field String Watchword.Object.Word
+vowel : Field String WatchWord.Object.Word
 vowel =
     Object.fieldDecoder "vowel" [] Decode.string
 
 
 type alias GamesOptionalArguments =
-    { where_ : OptionalArgument Watchword.InputObject.GameWhereInput, orderBy : OptionalArgument Watchword.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
+    { where_ : OptionalArgument WatchWord.InputObject.GameWhereInput, orderBy : OptionalArgument WatchWord.Enum.GameOrderByInput.GameOrderByInput, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
 
 
 {-|
@@ -77,14 +77,14 @@ type alias GamesOptionalArguments =
   - last -
 
 -}
-games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo Watchword.Object.Game -> Field (Maybe (List decodesTo)) Watchword.Object.Word
+games : (GamesOptionalArguments -> GamesOptionalArguments) -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe (List decodesTo)) WatchWord.Object.Word
 games fillInOptionals object =
     let
         filledInOptionals =
             fillInOptionals { where_ = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
-            [ Argument.optional "where" filledInOptionals.where_ Watchword.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum Watchword.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
+            [ Argument.optional "where" filledInOptionals.where_ WatchWord.InputObject.encodeGameWhereInput, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum WatchWord.Enum.GameOrderByInput.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
                 |> List.filterMap identity
     in
     Object.selectionField "games" optionalArgs object (identity >> Decode.list >> Decode.nullable)

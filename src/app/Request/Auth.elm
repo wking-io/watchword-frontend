@@ -5,13 +5,13 @@ import Data.UserSession as UserSession exposing (UserSession)
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Operation exposing (RootMutation)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
-import Watchword.Enum.UserRole exposing (UserRole)
-import Watchword.Mutation as Mutation
-import Watchword.InputObject exposing (buildLoginInput, LoginInputRequiredFields, buildSignupInput, SignupInputRequiredFields, buildRecoverInput, RecoverInputRequiredFields, buildResetInput, ResetInputRequiredFields)
-import Watchword.Object
-import Watchword.Object.AuthPayload as AuthPayload
-import Watchword.Object.User as User
-import Watchword.Scalar exposing (DateTime)
+import WatchWord.Enum.UserRole exposing (UserRole)
+import WatchWord.Mutation as Mutation
+import WatchWord.InputObject exposing (buildLoginInput, LoginInputRequiredFields, buildSignupInput, SignupInputRequiredFields, buildRecoverInput, RecoverInputRequiredFields, buildResetInput, ResetInputRequiredFields)
+import WatchWord.Object
+import WatchWord.Object.AuthPayload as AuthPayload
+import WatchWord.Object.User as User
+import WatchWord.Scalar exposing (DateTime)
 
 
 type alias Response =
@@ -29,7 +29,7 @@ type alias RequestUser =
     }
 
 
-base : (SelectionSet UserSession Watchword.Object.AuthPayload -> Field UserSession RootMutation) -> Field UserSession RootMutation
+base : (SelectionSet UserSession WatchWord.Object.AuthPayload -> Field UserSession RootMutation) -> Field UserSession RootMutation
 base toField =
     AuthPayload.selection Response
         |> with AuthToken.fieldDecoder
@@ -82,7 +82,7 @@ getReset token input =
     base <| Mutation.reset { resetToken = token, input = buildResetInput input }
 
 
-getUser : Field RequestUser Watchword.Object.AuthPayload
+getUser : Field RequestUser WatchWord.Object.AuthPayload
 getUser =
     User.selection RequestUser
         |> with User.email

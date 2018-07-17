@@ -2,27 +2,21 @@ module Page.Test exposing (Model, Msg, init, view, update)
 
 import Data.AuthToken exposing (testToken)
 import Data.Session exposing (Session)
+import Data.Patterns exposing (Patterns)
 import Html exposing (Html)
 import Html.Attributes as HA
 import Request
-
-
--- import Request.Dashboard as Dashboard exposing (Response)
-
 import Data.UserSession exposing (UserSession)
-import Data.Games exposing (Games)
-
-
--- import Request.Auth as Auth
-
-import Request.Dashboard as Dashboard
+import Data.Game exposing (Game)
+import Request.Play as Play
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
+import WatchWord.Scalar exposing (Id(..))
 
 
 type alias Model =
-    { data : Games
+    { data : Patterns
     }
 
 
@@ -42,8 +36,11 @@ init session =
 
         resetToken =
             "f25e8de7d36fab872f0a29b9add2e1ebae5459c91531616933395"
+
+        singleGame =
+            Id "cjjc76pn7mbm10b96uwb94k88"
     in
-        Dashboard.get
+        Play.get singleGame
             |> Request.query maybeAuthToken
             |> Task.map Model
             |> Task.mapError (Debug.log "Error: ")

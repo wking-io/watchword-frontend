@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Scalar exposing (..)
+module WatchWord.Scalar exposing (..)
 
 
 type DateTime

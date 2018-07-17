@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module Watchword.Object.AuthPayload exposing (..)
+module WatchWord.Object.AuthPayload exposing (..)
 
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
@@ -11,27 +11,27 @@ import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent))
 import Graphqelm.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import Watchword.InputObject
-import Watchword.Interface
-import Watchword.Object
-import Watchword.Scalar
-import Watchword.Union
+import WatchWord.InputObject
+import WatchWord.Interface
+import WatchWord.Object
+import WatchWord.Scalar
+import WatchWord.Union
 
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) Watchword.Object.AuthPayload
+selection : (a -> constructor) -> SelectionSet (a -> constructor) WatchWord.Object.AuthPayload
 selection constructor =
     Object.selection constructor
 
 
 {-| -}
-token : Field String Watchword.Object.AuthPayload
+token : Field String WatchWord.Object.AuthPayload
 token =
     Object.fieldDecoder "token" [] Decode.string
 
 
 {-| -}
-user : SelectionSet decodesTo Watchword.Object.User -> Field decodesTo Watchword.Object.AuthPayload
+user : SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo WatchWord.Object.AuthPayload
 user object =
     Object.selectionField "user" [] object identity
