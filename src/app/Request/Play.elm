@@ -5,10 +5,11 @@ import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import WatchWord.Query as Query
+import WatchWord.Scalar exposing (Id)
 
 
 type alias Response =
-    Maybe Play
+    Play
 
 
 get : Id -> SelectionSet Response RootQuery
@@ -20,3 +21,4 @@ get gameId =
 getPlay : Id -> Field Response RootQuery
 getPlay gameId =
     Query.play { id = gameId } Play.selection
+        |> Field.nonNullOrFail

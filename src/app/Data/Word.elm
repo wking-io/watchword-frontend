@@ -1,5 +1,6 @@
-module Data.Word exposing (Word, WordWithOptions, idToHtml, addOptions)
+module Data.Word exposing (Word, WordWithOptions, idToHtml, addOptions, empty, emptyWithOptions)
 
+import Data.Id as Id
 import Html exposing (Html)
 import WatchWord.Enum.Focus exposing (Focus(..))
 import WatchWord.Scalar exposing (Id(..))
@@ -32,4 +33,22 @@ addOptions : Word -> String -> WordWithOptions
 addOptions w optionsString =
     { word = w
     , options = String.split "/" optionsString
+    }
+
+
+empty : Word
+empty =
+    { id = Id.empty
+    , word = ""
+    , group = ""
+    , beginning = ""
+    , ending = ""
+    , vowel = ""
+    }
+
+
+emptyWithOptions : WordWithOptions
+emptyWithOptions =
+    { word = empty
+    , options = []
     }

@@ -1,4 +1,4 @@
-module Data.Play exposing (Play, PlayData, ConnectFields, FilterFields, IdentifyFields, MemorizeFields, OrderFields, playSelection)
+module Data.Play exposing (Play, PlayData, ConnectFields, FilterFields, IdentifyFields, MemorizeFields, OrderFields, selection)
 
 import Data.Id as Id
 import Data.SelectTwo as SelectTwo exposing (SelectTwo)
@@ -162,9 +162,9 @@ type alias OrderFields =
     }
 
 
-playSelection : SelectionSet Play WatchWord.Union.PlayData
-playSelection =
-    WatchWord.Union.PlayData.selection Init
+selection : SelectionSet (Maybe Play) WatchWord.Union.PlayData
+selection =
+    WatchWord.Union.PlayData.selection (Maybe.map Init)
         [ WatchWord.Union.PlayData.onConnectData connectDataSelection
         , WatchWord.Union.PlayData.onFilterData filterDataSelection
         , WatchWord.Union.PlayData.onIdentifyData identifyDataSelection
@@ -249,8 +249,13 @@ identifyDataSelection =
 identifyRawToData : IdentifyRaw -> PlayData
 identifyRawToData raw =
     let
-        (selected :: rest) =
-            List.map2 Word.addOptions raw.words raw.options
+        theData =
+            case List.map2 Word.addOptions raw.words raw.options of
+                selected :: rest ->
+                    SelectList.fromLists [] selected rest
+
+                [] ->
+                    SelectList.fromLists [] Word.emptyWithOptions []
     in
         IdentifyData
             { id = raw.id
@@ -261,7 +266,7 @@ identifyRawToData raw =
             , words = raw.words
             , sessionName = ""
             , sessionId = Id.empty
-            , data = SelectList.fromLists [] selected rest
+            , data = theData
             , answer = ""
             }
 
@@ -311,8 +316,13 @@ orderDataSelection =
 orderRawToData : OrderRaw -> PlayData
 orderRawToData raw =
     let
-        (selected :: rest) =
-            raw.orderData
+        theData =
+            case raw.orderData of
+                selected :: rest ->
+                    SelectList.fromLists [] selected rest
+
+                [] ->
+                    SelectList.fromLists [] Word.empty []
     in
         OrderData
             { id = raw.id
@@ -323,7 +333,7 @@ orderRawToData raw =
             , words = raw.words
             , sessionName = ""
             , sessionId = Id.empty
-            , data = SelectList.fromLists [] selected rest
+            , data = theData
             , answer = ( [], [] )
             }
 

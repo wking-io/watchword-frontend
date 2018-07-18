@@ -1,13 +1,11 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
 import Data.AuthToken exposing (testToken)
-import Data.Session exposing (Session)
-import Data.Patterns exposing (Patterns)
+import Data.Play exposing (Play)
 import Html exposing (Html)
 import Html.Attributes as HA
 import Request
 import Data.UserSession exposing (UserSession)
-import Data.Game exposing (Game)
 import Request.Play as Play
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
@@ -16,7 +14,7 @@ import WatchWord.Scalar exposing (Id(..))
 
 
 type alias Model =
-    { data : Patterns
+    { data : Play
     }
 
 
@@ -38,7 +36,7 @@ init session =
             "f25e8de7d36fab872f0a29b9add2e1ebae5459c91531616933395"
 
         singleGame =
-            Id "cjjc76pn7mbm10b96uwb94k88"
+            Id "cjjc7fi0umfxm0b962kvgizl8"
     in
         Play.get singleGame
             |> Request.query maybeAuthToken
