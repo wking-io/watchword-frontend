@@ -1,6 +1,5 @@
 module Data.Play exposing (Play, PlayData, ConnectFields, FilterFields, IdentifyFields, MemorizeFields, OrderFields, selection)
 
-import Data.Id as Id
 import Data.SelectTwo as SelectTwo exposing (SelectTwo)
 import Data.Word as Word exposing (Word, WordWithOptions)
 import Data.Words exposing (Words)
@@ -16,15 +15,16 @@ import WatchWord.Object.MemorizeData
 import WatchWord.Object.OrderData
 import WatchWord.Object.Word
 import WatchWord.Scalar exposing (Id, DateTime)
-import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, hardcoded)
+import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import WatchWord.Union
 import WatchWord.Union.PlayData
 
 
 type Play
     = Init PlayData
-    | Play PlayData
-    | Complete PlayData
+    | Setup String PlayData
+    | Playing Id PlayData
+    | Complete Id PlayData
 
 
 type PlayData
@@ -54,9 +54,7 @@ type alias ConnectFields =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , sessionName : String
-    , sessionId : Id
-    , data : ( List Word, List Word )
+    , data : ( Words, Words )
     , answer : SelectTwo Word
     }
 
@@ -80,9 +78,7 @@ type alias FilterFields =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , sessionName : String
-    , sessionId : Id
-    , data : ( Word, List Word )
+    , data : ( Word, Words )
     , answer : Maybe Word
     }
 
@@ -105,8 +101,6 @@ type alias IdentifyFields =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , sessionName : String
-    , sessionId : Id
     , data : SelectList WordWithOptions
     , answer : String
     }
@@ -119,7 +113,7 @@ type alias MemorizeRaw =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , memorizeData : List Word
+    , memorizeData : Words
     }
 
 
@@ -130,9 +124,7 @@ type alias MemorizeFields =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , sessionName : String
-    , sessionId : Id
-    , data : List Word
+    , data : Words
     , answer : SelectTwo Word
     }
 
@@ -144,7 +136,7 @@ type alias OrderRaw =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , orderData : List Word
+    , orderData : Words
     }
 
 
@@ -155,8 +147,6 @@ type alias OrderFields =
     , size : Int
     , pattern : PatternType
     , words : Words
-    , sessionName : String
-    , sessionId : Id
     , data : SelectList Word
     , answer : ( List String, List String )
     }
@@ -164,7 +154,7 @@ type alias OrderFields =
 
 selection : SelectionSet (Maybe Play) WatchWord.Union.PlayData
 selection =
-    WatchWord.Union.PlayData.selection (Maybe.map Init)
+    WatchWord.Union.PlayData.selection Init
         [ WatchWord.Union.PlayData.onConnectData connectDataSelection
         , WatchWord.Union.PlayData.onFilterData filterDataSelection
         , WatchWord.Union.PlayData.onIdentifyData identifyDataSelection
@@ -181,9 +171,9 @@ connectDataSelection =
         |> with WatchWord.Object.ConnectData.focus
         |> with WatchWord.Object.ConnectData.size
         |> with WatchWord.Object.ConnectData.pattern
-        |> with (wordOn WatchWord.Object.ConnectData.words)
-        |> with (wordOn WatchWord.Object.ConnectData.left)
-        |> with (wordOn WatchWord.Object.ConnectData.right)
+        |> with (WatchWord.Object.ConnectData.words identity |> Word.on)
+        |> with (WatchWord.Object.ConnectData.left identity |> Word.on)
+        |> with (WatchWord.Object.ConnectData.right identity |> Word.on)
         |> SelectionSet.map connectRawToData
 
 
@@ -196,8 +186,6 @@ connectRawToData raw =
         , size = raw.size
         , pattern = raw.pattern
         , words = raw.words
-        , sessionName = ""
-        , sessionId = Id.empty
         , data = ( raw.left, raw.right )
         , answer = SelectTwo.empty
         }
@@ -211,9 +199,9 @@ filterDataSelection =
         |> with WatchWord.Object.FilterData.focus
         |> with WatchWord.Object.FilterData.size
         |> with WatchWord.Object.FilterData.pattern
-        |> with (wordOn WatchWord.Object.FilterData.words)
-        |> with (wordOn WatchWord.Object.FilterData.answer)
-        |> with (wordOn WatchWord.Object.FilterData.rest)
+        |> with (WatchWord.Object.FilterData.words identity |> Word.on)
+        |> with (WatchWord.Object.FilterData.answer identity |> Word.on)
+        |> with (WatchWord.Object.FilterData.rest identity |> Word.on)
         |> SelectionSet.map filterRawToData
 
 
@@ -226,8 +214,6 @@ filterRawToData raw =
         , size = raw.size
         , pattern = raw.pattern
         , words = raw.words
-        , sessionName = ""
-        , sessionId = Id.empty
         , data = ( raw.answer, raw.rest )
         , answer = Nothing
         }
@@ -241,7 +227,7 @@ identifyDataSelection =
         |> with WatchWord.Object.IdentifyData.focus
         |> with WatchWord.Object.IdentifyData.size
         |> with WatchWord.Object.IdentifyData.pattern
-        |> with (wordOn WatchWord.Object.IdentifyData.words)
+        |> with (WatchWord.Object.IdentifyData.words identity |> Word.on)
         |> with WatchWord.Object.IdentifyData.options
         |> SelectionSet.map identifyRawToData
 
@@ -264,8 +250,6 @@ identifyRawToData raw =
             , size = raw.size
             , pattern = raw.pattern
             , words = raw.words
-            , sessionName = ""
-            , sessionId = Id.empty
             , data = theData
             , answer = ""
             }
@@ -279,8 +263,8 @@ memorizeDataSelection =
         |> with WatchWord.Object.MemorizeData.focus
         |> with WatchWord.Object.MemorizeData.size
         |> with WatchWord.Object.MemorizeData.pattern
-        |> with (wordOn WatchWord.Object.MemorizeData.words)
-        |> with (wordOn WatchWord.Object.MemorizeData.memorizeData)
+        |> with (WatchWord.Object.MemorizeData.words identity |> Word.on)
+        |> with (WatchWord.Object.MemorizeData.memorizeData identity |> Word.on)
         |> SelectionSet.map memorizeRawToData
 
 
@@ -293,8 +277,6 @@ memorizeRawToData raw =
         , size = raw.size
         , pattern = raw.pattern
         , words = raw.words
-        , sessionName = ""
-        , sessionId = Id.empty
         , data = raw.memorizeData
         , answer = SelectTwo.empty
         }
@@ -308,8 +290,8 @@ orderDataSelection =
         |> with WatchWord.Object.OrderData.focus
         |> with WatchWord.Object.OrderData.size
         |> with WatchWord.Object.OrderData.pattern
-        |> with (wordOn WatchWord.Object.OrderData.words)
-        |> with (wordOn WatchWord.Object.OrderData.orderData)
+        |> with (WatchWord.Object.OrderData.words identity |> Word.on)
+        |> with (WatchWord.Object.OrderData.orderData identity |> Word.on)
         |> SelectionSet.map orderRawToData
 
 
@@ -331,24 +313,6 @@ orderRawToData raw =
             , size = raw.size
             , pattern = raw.pattern
             , words = raw.words
-            , sessionName = ""
-            , sessionId = Id.empty
             , data = theData
             , answer = ( [], [] )
             }
-
-
-wordOn : (SelectionSet Word WatchWord.Object.Word -> Field decodesTo a) -> Field decodesTo a
-wordOn obj =
-    obj wordSelection
-
-
-wordSelection : SelectionSet Word WatchWord.Object.Word
-wordSelection =
-    WatchWord.Object.Word.selection Word
-        |> with WatchWord.Object.Word.id
-        |> with WatchWord.Object.Word.word
-        |> with WatchWord.Object.Word.group
-        |> with WatchWord.Object.Word.beginning
-        |> with WatchWord.Object.Word.ending
-        |> with WatchWord.Object.Word.vowel

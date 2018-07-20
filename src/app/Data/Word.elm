@@ -1,8 +1,6 @@
-module Data.Word exposing (Word, WordWithOptions, idToHtml, addOptions, empty, emptyWithOptions)
+module Data.Word exposing (Word, WordWithOptions, addOptions, empty, emptyWithOptions)
 
 import Data.Id as Id
-import Html exposing (Html)
-import WatchWord.Enum.Focus exposing (Focus(..))
 import WatchWord.Scalar exposing (Id(..))
 
 
@@ -20,13 +18,6 @@ type alias WordWithOptions =
     { word : Word
     , options : List String
     }
-
-
-idToHtml : Word -> Html msg
-idToHtml { id } =
-    case id of
-        Id id ->
-            Html.text id
 
 
 addOptions : Word -> String -> WordWithOptions

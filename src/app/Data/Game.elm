@@ -2,9 +2,9 @@ module Data.Game exposing (Game)
 
 import Data.Sessions exposing (Sessions)
 import Data.Words exposing (Words)
-import WatchWord.Scalar exposing (Id, DateTime)
 import WatchWord.Enum.Focus exposing (Focus)
 import WatchWord.Enum.PatternType exposing (PatternType)
+import WatchWord.Scalar exposing (Id, DateTime)
 
 
 type alias Game =
