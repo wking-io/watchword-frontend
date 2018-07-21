@@ -1,4 +1,4 @@
-module Data.User exposing (User, decoder, encode)
+module Data.User exposing (User, UserRaw, decoder, encode)
 
 import Data.AuthToken as AuthToken exposing (AuthToken)
 import Data.DateTime as DateTime
@@ -13,6 +13,15 @@ import WatchWord.Scalar exposing (DateTime)
 type alias User =
     { email : String
     , token : AuthToken
+    , createdAt : DateTime
+    , updatedAt : DateTime
+    , role : UserRole
+    }
+
+
+type alias UserRaw =
+    { email : String
+    , name : String
     , createdAt : DateTime
     , updatedAt : DateTime
     , role : UserRole

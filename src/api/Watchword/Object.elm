@@ -5,10 +5,6 @@
 module WatchWord.Object exposing (..)
 
 
-type AuthPayload
-    = AuthPayload
-
-
 type ConnectData
     = ConnectData
 

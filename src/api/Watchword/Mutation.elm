@@ -162,7 +162,7 @@ type alias LoginRequiredArguments =
   - input -
 
 -}
-login : LoginRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
+login : LoginRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo RootMutation
 login requiredArgs object =
     Object.selectionField "login" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeLoginInput ] object identity
 
@@ -176,7 +176,7 @@ type alias RecoverRequiredArguments =
   - input -
 
 -}
-recover : RecoverRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
+recover : RecoverRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo RootMutation
 recover requiredArgs object =
     Object.selectionField "recover" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeRecoverInput ] object identity
 
@@ -191,7 +191,7 @@ type alias ResetRequiredArguments =
   - input -
 
 -}
-reset : ResetRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
+reset : ResetRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo RootMutation
 reset requiredArgs object =
     Object.selectionField "reset" [ Argument.required "resetToken" requiredArgs.resetToken Encode.string, Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeResetInput ] object identity
 
@@ -205,7 +205,7 @@ type alias SignupRequiredArguments =
   - input -
 
 -}
-signup : SignupRequiredArguments -> SelectionSet decodesTo WatchWord.Object.AuthPayload -> Field decodesTo RootMutation
+signup : SignupRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo RootMutation
 signup requiredArgs object =
     Object.selectionField "signup" [ Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeSignupInput ] object identity
 

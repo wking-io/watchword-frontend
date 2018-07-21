@@ -27,9 +27,9 @@ selection constructor =
 
 
 {-| -}
-id : Field WatchWord.Scalar.Id WatchWord.Object.User
-id =
-    Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map WatchWord.Scalar.Id)
+token : Field String WatchWord.Object.User
+token =
+    Object.fieldDecoder "token" [] Decode.string
 
 
 {-| -}

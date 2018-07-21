@@ -14,24 +14,9 @@ import WatchWord.Object.User as User
 import WatchWord.Scalar exposing (DateTime)
 
 
-type alias Response =
-    { token : AuthToken
-    , user : RequestUser
-    }
-
-
-type alias RequestUser =
-    { email : String
-    , name : String
-    , createdAt : DateTime
-    , updatedAt : DateTime
-    , role : UserRole
-    }
-
-
 base : (SelectionSet UserSession WatchWord.Object.AuthPayload -> Field UserSession RootMutation) -> Field UserSession RootMutation
 base toField =
-    AuthPayload.selection Response
+    AuthPayload.selection UserSession
         |> with AuthToken.fieldDecoder
         |> with getUser
         |> SelectionSet.map buildSession
