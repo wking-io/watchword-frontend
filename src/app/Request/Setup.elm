@@ -7,9 +7,9 @@ import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fiel
 import Request.Game as Game
 import Request.Pattern as Pattern
 import WatchWord.Enum.PatternType exposing (PatternType)
-import WatchWord.InputObject exposing (buildGameInput, GameInputRequiredFields, buildSignupInput, SignupInputRequiredFields, buildRecoverInput, RecoverInputRequiredFields, buildResetInput, ResetInputRequiredFields)
-import WatchWord.Query as Query
+import WatchWord.InputObject exposing (buildGameInput, GameInputRequiredFields)
 import WatchWord.Mutation as Mutation
+import WatchWord.Query as Query
 
 
 type alias Response =

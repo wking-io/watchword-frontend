@@ -27,6 +27,20 @@ selection constructor =
     Object.selection constructor
 
 
+type alias ArchiveGameRequiredArguments =
+    { id : WatchWord.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+archiveGame : ArchiveGameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) RootMutation
+archiveGame requiredArgs object =
+    Object.selectionField "archiveGame" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
+
+
 type alias CreateGameRequiredArguments =
     { input : WatchWord.InputObject.GameInput }
 
@@ -194,6 +208,20 @@ type alias ResetRequiredArguments =
 reset : ResetRequiredArguments -> SelectionSet decodesTo WatchWord.Object.User -> Field decodesTo RootMutation
 reset requiredArgs object =
     Object.selectionField "reset" [ Argument.required "resetToken" requiredArgs.resetToken Encode.string, Argument.required "input" requiredArgs.input WatchWord.InputObject.encodeResetInput ] object identity
+
+
+type alias RestoreGameRequiredArguments =
+    { id : WatchWord.Scalar.Id }
+
+
+{-|
+
+  - id -
+
+-}
+restoreGame : RestoreGameRequiredArguments -> SelectionSet decodesTo WatchWord.Object.Game -> Field (Maybe decodesTo) RootMutation
+restoreGame requiredArgs object =
+    Object.selectionField "restoreGame" [ Argument.required "id" requiredArgs.id (\(WatchWord.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
 type alias SignupRequiredArguments =

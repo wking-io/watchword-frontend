@@ -162,3 +162,9 @@ words fillInOptionals object =
 name : Field String WatchWord.Object.Game
 name =
     Object.fieldDecoder "name" [] Decode.string
+
+
+{-| -}
+archived : Field Bool WatchWord.Object.Game
+archived =
+    Object.fieldDecoder "archived" [] Decode.bool

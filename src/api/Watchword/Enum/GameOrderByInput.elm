@@ -21,6 +21,8 @@ import Json.Decode as Decode exposing (Decoder)
   - Size_DESC -
   - Name_ASC -
   - Name_DESC -
+  - Archived_ASC -
+  - Archived_DESC -
 
 -}
 type GameOrderByInput
@@ -36,6 +38,8 @@ type GameOrderByInput
     | Size_DESC
     | Name_ASC
     | Name_DESC
+    | Archived_ASC
+    | Archived_DESC
 
 
 decoder : Decoder GameOrderByInput
@@ -79,6 +83,12 @@ decoder =
 
                     "name_DESC" ->
                         Decode.succeed Name_DESC
+
+                    "archived_ASC" ->
+                        Decode.succeed Archived_ASC
+
+                    "archived_DESC" ->
+                        Decode.succeed Archived_DESC
 
                     _ ->
                         Decode.fail ("Invalid GameOrderByInput type, " ++ string ++ " try re-running the graphqelm CLI ")
@@ -125,3 +135,9 @@ toString enum =
 
         Name_DESC ->
             "name_DESC"
+
+        Archived_ASC ->
+            "archived_ASC"
+
+        Archived_DESC ->
+            "archived_DESC"
