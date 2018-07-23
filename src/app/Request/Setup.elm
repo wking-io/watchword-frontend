@@ -1,15 +1,15 @@
 module Request.Setup exposing (get)
 
+import Data.Game exposing (Game)
 import Data.Pattern exposing (Pattern)
-import Graphqelm.Field as Field exposing (Field)
-import Graphqelm.Operation exposing (RootQuery)
+import Graphqelm.Operation exposing (RootQuery, RootMutation)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
+import Request.Game as Game
+import Request.Pattern as Pattern
 import WatchWord.Enum.PatternType exposing (PatternType)
+import WatchWord.InputObject exposing (buildGameInput, GameInputRequiredFields, buildSignupInput, SignupInputRequiredFields, buildRecoverInput, RecoverInputRequiredFields, buildResetInput, ResetInputRequiredFields)
 import WatchWord.Query as Query
-import WatchWord.Object
-import WatchWord.Object.Game
-import WatchWord.Object.Pattern
-import WatchWord.Scalar exposing (Id)
+import WatchWord.Mutation as Mutation
 
 
 type alias Response =
@@ -19,21 +19,10 @@ type alias Response =
 get : PatternType -> SelectionSet Response RootQuery
 get patternType =
     Query.selection identity
-        |> with (getPattern patternType)
+        |> with (Query.pattern { pattern = patternType } Pattern.selection)
 
 
-getPattern : PatternType -> Field Response RootQuery
-getPattern patternType =
-    WatchWord.Object.Pattern.selection Pattern
-        |> with WatchWord.Object.Pattern.pattern
-        |> with WatchWord.Object.Pattern.name
-        |> with WatchWord.Object.Pattern.description
-        |> with WatchWord.Object.Pattern.focusType
-        |> with getDemo
-        |> Query.pattern { pattern = patternType }
-
-
-getDemo : Field (Maybe Id) WatchWord.Object.Pattern
-getDemo =
-    fieldSelection WatchWord.Object.Game.id
-        |> WatchWord.Object.Pattern.demo identity
+create : GameInputRequiredFields -> SelectionSet Game RootMutation
+create input =
+    Mutation.selection identity
+        |> with (Game.on (Mutation.createGame { input = buildGameInput input }))

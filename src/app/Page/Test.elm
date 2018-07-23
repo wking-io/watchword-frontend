@@ -1,19 +1,22 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
 import Data.AuthToken exposing (testToken)
+import Data.Pattern exposing (Pattern)
 import Html exposing (Html)
 import Html.Attributes as HA
 import Request
 import Data.UserSession as UserSession exposing (UserSession)
-import Request.Auth as Auth
+import Request.Setup as Setup
 import Page.Errored exposing (PageLoadError, pageLoadError)
+import SelectList exposing (SelectList)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
+import WatchWord.Enum.PatternType exposing (PatternType(..))
 import WatchWord.Scalar exposing (Id(..))
 
 
 type alias Model =
-    { data : UserSession
+    { data : Maybe Pattern
     }
 
 
@@ -24,7 +27,7 @@ init session =
             pageLoadError "Test page is currently unavailable."
 
         maybeAuthToken =
-            UserSession.token session
+            Just testToken
 
         input =
             { email = "contact+gene@wking.io"
@@ -37,8 +40,8 @@ init session =
         singleGame =
             Id "cjjc7fi0umfxm0b962kvgizl8"
     in
-        Auth.login input
-            |> Request.mutation maybeAuthToken
+        Setup.get Identify
+            |> Request.query maybeAuthToken
             |> Task.map Model
             |> Task.mapError (Debug.log "Error: ")
             |> Task.mapError handleLoadError
