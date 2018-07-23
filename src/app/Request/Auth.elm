@@ -1,25 +1,19 @@
 module Request.Auth exposing (login, signup, recover, reset)
 
-import Data.AuthToken as AuthToken exposing (AuthToken)
 import Data.UserSession as UserSession exposing (UserSession)
 import Graphqelm.Field as Field exposing (Field)
 import Graphqelm.Operation exposing (RootMutation)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with, fieldSelection)
-import WatchWord.Enum.UserRole exposing (UserRole)
+import Request.User as User
 import WatchWord.Mutation as Mutation
 import WatchWord.InputObject exposing (buildLoginInput, LoginInputRequiredFields, buildSignupInput, SignupInputRequiredFields, buildRecoverInput, RecoverInputRequiredFields, buildResetInput, ResetInputRequiredFields)
 import WatchWord.Object
-import WatchWord.Object.AuthPayload as AuthPayload
-import WatchWord.Object.User as User
-import WatchWord.Scalar exposing (DateTime)
 
 
-base : (SelectionSet UserSession WatchWord.Object.AuthPayload -> Field UserSession RootMutation) -> Field UserSession RootMutation
+base : (SelectionSet UserSession WatchWord.Object.User -> Field UserSession RootMutation) -> Field UserSession RootMutation
 base toField =
-    AuthPayload.selection UserSession
-        |> with AuthToken.fieldDecoder
-        |> with getUser
-        |> SelectionSet.map buildSession
+    User.selection
+        |> SelectionSet.map UserSession.create
         |> toField
 
 
@@ -65,27 +59,3 @@ reset token input =
 getReset : String -> ResetInputRequiredFields -> Field UserSession RootMutation
 getReset token input =
     base <| Mutation.reset { resetToken = token, input = buildResetInput input }
-
-
-getUser : Field RequestUser WatchWord.Object.AuthPayload
-getUser =
-    User.selection RequestUser
-        |> with User.email
-        |> with User.name
-        |> with User.createdAt
-        |> with User.updatedAt
-        |> with User.role
-        |> AuthPayload.user
-
-
-buildSession : Response -> UserSession
-buildSession { token, user } =
-    { user =
-        Just
-            { email = user.email
-            , token = token
-            , createdAt = user.createdAt
-            , updatedAt = user.updatedAt
-            , role = user.role
-            }
-    }

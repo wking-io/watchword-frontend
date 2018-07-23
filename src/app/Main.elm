@@ -1,8 +1,6 @@
 module Main exposing (main)
 
-import Data.UserSession exposing (UserSession)
-import Data.User as User exposing (User)
-import Json.Decode as Decode exposing (Decoder)
+import Data.UserSession as UserSession exposing (UserSession)
 import Json.Encode exposing (Value)
 import Html exposing (Html, program, text, div, ul, li, img, p)
 
@@ -61,16 +59,8 @@ init : Value -> Location -> ( Model, Cmd Msg )
 init val location =
     setRoute (Route.fromLocation location)
         { pageState = Loaded initialPage
-        , session = { user = decodeUserFromJson val }
+        , session = UserSession.decoder val
         }
-
-
-decodeUserFromJson : Value -> Maybe User
-decodeUserFromJson json =
-    json
-        |> Decode.decodeValue Decode.string
-        |> Result.toMaybe
-        |> Maybe.andThen (Decode.decodeString User.decoder >> Result.toMaybe)
 
 
 initialPage : Page

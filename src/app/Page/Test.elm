@@ -1,12 +1,11 @@
 module Page.Test exposing (Model, Msg, init, view, update)
 
 import Data.AuthToken exposing (testToken)
-import Data.Play exposing (Play)
 import Html exposing (Html)
 import Html.Attributes as HA
 import Request
-import Data.UserSession exposing (UserSession)
-import Request.Play as Play
+import Data.UserSession as UserSession exposing (UserSession)
+import Request.Auth as Auth
 import Page.Errored exposing (PageLoadError, pageLoadError)
 import Util.Infix exposing ((=>))
 import Task exposing (Task)
@@ -14,7 +13,7 @@ import WatchWord.Scalar exposing (Id(..))
 
 
 type alias Model =
-    { data : Play
+    { data : UserSession
     }
 
 
@@ -25,21 +24,21 @@ init session =
             pageLoadError "Test page is currently unavailable."
 
         maybeAuthToken =
-            Just testToken
+            UserSession.token session
 
         input =
-            { email = "contact@wking.io"
-            , password = "AIRsoft9"
+            { email = "contact+gene@wking.io"
+            , password = "AIRsoft.9"
             }
 
         resetToken =
-            "f25e8de7d36fab872f0a29b9add2e1ebae5459c91531616933395"
+            "c2228a930f95e6cba4ef5f8a7db905a3ec5ec1a01532364287518"
 
         singleGame =
             Id "cjjc7fi0umfxm0b962kvgizl8"
     in
-        Play.get singleGame
-            |> Request.query maybeAuthToken
+        Auth.login input
+            |> Request.mutation maybeAuthToken
             |> Task.map Model
             |> Task.mapError (Debug.log "Error: ")
             |> Task.mapError handleLoadError
